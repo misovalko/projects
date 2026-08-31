@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading List: Statistical Anomaly Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+	--primary: #dc2626;
+	--primary-hover: #b91c1c;
+	--accent: #f87171;
+	--text: #1a1a2e;
+	--text-light: #64748b;
+	--bg: #f8fafc;
+	--card-bg: #ffffff;
+	--border: #e2e8f0;
+	--tag-bg: #fee2e2;
+	--tag-text: #b91c1c;
+	--success: #059669;
+	--radius: 12px;
+	--shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+	--shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+	padding: 2rem;
+}
+
+.container { max-width: 1000px; margin: 0 auto; }
+
+header {
+	text-align: center;
+	margin-bottom: 2rem;
+	padding: 2rem;
+	background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+	border-radius: var(--radius);
+	color: white;
+}
+
+header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+header p { opacity: 0.9; font-size: 0.95rem; }
+
+.back-link {
+	display: inline-flex; align-items: center; gap: 0.5rem;
+	color: white; text-decoration: none; font-size: 0.875rem;
+	margin-bottom: 1rem; opacity: 0.9; transition: opacity 0.2s;
+}
+.back-link:hover { opacity: 1; }
+
+#qs {
+	background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem;
+	margin-bottom: 1.5rem; box-shadow: var(--shadow);
+	display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+}
+#qs label { font-weight: 500; color: var(--text-light); font-size: 0.875rem; }
+#qsfield {
+	flex: 1; min-width: 200px; padding: 0.75rem 1rem;
+	border: 2px solid var(--border); border-radius: 8px; font-size: 1rem;
+	transition: border-color 0.2s, box-shadow 0.2s;
+			}
+#qsfield:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+#qsfield.invalidsearch { border-color: #ef4444; background: #fef2f2; }
+.search-btn { padding: 0.75rem 1.25rem; background: var(--border); border: none; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: background 0.2s; }
+.search-btn:hover { background: #cbd5e1; }
+#stat { font-size: 0.875rem; color: var(--text-light); font-weight: 500; }
+#qssettings { display: none; }
+
+.references { display: flex; flex-direction: column; gap: 1rem; }
+
+.ref-card {
+	background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem;
+	box-shadow: var(--shadow); transition: box-shadow 0.2s, transform 0.2s;
+}
+.ref-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.ref-card.noshow { display: none; }
+.ref-card.highlight { border-left: 4px solid var(--primary); }
+
+.ref-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; }
+.ref-year { background: var(--tag-bg); color: var(--tag-text); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.ref-title { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; line-height: 1.4; }
+.ref-authors { color: var(--text-light); font-size: 0.95rem; margin-bottom: 0.75rem; }
+.ref-venue { font-size: 0.875rem; color: var(--text-light); font-style: italic; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+
+.ref-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ref-actions a, .ref-actions button { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 0.875rem; font-size: 0.8rem; font-weight: 500; border-radius: 6px; text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-secondary:hover { background: #cbd5e1; }
+
+.ref-extra { display: none; margin-top: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 8px; font-size: 0.875rem; }
+.ref-extra.show { display: block; }
+.ref-extra h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 0.5rem; }
+.ref-extra pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; }
+.ref-extra p { color: var(--text); line-height: 1.7; }
+
+footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.875rem; }
+footer a { color: var(--primary); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+	body { padding: 1rem; }
+	header { padding: 1.5rem; }
+	header h1 { font-size: 1.5rem; }
+	.ref-card { padding: 1rem; }
+	.ref-header { flex-direction: column-reverse; }
+	.ref-year { align-self: flex-start; }
+}
+</style>
+<script>
+let entryCards = [];
+document.addEventListener('DOMContentLoaded', function() {
+	entryCards = document.querySelectorAll('.ref-card[data-searchable]');
+	document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length;
+	document.getElementById('qsfield').addEventListener('keyup', quickSearch);
+});
+function quickSearch(e) {
+	const query = e.target.value.toLowerCase().trim();
+	if (!query) { entryCards.forEach(card => card.classList.remove('noshow')); document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length; e.target.classList.remove('invalidsearch'); return; }
+	try {
+		const regex = new RegExp(query, 'i'); let hits = 0;
+		entryCards.forEach(card => { if (regex.test(card.textContent)) { card.classList.remove('noshow'); hits++; } else { card.classList.add('noshow'); } });
+		document.getElementById('stat').textContent = hits + '/' + entryCards.length;
+		e.target.classList.remove('invalidsearch');
+	} catch(err) { e.target.classList.add('invalidsearch'); }
+}
+function clearSearch() { const field = document.getElementById('qsfield'); field.value = ''; field.dispatchEvent(new Event('keyup')); }
+function toggleInfo(id, type) { const el = document.getElementById(type + '_' + id); const card = document.getElementById(id); if (el) { el.classList.toggle('show'); card.classList.toggle('highlight', el.classList.contains('show')); } }
+</script>
+</head>
+<body>
+
+<div class="container">
+	<header>
+		<a href="../../comps.html" class="back-link">← Back to Comprehensive Exam</a>
+		<h1>🔍 Statistical Anomaly Detection</h1>
+		<p>Reading list for PhD comprehensive exam • Dr. Marai</p>
+	</header>
+
+<div id="qs">
+		<label for="qsfield">🔍 Search</label>
+		<input type="text" id="qsfield" placeholder="Search by author, title, year..." autocomplete="off" aria-label="Search papers">
+		<button class="search-btn" onclick="clearSearch()">Clear</button>
+		<span>Showing <span id="stat">0</span> papers</span>
+		<div id="qssettings"></div>
+	</div>
+
+	<div class="references">
+
+		<article class="ref-card" id="aggarwal2001outlier" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Outlier Detection for High Dimensional Data</div>
+					<div class="ref-authors">Aggarwal, C.C. & Yu, P.S.</div>
+				</div>
+				<span class="ref-year">2001</span>
+			</div>
+			<div class="ref-venue">SIGMOD '01: Proceedings of the 2001 ACM SIGMOD International Conference on Management of Data, pp. 37-46</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/375663.375668" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('aggarwal2001outlier','bib')">📋 BibTeX</button>
+</div>
+			<div class="ref-extra" id="bib_aggarwal2001outlier">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{aggarwal2001outlier,
+  author = {Charu C. Aggarwal and Philip S. Yu},
+  title = {Outlier detection for high dimensional data},
+  booktitle = {SIGMOD '01},
+  year = {2001},
+  pages = {37--46}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="bolton2002statistical" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Statistical Fraud Detection: A Review</div>
+					<div class="ref-authors">Bolton, R.J. & Hand, D.J.</div>
+				</div>
+				<span class="ref-year">2002</span>
+			</div>
+			<div class="ref-venue">Statistical Science, Vol. 17(3), pp. 235-255</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1214/ss/1042727940" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('bolton2002statistical','bib')">📋 BibTeX</button>
+				<button class="btn-secondary" onclick="toggleInfo('bolton2002statistical','abs')">📝 Abstract</button>
+			</div>
+			<div class="ref-extra" id="abs_bolton2002statistical">
+				<h4>Abstract</h4>
+				<p>Fraud is increasing dramatically with the expansion of modern technology and the global superhighways of communication. Statistics and machine learning provide effective technologies for fraud detection and have been applied successfully to detect activities such as money laundering, e-commerce credit card fraud, telecommunications fraud and computer intrusion.</p>
+			</div>
+			<div class="ref-extra" id="bib_bolton2002statistical">
+				<h4>BibTeX</h4>
+				<pre>@article{bolton2002statistical,
+  author = {Bolton, Richard J. and Hand, David J.},
+  title = {Statistical fraud detection: a review},
+  journal = {Stat. Sci.},
+  year = {2002},
+  volume = {17},
+  number = {3},
+  pages = {235-255}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="breunig2000lof" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">LOF: Identifying Density-Based Local Outliers</div>
+					<div class="ref-authors">Breunig, M.M., Kriegel, H.-P., Ng, R.T. & Sander, J.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">SIGMOD '00: Proceedings of the 2000 ACM SIGMOD International Conference on Management of Data, pp. 93-104</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/335191.335388" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('breunig2000lof','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_breunig2000lof">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{breunig2000lof,
+  author = {Markus M. Breunig and Hans-Peter Kriegel and Raymond T. Ng and Jörg Sander},
+  title = {LOF: identifying density-based local outliers},
+  booktitle = {SIGMOD '00},
+  year = {2000},
+  pages = {93--104}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="campbell2000linear" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">A Linear Programming Approach to Novelty Detection</div>
+					<div class="ref-authors">Campbell, C. & Bennett, K.P.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 13 (NeurIPS 2000), pp. 395-401</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.neurips.cc/paper/1999/file/8725fb777f25776ffa9076e44fcfd776-Paper.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('campbell2000linear','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_campbell2000linear">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{campbell2000linear,
+  author = {Colin Campbell and Kristin P. Bennett},
+  title = {A Linear Programming Approach to Novelty Detection},
+  booktitle = {NeurIPS 13},
+  year = {2000},
+  pages = {395-401}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="eskin2000anomaly" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Anomaly Detection over Noisy Data using Learned Probability Distributions</div>
+					<div class="ref-authors">Eskin, E.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">ICML '00: Proceedings of the 17th International Conference on Machine Learning, pp. 255-262</div>
+			<div class="ref-actions">
+				<a href="https://www.cs.columbia.edu/~eeskin/papers/icml2000.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('eskin2000anomaly','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_eskin2000anomaly">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{eskin2000anomaly,
+  author = {Eleazar Eskin},
+  title = {Anomaly Detection over Noisy Data using Learned Probability Distributions},
+  booktitle = {ICML},
+  year = {2000},
+  pages = {255--262}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="eskin2000detecting" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Detecting Errors within a Corpus using Anomaly Detection</div>
+					<div class="ref-authors">Eskin, E.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">NAACL 2000: Proceedings of the North American Chapter of the Association for Computational Linguistics</div>
+			<div class="ref-actions">
+				<a href="https://aclanthology.org/A00-1044/" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 Link</a>
+				<button class="btn-secondary" onclick="toggleInfo('eskin2000detecting','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_eskin2000detecting">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{eskin2000detecting,
+  author = {Eleazar Eskin},
+  title = {Detecting Errors within a Corpus using Anomaly Detection},
+  booktitle = {NAACL},
+  year = {2000}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="fawcett1997adaptive" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Adaptive Fraud Detection</div>
+					<div class="ref-authors">Fawcett, T. & Provost, F.</div>
+				</div>
+				<span class="ref-year">1997</span>
+			</div>
+			<div class="ref-venue">Data Mining and Knowledge Discovery, Vol. 1(3), pp. 291-316</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1023/A:1009700419189" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('fawcett1997adaptive','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_fawcett1997adaptive">
+				<h4>BibTeX</h4>
+				<pre>@article{fawcett1997adaptive,
+  author = {Tom Fawcett and Foster Provost},
+  title = {Adaptive Fraud Detection},
+  journal = {Data Min. Knowl. Discov.},
+  year = {1997},
+  volume = {1},
+  number = {3},
+  pages = {291--316}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="he2008nearest-neighbor-based" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Nearest-Neighbor-Based Active Learning for Rare Category Detection</div>
+					<div class="ref-authors">He, J. & Carbonell, J.</div>
+				</div>
+				<span class="ref-year">2008</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 20, pp. 633-640</div>
+			<div class="ref-actions">
+				<a href="https://papers.nips.cc/paper/2007/hash/c7635bfd99c634622690b1c9a1c88b4b-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 Paper</a>
+				<button class="btn-secondary" onclick="toggleInfo('he2008nearest-neighbor-based','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_he2008nearest-neighbor-based">
+				<h4>BibTeX</h4>
+				<pre>@incollection{he2008nearest-neighbor-based,
+  author = {Jingrui He and Jaime Carbonell},
+  title = {Nearest-Neighbor-Based Active Learning for Rare Category Detection},
+  booktitle = {NeurIPS 20},
+  year = {2008},
+  pages = {633--640}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="hodge2004survey" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">A Survey of Outlier Detection Methodologies</div>
+					<div class="ref-authors">Hodge, V. & Austin, J.</div>
+				</div>
+				<span class="ref-year">2004</span>
+			</div>
+			<div class="ref-venue">Artificial Intelligence Review, Vol. 22(2), pp. 85-126</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1023/B:AIRE.0000045502.10941.a9" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('hodge2004survey','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_hodge2004survey">
+				<h4>BibTeX</h4>
+				<pre>@article{hodge2004survey,
+  author = {Victoria Hodge and Jim Austin},
+  title = {A Survey of Outlier Detection Methodologies},
+  journal = {Artif. Intell. Rev.},
+  year = {2004},
+  volume = {22},
+  number = {2},
+  pages = {85--126}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="lazarevic2005feature" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Feature Bagging for Outlier Detection</div>
+					<div class="ref-authors">Lazarevic, A. & Kumar, V.</div>
+				</div>
+				<span class="ref-year">2005</span>
+			</div>
+			<div class="ref-venue">KDD '05: Proceedings of the 11th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, pp. 157-166</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/1081870.1081891" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('lazarevic2005feature','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_lazarevic2005feature">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{lazarevic2005feature,
+  author = {Aleksandar Lazarevic and Vipin Kumar},
+  title = {Feature bagging for outlier detection},
+  booktitle = {KDD '05},
+  year = {2005},
+  pages = {157--166}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="markou2003novelty" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Novelty Detection: A Review — Part 1: Statistical Approaches</div>
+					<div class="ref-authors">Markou, M. & Singh, S.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Signal Processing, Vol. 83(12), pp. 2481-2497</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1016/j.sigpro.2003.07.018" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('markou2003novelty','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_markou2003novelty">
+				<h4>BibTeX</h4>
+				<pre>@article{markou2003novelty,
+  author = {Markos Markou and Sameer Singh},
+  title = {Novelty detection: a review, part 1: statistical approaches},
+  journal = {Signal Process.},
+  year = {2003},
+  volume = {83},
+  number = {12},
+  pages = {2481--2497}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="markou2003noveltya" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Novelty Detection: A Review — Part 2: Neural Network Based Approaches</div>
+					<div class="ref-authors">Markou, M. & Singh, S.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Signal Processing, Vol. 83(12), pp. 2499-2521</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1016/j.sigpro.2003.07.019" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('markou2003noveltya','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_markou2003noveltya">
+				<h4>BibTeX</h4>
+				<pre>@article{markou2003noveltya,
+  author = {Markos Markou and Sameer Singh},
+  title = {Novelty detection: a review, part 2: neural network based approaches},
+  journal = {Signal Process.},
+  year = {2003},
+  volume = {83},
+  number = {12},
+  pages = {2499--2521}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="pelleg2005active" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Active Learning for Anomaly and Rare-Category Detection</div>
+					<div class="ref-authors">Pelleg, D. & Moore, A.W.</div>
+				</div>
+				<span class="ref-year">2005</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 17, pp. 1073-1080</div>
+			<div class="ref-actions">
+				<a href="https://papers.nips.cc/paper_files/paper/2004/hash/8c59fd6fbe0e9793ec2b27971221cace-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 Paper</a>
+				<button class="btn-secondary" onclick="toggleInfo('pelleg2005active','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_pelleg2005active">
+				<h4>BibTeX</h4>
+				<pre>@incollection{pelleg2005active,
+  author = {Dan Pelleg and Andrew W. Moore},
+  title = {Active Learning for Anomaly and Rare-Category Detection},
+  booktitle = {NeurIPS 17},
+  year = {2005},
+  pages = {1073-1080}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="schoelkopf1999estimating" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Estimating the Support of a High-Dimensional Distribution</div>
+					<div class="ref-authors">Schölkopf, B., Platt, J.C., Shawe-Taylor, J., Smola, A.J. & Williamson, R.C.</div>
+				</div>
+				<span class="ref-year">1999</span>
+			</div>
+			<div class="ref-venue">Neural Computation, Vol. 13, pp. 2001</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1162/089976601750264965" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('schoelkopf1999estimating','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_schoelkopf1999estimating">
+				<h4>BibTeX</h4>
+				<pre>@article{schoelkopf1999estimating,
+  author = {Bernhard Schölkopf and John C. Platt and John Shawe-Taylor and Alex J. Smola and Robert C. Williamson},
+  title = {Estimating the support of a high-dimensional distribution},
+  journal = {Neural Computation},
+  year = {1999},
+  volume = {13}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="song2007conditional" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Conditional Anomaly Detection</div>
+					<div class="ref-authors">Song, X., Wu, M. & Jermaine, C.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">IEEE Transactions on Knowledge and Data Engineering, Vol. 19(5), pp. 631-645</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1109/TKDE.2007.1009" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('song2007conditional','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_song2007conditional">
+				<h4>BibTeX</h4>
+				<pre>@article{song2007conditional,
+  author = {Xiuyao Song and Mingxi Wu and Christopher Jermaine},
+  title = {Conditional Anomaly Detection},
+  journal = {IEEE TKDE},
+  year = {2007},
+  volume = {19},
+  number = {5},
+  pages = {631--645}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="wong2003bayesian" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Bayesian Network Anomaly Pattern Detection for Disease Outbreaks</div>
+					<div class="ref-authors">Wong, W.K., Moore, A., Cooper, G. & Wagner, M.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">ICML '03: Proceedings of the 20th International Conference on Machine Learning</div>
+			<div class="ref-actions">
+				<a href="https://www.jmlr.org/papers/volume6/wong05a/wong05a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('wong2003bayesian','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_wong2003bayesian">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{wong2003bayesian,
+  author = {Weng Keen Wong and Andrew Moore and Gregory Cooper and Michael Wagner},
+  title = {Bayesian Network Anomaly Pattern Detection for Disease Outbreaks},
+  booktitle = {ICML},
+  year = {2003}
+}</pre>
+			</div>
+		</article>
+
+	</div>
+
+	<footer>
+		<p>Reading list for PhD Comprehensive Exam, September 2008</p>
+		<p>Originally generated by <a href="https://www.jabref.org">JabRef</a> • Modernized 2025</p>
+	</footer>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+</html>

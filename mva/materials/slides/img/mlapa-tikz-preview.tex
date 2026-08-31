@@ -1,0 +1,137 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{fontawesome5}
+\usetikzlibrary{positioning, shapes.geometric, shapes.symbols, shadows, calc, shapes.callouts, backgrounds}
+
+\begin{document}
+
+\definecolor{fbBlue}{HTML}{3b5998}
+\definecolor{twCyan}{HTML}{1da1f2}
+\definecolor{liBlue}{HTML}{0077b5}
+\definecolor{ytRed}{HTML}{ff0000}
+\definecolor{suOrange}{HTML}{eb4924}
+\definecolor{pinRed}{HTML}{bd081c}
+\definecolor{rdOrange}{HTML}{ff4500}
+\definecolor{bgOrange}{HTML}{f57d00}
+\definecolor{tmBlue}{HTML}{35465c}
+\definecolor{flBlue}{HTML}{0063dc}
+\definecolor{flPink}{HTML}{ff0084}
+
+% Social ME-dia cartoon - Modern version
+\begin{tikzpicture}[
+    appicon/.style={
+        rectangle, 
+        rounded corners=10pt, 
+        draw=none, 
+        minimum size=1.8cm, 
+        inner sep=0, 
+        drop shadow={opacity=0.3, shadow xshift=2pt, shadow yshift=-2pt},
+        font=\Huge\color{white}
+    },
+    speech/.style={
+        ellipse callout, 
+        callout absolute pointer={#1},
+        draw=black!40, 
+        thick, 
+        fill=white, 
+        align=center, 
+        font=\bfseries\sffamily,
+        inner sep=6pt,
+        drop shadow={opacity=0.15}
+    },
+    limb/.style={draw=black!80, line width=3pt, line cap=round, line join=round}
+]
+
+    % Title
+    \node[font=\Huge\bfseries\sffamily, text=black!80] at (0, 6) {Social \underline{\textcolor{red!80!black}{ME}}-dia};
+    
+    % --- ROW 1 ---
+    \def\rowY{3}
+    
+    % Facebook: "like ME!"
+    \node[appicon, fill=fbBlue] (fb) at (-7.5, \rowY) {\faFacebookF};
+    \draw[limb] (fb.south west) ++(0.4,0) -- ++(-0.2,-0.8) -- ++(-0.3,0); 
+    \draw[limb] (fb.south east) ++(-0.4,0) -- ++(0.2,-0.8) -- ++(0.3,0);
+    \draw[limb] (fb.west) ++(0,-0.2) -- ++(-0.6,0.4) -- ++(0,0.5); 
+    \draw[limb] (fb.east) ++(0,-0.2) -- ++(0.6,-0.4);
+    \node[speech={(fb.north)}, above=1.0cm of fb] {like ME!};
+
+    % Twitter: "listen to ME!"
+    \node[appicon, fill=twCyan] (tw) at (-4, \rowY) {\faTwitter};
+    \draw[limb] (tw.south west) ++(0.4,0) -- ++(-0.1,-0.8);
+    \draw[limb] (tw.south east) ++(-0.4,0) -- ++(0.1,-0.8);
+    \draw[limb] (tw.west) ++(0,0) -- ++(-0.5,0.3) -- ++(-0.2,0.4); 
+    \draw[limb] (tw.east) ++(0,0) -- ++(0.5,-0.3);
+    \node[speech={(tw.north)}, above=1.0cm of tw] {listen to ME!};
+    
+    % LinkedIn: "hire ME!"
+    \node[appicon, fill=liBlue] (li) at (-0.5, \rowY) {\faLinkedinIn};
+    \draw[limb] (li.south west) ++(0.4,0) -- ++(0,-0.8);
+    \draw[limb] (li.south east) ++(-0.4,0) -- ++(0,-0.8);
+    \draw[limb] (li.west) ++(0,0.1) -- ++(-0.4,-0.2) -- ++(-0.2,0.5); 
+    \draw[limb] (li.east) ++(0,0.1) -- ++(0.4,-0.2) -- ++(0.2,0.5);
+    \node[speech={(li.north)}, above=1.0cm of li] {hire ME!};
+    
+    % YouTube: "watch ME!"
+    \node[appicon, fill=white, draw=ytRed, line width=2pt] (yt) at (3, \rowY) {\textcolor{ytRed}{\faYoutube}};
+    \draw[limb] (yt.south west) ++(0.4,0) -- ++(-0.2,-0.8);
+    \draw[limb] (yt.south east) ++(-0.4,0) -- ++(0.2,-0.8);
+    \draw[limb] (yt.west) ++(0,-0.1) -- ++(-0.5,0.5); 
+    \draw[limb] (yt.east) ++(0,-0.1) -- ++(0.5,0.5);
+    \node[speech={(yt.north)}, above=1.0cm of yt] {watch ME!};
+    
+    % StumbleUpon: "find ME!"
+    \node[appicon, fill=suOrange] (su) at (6.5, \rowY) {\faStumbleupon};
+    \draw[limb] (su.south west) ++(0.4,0) -- ++(-0.1,-0.8);
+    \draw[limb] (su.south east) ++(-0.4,0) -- ++(0.1,-0.8);
+    \draw[limb] (su.west) ++(0,0) -- ++(-0.5,-0.3);
+    \draw[limb] (su.east) ++(0,0) -- ++(0.5,0.3) -- ++(0,0.3); 
+    \node[speech={(su.north)}, above=1.0cm of su] {find ME!};
+
+
+    % --- ROW 2 ---
+    \def\rowY{-2}
+
+    % Pinterest: "show ME!"
+    \node[appicon, fill=pinRed] (pin) at (-7.5, \rowY) {\faPinterestP};
+    \draw[limb] (pin.south west) ++(0.4,0) -- ++(-0.1,-0.8);
+    \draw[limb] (pin.south east) ++(-0.4,0) -- ++(0.1,-0.8);
+    \draw[limb] (pin.west) ++(0,-0.1) -- ++(-0.5,0.3);
+    \draw[limb] (pin.east) ++(0,-0.1) -- ++(0.5,0.3) -- ++(0.3,-0.2); 
+    \node[speech={(pin.north)}, above=1.0cm of pin] {show ME!};
+
+    % Reddit: "vote for ME!"
+    \node[appicon, fill=white, draw=black!10, line width=1pt] (red) at (-4, \rowY) {\textcolor{rdOrange}{\faRedditAlien}};
+    \draw[limb] (red.south west) ++(0.4,0) -- ++(-0.3,-0.8);
+    \draw[limb] (red.south east) ++(-0.4,0) -- ++(0.3,-0.8);
+    \draw[limb] (red.west) ++(0,0.1) -- ++(-0.5,0.4); 
+    \draw[limb] (red.east) ++(0,0.1) -- ++(0.5,0.4);
+    \node[speech={(red.north)}, above=1.0cm of red] {vote for ME!};
+    
+    % Blogger: "agree with ME!"
+    \node[appicon, fill=bgOrange] (blog) at (-0.5, \rowY) {\faBloggerB};
+    \draw[limb] (blog.south west) ++(0.4,0) -- ++(0,-0.8);
+    \draw[limb] (blog.south east) ++(-0.4,0) -- ++(0,-0.8);
+    \draw[limb] (blog.west) ++(0,0) -- ++(-0.4,-0.4);
+    \draw[limb] (blog.east) ++(0,0) -- ++(0.4,-0.4);
+    \node[speech={(blog.north)}, above=1.0cm of blog] {agree with ME!};
+    
+    % Tumblr: "accept ME!"
+    \node[appicon, fill=tmBlue] (tum) at (3, \rowY) {\faTumblr};
+    \draw[limb] (tum.south west) ++(0.4,0) -- ++(-0.1,-0.8);
+    \draw[limb] (tum.south east) ++(-0.4,0) -- ++(0.1,-0.8);
+    \draw[limb] (tum.west) ++(0,-0.1) -- ++(-0.5,-0.3);
+    \draw[limb] (tum.east) ++(0,-0.1) -- ++(0.5,0.5);
+    \node[speech={(tum.north)}, above=1.0cm of tum] {accept ME!};
+    
+    % Flickr: "look at ME!"
+    \node[appicon, fill=white, draw=black!10, line width=1pt] (fl) at (6.5, \rowY) {\textcolor{flBlue}{\Large\textbullet}\ \textcolor{flPink}{\Large\textbullet}};
+    \draw[limb] (fl.south west) ++(0.4,0) -- ++(-0.3,-0.8);
+    \draw[limb] (fl.south east) ++(-0.4,0) -- ++(0.3,-0.8);
+    \draw[limb] (fl.west) ++(0,0) -- ++(-0.5,0.3) -- ++(-0.2,0); 
+    \draw[limb] (fl.east) ++(0,0) -- ++(0.5,0.3) -- ++(0.2,0);
+    \node[speech={(fl.north)}, above=1.0cm of fl] {look at ME!};
+    
+\end{tikzpicture}
+
+\end{document}

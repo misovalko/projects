@@ -1,0 +1,25 @@
+% !TEX TS-program = lualatex
+\documentclass{beamer}
+\usepackage{pdfpages}
+% Restore the "Graph Bandits" content from archives.
+% Composition:
+% - 2018-2019 Pages 1-18: Introduction, Observability Graphs, General Setting
+% - 2018-2019 Pages 65-69: Side Observations Setup (Undirected/Directed), ELP, Exp3-DOM
+% - 2014-2015 Pages 14-15: Revival of "Online Non-Stochastic Rewards" (Exp3 Reminder, Bias-Variance Tradeoff)
+% - 2018-2019 Pages 70-83: Exp3-IX Algorithm, Analysis, Conclusion
+\begin{document}
+\setbeamercolor{background canvas}{bg=} % Ensure transparent background for included PDF
+
+% Intro
+\includepdf[pages={1-18},fitpaper]{../../year-archives/2018-2019/mlgraphs7.pdf}
+
+% Side Observations Setup
+\includepdf[pages={65-69},fitpaper]{../../year-archives/2018-2019/mlgraphs7.pdf}
+
+% Revived: Exp3 General & Bias-Variance (from 2014-2015)
+\includepdf[pages={14-15},fitpaper]{../../year-archives/2014-2015/mlgraphs8.pdf}
+
+% Exp3-IX and rest
+\includepdf[pages={70-83},fitpaper]{../../year-archives/2018-2019/mlgraphs7.pdf}
+
+\end{document}

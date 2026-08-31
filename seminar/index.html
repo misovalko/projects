@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<html>
+<head>
+<title>seminar</title>
+</head>
+
+<frameset rows="1,*" cols="120,*" framespacing="0" frameborder="0" border="0">
+  <frame src="about:blank">
+  <frame src="about:blank">
+  <frame src="panel.html" name="panel" marginwidth="0" marginheight="0">
+  <frame src="sem.html" name="okno" marginwidth="0" marginheight="0" >
+</frameset>
+<noframes>
+<body bgcolor="#FFFFFF">
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body></noframes>
+</html>

@@ -1,0 +1,31 @@
+\frametitle{\bf The GraphLab abstraction}
+\begin{center}
+\vspace{-1\baselineskip}
+Slightly more complicated example, suboptimal pagerank
+\vspace{-0.5\baselineskip}
+\end{center}
+\begin{lstlisting}[basicstyle=\fdmfamily\scriptsize]
+#assume each node in G has a field 'degree' and 'pagerank'
+#initialize 'pagerank' = 1/n for all nodes
+
+def weight_count_fn (src, edge, dst):
+    dst['degree'] += edge['weight']
+    return (src, edge, dst)
+
+def pagerank_step_fn (src, edge, dst):
+    dst['pagerank'] += (edge['weight']*src['pagerank']
+                                      /dst['degree'])
+    return (src, edge, dst)
+
+G_pagerank = G.triple_apply(weight_count_fn, 'degree')
+
+while not converged(G_pagerank):
+    G_pagerank = G_pagerank.triple_apply(
+                        pagerank_step_fn, 'pagerank')
+\end{lstlisting}
+\pause
+
+\begin{center}
+\vspace{-1.5\baselineskip}
+\questionbox{How many iterations to convergence?}
+\end{center}

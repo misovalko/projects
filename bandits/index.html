@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Michal Valko" />
+    <meta name="keywords" content="multi-armed bandits, bandit algorithms, UCB, Thompson sampling, regret bounds, exploration exploitation, machine learning" />
+    <meta name="description" content="Comprehensive resource on multi-armed bandit algorithms - theory, bounds, papers, books, software, and links." />
+    <title>Multi-Armed Bandits - Algorithm Comparison and Resources</title>
+    <link rel="shortcut icon" href="../../images/common/micon6.webp" />
+<link rel="stylesheet" href="../../luky.min.css" title="base" type="text/css" />
+<script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    });
+    </script>
+    <style>
+        /* 2025 Modern Design */
+        h2 {
+            background: linear-gradient(135deg, #2c5aa0 0%, #4a90e2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom: 3px solid;
+            border-image: linear-gradient(90deg, #2c5aa0, #4a90e2, transparent) 1;
+            padding-bottom: 0.5em;
+            margin-top: 2.5em;
+            margin-bottom: 1em;
+            font-size: 1.7em;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            color: #1e3a5f;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            font-size: 1.3em;
+            font-weight: 600;
+            position: relative;
+            padding-left: 1em;
+        }
+
+        h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 70%;
+            background: linear-gradient(180deg, #4a90e2, #2c5aa0);
+            border-radius: 2px;
+        }
+
+        h4 {
+            color: #334155;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            font-size: 1.15em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.95em;
+        }
+
+        #content p {
+            line-height: 1.7;
+            margin-bottom: 1.1em;
+            color: #334155;
+        }
+
+        /* Navigation cards - 2025 Style */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5em;
+            margin: 2em 0;
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 2em;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(44, 90, 160, 0.08);
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2c5aa0, #4a90e2, #2c5aa0);
+            background-size: 200% 100%;
+            animation: shimmer 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .nav-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(44, 90, 160, 0.16);
+            border-color: #4a90e2;
+        }
+
+        .nav-card h3 {
+            margin-top: 0;
+            padding-left: 0;
+            background: linear-gradient(135deg, #2c5aa0 0%, #4a90e2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-card h3::before {
+            display: none;
+        }
+
+        .nav-card p {
+            color: #64748b;
+            font-size: 0.95em;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Algorithm comparison table - 2025 Style */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5em 0;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(44, 90, 160, 0.08);
+            border: 2px solid #e2e8f0;
+        }
+
+        table tr:first-child td {
+            background: linear-gradient(135deg, #2c5aa0 0%, #4a90e2 100%);
+            font-weight: 700;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.05em;
+            padding: 1.2em 1em;
+        }
+
+        table td {
+            padding: 1.2em 1em;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+            transition: background 0.2s;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:not(:first-child):hover {
+            background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        table tr:not(:first-child):hover td:first-child {
+            color: #2c5aa0;
+            font-weight: 600;
+        }
+
+        /* Links */
+        #content a {
+            color: #008BA4;
+            text-decoration: none;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+
+        #content a:hover {
+            color: #8282FF;
+            text-decoration: underline;
+        }
+
+        /* Intro box - 2025 Style */
+        .intro-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e0efff 100%);
+            padding: 2em;
+            border-radius: 20px;
+            margin-bottom: 2.5em;
+            box-shadow: 0 6px 30px rgba(44, 90, 160, 0.12);
+            border: 2px solid rgba(74, 144, 226, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.1) 0%, transparent 70%);
+        }
+
+        /* Math formulas styling */
+        .MathJax {
+            font-size: 1.1em !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="supertoplt">
+			<div id="supertoprt">
+				<div id="supertop"></div>
+			</div>
+		</div>
+		<div id="lt">
+			<div id="rt">
+				<div id="top"><span class="nadpis">Michal Valko : Projects</span></div>
+				<div id="menu">
+					<div class="menulink">
+						<a href="../../index.html" class="active">Intro</a>
+						<a href="../../research.html">Publications</a>
+						<a href="../../projects.html">Projects</a>
+						<a href="../../mva-ml-graphs.html">Teaching</a>
+						<a href="../../press.html">Press</a>
+						<a href="../../talks.html">Talks</a>
+						<a href="../../service.html">Service</a>
+						<a href="../../experience.html">Experience</a>
+					</div>
+					<br />
+					<span class="male"><a href="mailto:michal.valko@inria.fr" aria-label="Email Michal Valko">michal.valko@inria.fr</a></span>
+					<div class="sidebar-social-icons">
+						<a href="https://scholar.google.com/citations?user=jrazNCQAAAAJ" class="scholar" title="Google Scholar" aria-label="Google Scholar profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M320 32L0 160l320 128 320-128L320 32zM64 224v128l256 128 256-128V224L320 352 64 224z"/></svg></a>
+						<a href="https://github.com/misovalko" class="github" title="GitHub" aria-label="GitHub profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"/></svg></a>
+						<a href="https://x.com/misovalko" class="twitter" title="Twitter/X" aria-label="X profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
+					<a href="https://www.linkedin.com/in/michalvalko/" class="linkedin" title="LinkedIn" aria-label="LinkedIn profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a> <a href="https://orcid.org/0009-0009-2673-0144" class="orcid" title="ORCID" aria-label="ORCID profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm-80.79 360.76h-29.84v-207.5h29.84zm-14.92-231.14a19.57 19.57 0 1 1 19.57-19.57 19.64 19.64 0 0 1-19.57 19.57zM300 369h-81V143.26h81c62.52 0 113 28.05 113 113.42C413 322.38 364.87 369 300 369z"/></svg></a>
+					</div>
+					<div class="centered">
+						<a href="../../images/common/gr20.webp"><picture><source srcset="../../images/common/mvgr20.webp" type="image/webp"><img src="../../images/common/mvgr20.webp" alt="Portrait photo of Michal Valko" loading="lazy" decoding="async" /></picture></a><br />
+						<br />
+						<a href="https://isara.io" rel="noopener noreferrer"><picture><source srcset="../../images/common/isara.webp" type="image/webp"><img src="../../images/common/isara.webp" alt="Isara Labs logo" height="40" loading="lazy" decoding="async"></picture></a><br />
+						<a href="https://www.inria.fr/"><picture><source srcset="../../images/common/INRIA-CORPO-CMJN.webp" type="image/webp"><img src="../../images/common/INRIA-CORPO-CMJN.webp" alt="Inria logo" height="32" loading="lazy" decoding="async"></picture></a><br />
+						<a href="https://www.master-mva.com/"><img src="../../images/common/mva.webp" alt="MVA Master program logo" height="40" loading="lazy" /></a><br /><br />
+												<div class="sidebar-students">
+						<div class="sidebar-student"><a href="https://giorgio-racca.github.io/"><picture><source srcset="../../images/students/giorgio.webp" type="image/webp"><img src="../../images/students/giorgio.webp" alt="Giorgio" loading="lazy" decoding="async" /></picture></a><span>Giorgio</span></div>
+						<div class="sidebar-student"><a href="https://d-tiapkin.github.io/"><picture><source srcset="../../images/students/daniil.webp" type="image/webp"><img src="../../images/students/daniil.webp" alt="Daniil" loading="lazy" decoding="async" /></picture></a><span>Daniil</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.com/citations?user=FJ9U_2oAAAAJ&hl=fr"><picture><source srcset="../../images/students/lisa.webp" type="image/webp"><img src="../../images/students/lisa.webp" alt="Lisa" loading="lazy" decoding="async" /></picture></a><span>Lisa</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Côme_Fiegel1"><picture><source srcset="../../images/students/come.webp" type="image/webp"><img src="../../images/students/come.webp" alt="Côme" loading="lazy" decoding="async" /></picture></a><span>Côme</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Jean_Tarbouriech1"><picture><source srcset="../../images/students/jean.webp" type="image/webp"><img src="../../images/students/jean.webp" alt="Jean" loading="lazy" decoding="async" /></picture></a><span>Jean</span></div>
+						<div class="sidebar-student"><a href="https://menardprr.github.io/"><picture><source srcset="../../images/students/pierre1.webp" type="image/webp"><img src="../../images/students/pierre1.webp" alt="Pierre" loading="lazy" decoding="async" /></picture></a><span>Pierre</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Omar_Darwiche_Domingues1"><picture><source srcset="../../images/students/omar.webp" type="image/webp"><img src="../../images/students/omar.webp" alt="Omar" loading="lazy" decoding="async" /></picture></a><span>Omar</span></div>
+						<div class="sidebar-student"><a href="https://edouardoyallon.github.io/"><picture><source srcset="../../images/students/edouard.webp" type="image/webp"><img src="../../images/students/edouard.webp" alt="Édouard" loading="lazy" decoding="async" /></picture></a><span>Édouard</span></div>
+						<div class="sidebar-student"><a href="https://fr.linkedin.com/in/pierre-perrault-642b82131"><picture><source srcset="../../images/students/pierre2.webp" type="image/webp"><img src="../../images/students/pierre2.webp" alt="Pierre" loading="lazy" decoding="async" /></picture></a><span>Pierre</span></div>
+						<div class="sidebar-student"><a href="https://xuedong.github.io/"><picture><source srcset="../../images/students/xuedong.webp" type="image/webp"><img src="../../images/students/xuedong.webp" alt="Xuedong" loading="lazy" decoding="async" /></picture></a><span>Xuedong</span></div>
+						<div class="sidebar-student"><a href="https://guilgautier.github.io/"><picture><source srcset="../../images/students/guillaume.webp" type="image/webp"><img src="../../images/students/guillaume.webp" alt="Guillaume" loading="lazy" decoding="async" /></picture></a><span>Guillaume</span></div>
+						<div class="sidebar-student"><a href="https://www.linkedin.com/in/julien-seznec-29364a104/?ppe=1"><picture><source srcset="../../images/students/julien.webp" type="image/webp"><img src="../../images/students/julien.webp" alt="Julien" loading="lazy" decoding="async" /></picture></a><span>Julien</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Jean-Bastien_Grill2"><picture><source srcset="../../images/students/jean-bastien.webp" type="image/webp"><img src="../../images/students/jean-bastien.webp" alt="Jean-Bastien" loading="lazy" decoding="async" /></picture></a><span>Jean-Bastien</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.it/citations?user=R7c1UMMAAAAJ"><picture><source srcset="../../images/students/daniele.webp" type="image/webp"><img src="../../images/students/daniele.webp" alt="Daniele" loading="lazy" decoding="async" /></picture></a><span>Daniele</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.com/citations?user=2FaMLggAAAAJ"><picture><source srcset="../../images/students/tomas.webp" type="image/webp"><img src="../../images/students/tomas.webp" alt="Tomáš" loading="lazy" decoding="async" /></picture></a><span>Tomáš</span></div>
+					</div>
+		</div>
+					</div>
+				</div>
+				<div id="content">
+
+                <h1>Multi-Armed Bandit Algorithms</h1>
+
+                <div class="intro-box">
+                    A comprehensive resource on multi-armed bandit algorithms, covering theoretical bounds, algorithm comparisons,
+                    fundamental papers, books, tutorials, software implementations, and research links. This page provides regret bounds
+                    and performance guarantees for various bandit algorithms across different settings.
+                </div>
+
+                <div class="nav-grid">
+                    <a href="papers.html" class="nav-card">
+                        <h3>Papers</h3>
+                        <p>Fundamental papers, main venues, and comprehensive Mendeley group of bandit research</p>
+                    </a>
+
+                    <a href="books.html" class="nav-card">
+                        <h3>Books & Tutorials</h3>
+                        <p>Essential books, survey papers, ICML tutorials, and video lectures on bandits</p>
+                    </a>
+
+                    <a href="software.html" class="nav-card">
+                        <h3>Software & Datasets</h3>
+                        <p>Implementations in C#, Matlab, JavaScript, Ruby, and benchmark datasets</p>
+                    </a>
+
+                    <a href="links.html" class="nav-card">
+                        <h3>Links & Groups</h3>
+                        <p>Research groups, Wikipedia resources, and active communities</p>
+                    </a>
+
+                    <a href="contextual.html" class="nav-card">
+                        <h3>Contextual Bandits</h3>
+                        <p>Contextual bandit algorithms, papers, and the Exploration-Exploitation Challenge</p>
+                    </a>
+                </div>
+
+                <p>We provide the theoretical lower bounds for these settings and the
+                regret upper bounds of the listed algorithms as the function of the
+                following key quantities: $K$ - number of arms, $T$ -  number of rounds (time steps),
+                $d$ - dimension (where appropriate) and sometimes also additional
+                parameters pertinent to the assumptions on the bandits' structure. We shall also use the notations
+                $R_T$, $r_T$, and $g_T$ respectively for the cumulative regret, simple regret, and gain at time $T$.</p>
+
+                <h2>Finite-Armed Bandits</h2>
+                <h3>Cumulative Regret $E(R_T)$</h3>
+                <h4>Stochastic</h4>
+                <p><strong>Lai-Robbins Lower Bound [1985]:</strong>
+                Under mild assumptions on the reward distribution,
+                the asymptotic lower bound on expected cumulative regret is:
+                $$\liminf_{T\rightarrow\infty}\frac{E(R_T)}{\log T}
+                \geq \sum_{i:\mu_i < \mu^*} \frac{\Delta_i}{\text{KL}(\mu_i || \mu^*)},$$
+                where $\Delta_i = \mu^* - \mu_i$ is the gap and $\text{KL}(\mu_i || \mu^*)$ is the KL divergence between arm $i$ and the optimal arm.
+                This is the fundamental information-theoretic limit for any consistent algorithm.</p>
+
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>ε-greedy</td>
+                    <td><a href="https://link.springer.com/article/10.1023/A:1013689704352">[Auer et al, 2002]</a></td>
+                    <td>$E(R_T) = \Omega(T)$ for constant $\epsilon$, $O(\log T)$ for decaying $\epsilon_t$</td>
+                    <td>Simple but suboptimal. Constant $\epsilon$ gives linear regret. Outperformed by UCB strategies.</td>
+                </tr>
+                <tr>
+                    <td>UCB1</td>
+                    <td><a href="https://link.springer.com/article/10.1023/A:1013689704352">[Auer, Cesa-Bianchi & Fischer, 2002]</a></td>
+                    <td>$E(R_T) \le \sum_{i:\mu_i < \mu^*}
+                        \frac{8\log T}{\Delta_i}  + \left(1 + \frac{\pi^2}{3}\right)\sum_{i=1}^K \Delta_i$</td>
+                    <td>Classic algorithm. Simple and practical. Over-explores by factor of 8 compared to Lai-Robbins lower bound.</td>
+                </tr>
+                <tr>
+                    <td>UCB-V</td>
+                    <td><a href="https://link.springer.com/chapter/10.1007/978-3-540-45167-9_3">[Audibert, Munos & Szepesvári, 2009]</a></td>
+                    <td>$E(R_T) \le \sum_{i:\mu_i < \mu^*}
+                        \left(\frac{2\sigma_i^2\log T}{\Delta_i} + 3\Delta_i\right)$</td>
+                    <td>Exploits variance information. Better constants than UCB1 when variances differ significantly.</td>
+                </tr>
+                <tr>
+                    <td>KL-UCB</td>
+                    <td><a href="https://arxiv.org/abs/1102.2490">[Garivier & Cappé, 2011]</a></td>
+                    <td>$\limsup_{T\to\infty} \frac{E(R_T)}{\log T} \le \sum_{i:\mu_i < \mu^*}
+                        \frac{\Delta_i}{\text{KL}(\mu_i||\mu^*)}+o(1)$ </td>
+                    <td>Asymptotically optimal. Matches Lai-Robbins lower bound exactly (up to $o(\log T)$ terms).</td>
+                </tr>
+                <tr>
+                    <td>Thompson Sampling</td>
+                    <td><a href="https://proceedings.mlr.press/v23/agrawal12.html">[Agrawal & Goyal, 2012]</a></td>
+                    <td>$E(R_T) \le (1 + \epsilon) \sum_{i:\mu_i < \mu^*} \frac{\Delta_i}{\text{KL}(\mu_i||\mu^*)} \log T + O(K)$ for Bernoulli</td>
+                    <td>Bayesian approach. Asymptotically optimal like KL-UCB. Excellent empirical performance. Industry standard.</td>
+                </tr>
+                <tr>
+                    <td>FH-Gittins</td>
+                    <td><a href="https://doi.org/10.1017/CBO9780511721334">[Gittins, 1979]</a></td>
+                    <td>$E(R_T) \le \sum_{i:\mu_i < \mu^*}
+                        \frac{32\log T}{\Delta_i}+o(\log T)$</td>
+                    <td>Finite-horizon Gittins index. Designed for Bayesian setting. Requires knowledge
+                        of horizon $T$, but performs well compared to anytime strategies.</td>
+                </tr>
+                </table>
+
+                <h4>Adversarial</h4>
+                <p><strong>Minimax Lower Bound:</strong> For adversarial rewards, the minimax optimal regret is:
+                $$\inf_{\text{algorithm}} \sup_{\text{reward sequence}} E(R_T) = \Theta(\sqrt{TK}).$$
+                This bound holds even with full feedback and is unavoidable without stationarity assumptions.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>EXP3</td>
+                    <td><a href="https://doi.org/10.1137/S0097539701398375">[Auer, Cesa-Bianchi, Freund & Schapire, 2002]</a></td>
+                    <td>$E(R_T) \le 2\sqrt{eKT\log K}$</td>
+                    <td>Handles adversarial rewards. No stationarity assumptions needed. Requires knowing horizon $T$. Uses exponential weights.</td>
+                </tr>
+                <tr>
+                    <td>EXP3.1</td>
+                    <td><a href="https://doi.org/10.1137/S0097539701398375">[Auer, Cesa-Bianchi, Freund & Schapire, 2002]</a></td>
+                    <td>$E(R_T) \le 4\sqrt{eKT\log K}$</td>
+                    <td>Anytime version that does not require knowing $T$ in advance. Doubles time scale adaptively.</td>
+                </tr>
+                </table>
+
+                <h3>High-Probability Bounds</h3>
+                <p><strong>Goal:</strong> Bound regret that holds with high probability $1-\delta$, not just in expectation. Critical for risk-sensitive applications.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>UCB1</td>
+                    <td><a href="https://link.springer.com/article/10.1023/A:1013689704352">[Auer, Cesa-Bianchi & Fischer, 2002]</a></td>
+                    <td>$R_T \le \sum_{i:\mu_i < \mu^*} \frac{8\log T}{\Delta_i} + O(K\log(1/\delta))$ with prob. $\ge 1-\delta$</td>
+                    <td>High-probability version with extra $\log(1/\delta)$ term. Concentration via Hoeffding's inequality.</td>
+                </tr>
+                <tr>
+                    <td>MOSS</td>
+                    <td><a href="https://proceedings.mlr.press/v23/audibert12.html">[Audibert & Bubeck, 2009]</a></td>
+                    <td>$E(R_T) \le O(\sqrt{KT})$ minimax optimal, no gap dependence</td>
+                    <td>Minimax Optimal Strategy in Stochastic. Optimal worst-case bound without knowing gaps.</td>
+                </tr>
+                </table>
+
+                <h3>Simple Regret $E(r_T)$</h3>
+                <p><strong>Definition:</strong> Simple regret $r_T = \mu^* - \mu_{\hat{i}_T}$ measures quality of final recommendation, not cumulative regret.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>Uniform Sampling</td>
+                    <td><a href="https://arxiv.org/abs/0802.2655">[Bubeck, Munos & Stoltz, 2009]</a></td>
+                    <td>$E(r_T) \le \sum_{i=1}^K e^{-\frac{T\Delta_i^2}{2K}}$</td>
+                    <td>Pure exploration strategy. Exponential decay. Optimal for long horizons and many arms.</td>
+                </tr>
+                <tr>
+                    <td>UCB-E</td>
+                    <td><a href="https://arxiv.org/abs/0802.2655">[Bubeck, Munos & Stoltz, 2009]</a></td>
+                    <td>$E(r_T) \le O(T^{-\frac{\Delta_{\min}^2}{2}})$ polynomial decay</td>
+                    <td>Exploration-focused UCB variant. Better constants for medium horizons.</td>
+                </tr>
+                </table>
+
+                <h3>Expected Discounted Reward</h3>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>Gittins Index</td>
+                    <td><a href="https://doi.org/10.1017/CBO9780511721334">[Gittins, 1979]</a></td>
+                    <td>Optimal</td>
+                    <td>Optimal for discounted rewards. Bayesian approach. Computationally expensive.</td>
+                </tr>
+                <tr>
+                    <td>Dynamic Programming</td>
+                    <td>-</td>
+                    <td>Optimal</td>
+                    <td>Optimal solution exists but computationally intractable for large problems.</td>
+                </tr>
+                <tr>
+                    <td>Approximate Gittins</td>
+                    <td><a href="https://pubsonline.informs.org/doi/10.1287/opre.1090.0805">[Niño-Mora, 2011]</a></td>
+                    <td>Near-optimal</td>
+                    <td>Computationally efficient approximation to Gittins index.</td>
+                </tr>
+                </table>
+
+                <h2>Modern Bandits with Function Approximation</h2>
+                <h3>Linear & Contextual Bandits</h3>
+                <p><strong>Setting:</strong> Rewards follow $r_t = \langle \theta^*, x_t \rangle + \eta_t$ where $\theta^* \in \mathbb{R}^d$ is unknown and $x_t \in \mathbb{R}^d$ is context.</p>
+                <p><strong>Minimax Lower Bound:</strong> For linear bandits, the worst-case regret satisfies:
+                $$R_T = \Omega(d\sqrt{T}).$$
+                This dimension-dependent lower bound is fundamental and cannot be improved in the worst case. Optimal algorithms match this up to logarithmic factors.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>LinUCB</td>
+                    <td><a href="https://arxiv.org/abs/1003.0146">[Li, Chu, Langford & Schapire, 2010]</a></td>
+                    <td>$E(R_T) \le O(d\sqrt{T\log T})$</td>
+                    <td>Optimal for linear contextual bandits. Uses ridge regression + UCB bonus. Widely used in recommendation systems.</td>
+                </tr>
+                <tr>
+                    <td>LinTS</td>
+                    <td><a href="https://arxiv.org/abs/1209.3352">[Agrawal & Goyal, 2013]</a></td>
+                    <td>$E(R_T) \le \tilde{O}(d^{3/2}\sqrt{T})$ high prob., $\tilde{O}(d\sqrt{T})$ expected</td>
+                    <td>Thompson Sampling for linear bandits. Often better empirical performance than LinUCB. Bayesian approach.</td>
+                </tr>
+                <tr>
+                    <td>OFUL</td>
+                    <td><a href="https://papers.nips.cc/paper/4417-improved-algorithms-for-linear-stochastic-bandits">[Abbasi-Yadkori, Pál & Szepesvári, 2011]</a></td>
+                    <td>$E(R_T) \le O(d\sqrt{T\log(KT/\delta)})$ with prob. $\ge 1-\delta$</td>
+                    <td>Optimism in the Face of Uncertainty (Linear). Tight analysis with self-normalized concentrations.</td>
+                </tr>
+                </table>
+
+                <h3>Neural & Deep Bandits</h3>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Approach</strong></td>
+                    <td><strong>Notes</strong></td>
+                </tr>
+                <tr>
+                    <td>Neural-UCB</td>
+                    <td><a href="https://arxiv.org/abs/1911.04462">[Zhou, Li & Zhu, 2020]</a></td>
+                    <td>$E(R_T) \le \tilde{O}(\sqrt{T})$ for over-parameterized networks</td>
+                    <td>Provable regret for neural function approximation. Uses neural tangent kernel theory. Bridges theory-practice gap.</td>
+                </tr>
+                <tr>
+                    <td>Neural-TS</td>
+                    <td><a href="https://arxiv.org/abs/1802.09127">[Riquelme, Tucker & Snoek, 2018]</a></td>
+                    <td>Empirical: outperforms LinUCB on real datasets</td>
+                    <td>Thompson Sampling with deep neural networks. Practical Bayesian deep learning. Excellent empirical results.</td>
+                </tr>
+                <tr>
+                    <td>Bootstrapped DQN</td>
+                    <td><a href="https://arxiv.org/abs/1602.04621">[Osband, Blundell, Pritzel & Van Roy, 2016]</a></td>
+                    <td>Ensemble uncertainty for exploration in deep RL</td>
+                    <td>Efficient deep exploration via bootstrapping. Randomized value functions. Used in Atari and complex MDPs.</td>
+                </tr>
+                </table>
+
+                <h2>Best-of-Both-Worlds (BOBW) Algorithms</h2>
+                <p><strong>Major breakthrough:</strong> Algorithms that achieve near-optimal regret in BOTH stochastic AND adversarial settings simultaneously, without knowing which environment they're in.</p>
+                <p><strong>The Challenge:</strong> An algorithm must satisfy simultaneously:
+                $$\text{Stochastic: } E(R_T) = O\left(\sum_{i:\mu_i < \mu^*} \frac{\log T}{\Delta_i}\right) \quad \text{and} \quad \text{Adversarial: } E(R_T) = O(\sqrt{TK\log T}).$$
+                Recent breakthroughs (2022-2024) achieve both bounds without prior knowledge of the environment type.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Algorithm</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Guarantee</strong></td>
+                    <td><strong>Innovation</strong></td>
+                </tr>
+                <tr>
+                    <td>BOBW-Combinatorial</td>
+                    <td><a href="https://arxiv.org/abs/2206.13372">[Ito, 2023]</a></td>
+                    <td>Adversarial: $\tilde{O}(\sqrt{mKT})$, Stochastic: $O(m\log T / \Delta_{\min})$</td>
+                    <td>First practical BOBW for combinatorial bandits with $m$ base arms. Works in both worlds without tuning.</td>
+                </tr>
+                <tr>
+                    <td>Adversarial Linear</td>
+                    <td><a href="https://arxiv.org/abs/2206.00911">[Zimmert & Lattimore, 2022]</a></td>
+                    <td>$\tilde{O}(\sqrt{dT})$ with high probability, near-minimax optimal</td>
+                    <td>Resolves open problem on high-probability bounds. Nearly tight for adversarial linear bandits.</td>
+                </tr>
+                </table>
+
+                <h2>Batched & Delayed Feedback</h2>
+                <p><strong>Practical constraint:</strong> Real systems can't update policies after every interaction. Batched bandits reduce communication and enable parallelization.</p>
+                <p><strong>The Batched Regret Tradeoff:</strong> With $M$ adaptive batches over horizon $T$, the optimal regret bound is:
+                $$R_T = O\left(\sqrt{\frac{KT\log K}{M}} + M\Delta_{\max}\right),$$
+                where $\Delta_{\max}$ is the maximum gap. This reveals a fundamental tradeoff: using fewer batches ($M \ll \sqrt{T}$) incurs additional regret proportional to $M$.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Setting</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Result</strong></td>
+                    <td><strong>Impact</strong></td>
+                </tr>
+                <tr>
+                    <td>M-batched</td>
+                    <td><a href="https://arxiv.org/abs/1904.11763">[Gao et al, 2019]</a></td>
+                    <td>$O(\sqrt{KT/M} + M)$ regret with M batches</td>
+                    <td>Fundamental tradeoff: fewer batches = more regret. Critical for distributed systems.</td>
+                </tr>
+                <tr>
+                    <td>Delayed Feedback</td>
+                    <td><a href="https://arxiv.org/abs/2106.02613">[Dann & Lattimore, 2021]</a></td>
+                    <td>Handles variable delay in feedback</td>
+                    <td>Essential for online ads, recommendation where feedback is delayed hours/days.</td>
+                </tr>
+                </table>
+
+                <h2>LLM Alignment & RLHF</h2>
+                <table>
+                <tr>
+                    <td width="80"><strong>Method</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Key Contribution</strong></td>
+                    <td><strong>Impact</strong></td>
+                </tr>
+                <tr>
+                    <td>InstructGPT</td>
+                    <td><a href="https://arxiv.org/abs/2203.02155">[Ouyang et al, 2022]</a></td>
+                    <td>RLHF with human preferences for LLM alignment</td>
+                    <td>Foundation for ChatGPT. Revolutionized how LLMs are trained to follow instructions.</td>
+                </tr>
+                <tr>
+                    <td>Constitutional AI</td>
+                    <td><a href="https://arxiv.org/abs/2112.00861">[Bai et al, 2022]</a></td>
+                    <td>AI feedback instead of human feedback for alignment</td>
+                    <td>Scalable alignment method. Used in Claude and other models. Reduces human labeling.</td>
+                </tr>
+                <tr>
+                    <td>DPO</td>
+                    <td><a href="https://arxiv.org/abs/2305.18290">[Rafailov et al, 2023]</a></td>
+                    <td>Direct Preference Optimization without RL</td>
+                    <td>Simpler alternative to RLHF. Widely adopted for fine-tuning open models (Llama, Mistral).</td>
+                </tr>
+                <tr>
+                    <td>Test-Time Compute</td>
+                    <td><a href="https://arxiv.org/abs/2408.03314">[Snell et al, 2024]</a></td>
+                    <td>Scaling inference-time exploration</td>
+                    <td>Breakthrough: more test-time search can beat larger models. Key for o1-style reasoning.</td>
+                </tr>
+                </table>
+
+                <h2>Implicit Exploration</h2>
+                <p><strong>Key insight:</strong> Exploration can emerge implicitly from model uncertainty without explicit bonuses. Connects to deep RL and practical algorithms.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Method</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Mechanism</strong></td>
+                    <td><strong>Advantage</strong></td>
+                </tr>
+                <tr>
+                    <td>RLSVI</td>
+                    <td><a href="https://arxiv.org/abs/2002.05096">[Zanette, Brandfonbrener, Brunskill, Pirotta & Lazaric, 2020]</a></td>
+                    <td>Frequentist regret via randomized value iteration</td>
+                    <td>Randomized Least-Squares Value Iteration. Practical model-based RL with provable guarantees. Bridges theory-practice.</td>
+                </tr>
+                </table>
+
+                <h2>Pure Exploration & Best Arm Identification</h2>
+                <p><strong>Goal:</strong> Find the best arm with minimal samples, not minimize cumulative regret. Critical for clinical trials, A/B testing.</p>
+                <p><strong>Sample Complexity Lower Bound:</strong> To identify the best arm with probability $\geq 1-\delta$, any algorithm requires at least:
+                $$n \geq \Omega\left(\sum_{i=2}^K \frac{1}{\Delta_i^2} \log\frac{K}{\delta}\right)$$
+                samples, where arms are ordered by mean $\mu_1 > \mu_2 > \cdots > \mu_K$. This instance-dependent bound is tight and achieved by algorithms like lil'UCB and Track-and-Stop.</p>
+                <table>
+                <tr>
+                    <td width="80"><strong>Setting</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Bound</strong></td>
+                    <td><strong>Application</strong></td>
+                </tr>
+                <tr>
+                    <td>Fixed Budget</td>
+                    <td><a href="https://arxiv.org/abs/1802.03236">[Audibert & Bubeck, 2010]</a></td>
+                    <td>$O(\log(1/\delta)/\Delta^2)$ sample complexity</td>
+                    <td>Clinical trials with fixed number of patients. Find best treatment quickly.</td>
+                </tr>
+                <tr>
+                    <td>Fixed Confidence</td>
+                    <td><a href="https://arxiv.org/abs/1605.08988">[Jamieson et al, 2014]</a></td>
+                    <td>lil'UCB achieves optimal instance-dependent bounds</td>
+                    <td>Stop as soon as confident about best arm. Saves resources in practice.</td>
+                </tr>
+                <tr>
+                    <td>Dueling Bandits</td>
+                    <td><a href="https://arxiv.org/abs/2010.02866">[Neu & Olkhovskaya, 2021]</a></td>
+                    <td>Efficient algorithms for pairwise comparisons</td>
+                    <td>When you can only compare two options (e.g., which ad is better?). Widely used.</td>
+                </tr>
+                </table>
+
+                <h2>Offline Bandits & Off-Policy Evaluation</h2>
+                <table>
+                <tr>
+                    <td width="80"><strong>Method</strong></td>
+                    <td width="150"><strong>Reference</strong></td>
+                    <td width="350"><strong>Approach</strong></td>
+                    <td><strong>Use Case</strong></td>
+                </tr>
+                <tr>
+                    <td>Doubly Robust</td>
+                    <td><a href="https://arxiv.org/abs/1503.02531">[Dudik et al, 2014]</a></td>
+                    <td>Combines direct method and importance sampling</td>
+                    <td>Industry standard for off-policy evaluation. Used at Microsoft, Google, Meta.</td>
+                </tr>
+                <tr>
+                    <td>SWITCH</td>
+                    <td><a href="https://arxiv.org/abs/1606.00923">[Wang et al, 2017]</a></td>
+                    <td>Adaptive estimator selection for OPE</td>
+                    <td>Reduces variance in policy evaluation. Critical for A/B testing at scale.</td>
+                </tr>
+                <tr>
+                    <td>Balanced Policy Eval</td>
+                    <td><a href="https://arxiv.org/abs/1911.11361">[Athey & Wager, 2021]</a></td>
+                    <td>Balancing weights for causal inference</td>
+                    <td>Connects bandits to causal inference. Used in tech companies for decision making.</td>
+                </tr>
+                </table>
+
+                <div id="modified">mv</div>
+            </div>
+        </div>
+    </div>
+    <div id="downlt"><div id="downrt"><div id="down"></div></div></div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+
+</html>

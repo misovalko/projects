@@ -1,0 +1,1676 @@
+% =============================================================================
+% MVA Graphs in Machine Learning - Common Beamer Configuration
+% Michal Valko (Inria & ENS Paris-Saclay)
+% 2025 Modern Edition
+% =============================================================================
+
+\usetheme{default}
+\useoutertheme{infolines}
+
+% -----------------------------------------------------------------------------
+% Core packages
+% -----------------------------------------------------------------------------
+\usepackage{array}
+\usepackage{iftex}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{dsfont}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+% -----------------------------------------------------------------------------
+% Modern Font Configuration
+% Uses TeX Gyre Heros (Helvetica-like) which is bundled with TeX Live
+% Falls back gracefully if fonts aren't available
+% -----------------------------------------------------------------------------
+\ifluatex
+  \usepackage{fontspec}
+  \IfFontExistsTF{Fira Sans}{%
+    \setsansfont{Fira Sans}[
+      UprightFont = *-Regular,
+      BoldFont = *-SemiBold,
+      ItalicFont = *-Italic,
+      BoldItalicFont = *-SemiBoldItalic,
+      Scale = 0.95
+    ]
+  }{%
+    % Fallback to TeX Gyre Heros (bundled with TeX Live)
+    \setsansfont{TeX Gyre Heros}[Scale = 0.95]
+  }
+  \IfFontExistsTF{Fira Code}{%
+    \setmonofont{Fira Code}[Scale = 0.85]
+  }{%
+    % Fallback to TeX Gyre Cursor (bundled with TeX Live)
+    \setmonofont{TeX Gyre Cursor}[Scale = 0.85]
+  }
+\else\ifxetex
+  \usepackage{fontspec}
+  \IfFontExistsTF{Fira Sans}{%
+    \setsansfont{Fira Sans}[Scale = 0.95]
+  }{%
+    \setsansfont{TeX Gyre Heros}[Scale = 0.95]
+  }
+  \IfFontExistsTF{Fira Code}{%
+    \setmonofont{Fira Code}[Scale = 0.85]
+  }{%
+    \setmonofont{TeX Gyre Cursor}[Scale = 0.85]
+  }
+\fi\fi
+
+% -----------------------------------------------------------------------------
+% TikZ and graphics
+% -----------------------------------------------------------------------------
+\usepackage{tikz}
+\usepackage{etex}
+\usepackage{circuitikz}
+
+% Graph drawing requires LuaLaTeX
+\ifluatex
+  \usetikzlibrary{graphs,graphdrawing,quotes,shapes,arrows,positioning,graphs.standard,mindmap,calc}
+  \usegdlibrary{layered,trees,force}
+\else
+  \usetikzlibrary{graphs,quotes,shapes,arrows,positioning,graphs.standard,mindmap,calc}
+\fi
+
+\usetikzlibrary{overlay-beamer-styles}
+
+% TikZ slide animation helpers
+\tikzset{onslide/.code args={<#1>#2}{%
+  \only<#1>{\pgfkeysalso{#2}}
+}}
+\tikzset{temporal/.code args={<#1>#2#3#4}{%
+  \temporal<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}{\pgfkeysalso{#4}}
+}}
+\tikzstyle{highlight}=[red,ultra thick]
+
+% -----------------------------------------------------------------------------
+% Bibliography
+% -----------------------------------------------------------------------------
+\usepackage[style=apa,natbib=true,backend=biber]{biblatex}
+\usepackage{silence}
+\WarningFilter{biblatex}{Patching footnotes failed}
+\bibliography{local.bib}
+
+% -----------------------------------------------------------------------------
+% Fonts
+% -----------------------------------------------------------------------------
+\usepackage{../common/monster2e}
+
+% -----------------------------------------------------------------------------
+% Algorithms
+% -----------------------------------------------------------------------------
+\usepackage{../common/algorithm,../common/algorithmic,caption}
+
+% -----------------------------------------------------------------------------
+% Layout and positioning
+% -----------------------------------------------------------------------------
+\usepackage[absolute,overlay]{textpos}
+\TPshowboxesfalse
+\textblockorigin{0mm}{0mm}
+
+% Graphics path
+\graphicspath{{../img/}}
+
+% -----------------------------------------------------------------------------
+% Colors and symbols
+% -----------------------------------------------------------------------------
+% === MERGED misosymbols ===
+% =============================================================================
+% MVA Graphs in Machine Learning - Color Definitions
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% 2025 Modern Color Palette
+% Clean, cohesive palette for professional presentations
+% -----------------------------------------------------------------------------
+
+% Primary colors
+\definecolor{mvaPrimary}{HTML}{1e3a5f}      % Deep navy - main brand color
+\definecolor{mvaAccent}{HTML}{0891b2}       % Teal/cyan - accent and highlights
+\definecolor{mvaHighlight}{HTML}{fbbf24}    % Amber - callouts and emphasis
+\definecolor{mvaSuccess}{HTML}{059669}      % Emerald - positive/success states
+\definecolor{mvaAlert}{HTML}{dc2626}        % Red - warnings and alerts
+
+% Neutral colors
+\definecolor{mvaBackground}{HTML}{f8fafc}   % Slate-50 - light backgrounds
+\definecolor{mvaText}{HTML}{334155}         % Slate-700 - body text
+\definecolor{mvaMuted}{HTML}{94a3b8}        % Slate-400 - muted/secondary text
+
+% Additional modern colors
+\definecolor{mvaLightAccent}{HTML}{67e8f9}  % Cyan-300 - light accent
+\definecolor{mvaDarkAccent}{HTML}{0e7490}   % Cyan-700 - dark accent
+\definecolor{mvaSubtle}{HTML}{e2e8f0}       % Slate-200 - subtle borders
+
+% -----------------------------------------------------------------------------
+% Legacy Color Definitions (kept for backward compatibility)
+% -----------------------------------------------------------------------------
+\definecolor{graphicbackground}{rgb}{0.96,0.96,0.8}
+\definecolor{rouge1}{RGB}{226,0,38}         % red P
+\definecolor{orange1}{RGB}{243,154,38}      % orange P
+\definecolor{jaune}{RGB}{254,205,27}        % jaune P
+\definecolor{blanc}{RGB}{255,255,255}       % blanc P
+\definecolor{rouge2}{RGB}{230,68,57}        % red S
+\definecolor{orange2}{RGB}{236,117,40}      % orange S
+\definecolor{taupe}{RGB}{134,113,127}       % taupe S
+\definecolor{gris}{RGB}{91,94,111}          % gris S
+\definecolor{bleu1}{RGB}{38,109,131}        % bleu S
+\definecolor{bleu2}{RGB}{28,50,114}         % bleu S
+\definecolor{vert1}{RGB}{133,146,66}        % vert S
+\definecolor{vert3}{RGB}{20,200,66}         % vert S
+\definecolor{vert2}{RGB}{157,193,7}         % vert S
+\definecolor{darkyellow}{RGB}{233,165,0}    % orange S
+\definecolor{orangered}{RGB}{255,69,0}      % orange S
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
+\definecolor{darkgray}{rgb}{0.666,0.666,0.666}
+\definecolor{babyblue}{rgb}{0.54, 0.81, 0.94}
+\definecolor{citrine}{rgb}{0.89, 0.82, 0.04}
+
+% -----------------------------------------------------------------------------
+% Highlight Color Variants (for equation/text highlighting)
+% -----------------------------------------------------------------------------
+\colorlet{redp}{mvaAlert!25}
+\colorlet{greenp}{mvaSuccess!25}
+\colorlet{bluep}{mvaAccent!25}
+\colorlet{misogreen}{mvaSuccess!30}
+
+% -----------------------------------------------------------------------------
+% Text Color Commands
+% Semantic coloring for emphasis and annotations
+% -----------------------------------------------------------------------------
+
+% Primary emphasis colors
+\newcommand{\rcol}[1]{\textcolor{mvaAlert}{\textit{#1}}}
+\newcommand{\defcol}[1]{\textcolor{mvaSuccess}{\textbf{#1}}}
+\newcommand{\yellcol}[1]{\textcolor{mvaAccent}{\textbf{#1}}}
+\newcommand{\gcol}[1]{\textcolor{mvaSuccess}{\textbf{#1}}}
+
+\newcommand{\emphcol}[1]{\textcolor{mvaAccent!80!mvaText}{\textbf{#1}}}
+
+% Muted/note colors
+\newcommand{\grcol}[1]{\textcolor{mvaMuted}{#1}}
+\newcommand{\notecol}[1]{\textcolor{mvaMuted}{#1}}
+
+% Additional accent colors
+\newcommand{\ycol}[1]{\textcolor{mvaHighlight!80!mvaText}{\textit{#1}}}
+
+% Multi-color scheme for contrasting elements
+\newcommand{\mcolA}[1]{{\color{mvaPrimary} #1}}
+\newcommand{\mcolB}[1]{{\color{mvaHighlight!80!mvaText} #1}}
+\newcommand{\mcolC}[1]{{\color{mvaSuccess} #1}}  
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\arginf}{arg\,inf}
+\DeclareMathOperator*{\sgn}{sgn}
+%\DeclareMathOperator{\regret}{regret}
+\DeclareMathOperator{\polylog}{polylog}
+\DeclareMathOperator{\logloglog}{logloglog}
+\DeclareMathOperator{\polyloglog}{polyloglog}
+
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand*\Diff[1]{\mathop{}\!\mathrm{d^#1}}
+\renewcommand{\d}[1]{\ensuremath{\operatorname{d}\!{#1}}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+%\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+%\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+
+%\newcommand{\ceil}[1]{\lceil#1\rceil}
+
+\newcommand{\II}[1]{\mathds{1}_{\left\{#1\right\}}}
+\newcommand{\I}{{\mathds{1}}}
+
+
+%arrows 
+\newcommand{\ra}{\rightarrow}
+
+%distributions 
+\newcommand{\Bernoulli}{\mathrm{Bernoulli}}
+
+
+\newcommand{\specialcell}[2][c]{%
+ \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\newtheorem{assumption}{Assumption}
+%\newtheorem{lemma}{Lemma}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{definition}{Definition}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{remark}{Remark}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+
+% \newcommand{\R}{I\!\! R}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\realset}{\mathbb{R}}
+
+\newcommand{\NN}{{\mathbb N}}
+\newcommand{\1}{\mathds{1}}
+\newcommand{\bOne}{{\bf 1}}
+\newcommand{\bZero}{{\bf 0}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\EE}[1]{\mathbb{E}\left[#1\right]}
+\newcommand{\EEt}[1]{\mathbb{E}_t\left[#1\right]}
+\newcommand{\EEs}[2]{\mathbb{E}_{#1}\left[#2\right]}
+\newcommand{\EEc}[2]{\mathbb{E}\left[#1\left|#2\right.\right]}
+\newcommand{\EEcc}[2]{\mathbb{E}\left[\left.#1\right|#2\right]}
+\newcommand{\EEcct}[2]{\mathbb{E}_t\left[\left.#1\right|#2\right]}
+\newcommand{\PP}[1]{\mathbb{P}\left[#1\right]}
+\newcommand{\PPt}[1]{\mathbb{P}_t\left[#1\right]}
+ \newcommand{\PPc}[2]{\mathbb{P}\left[#1\left|#2\right.\right]}
+\newcommand{\PPcc}[2]{\mathbb{P}\left[\left.#1\right|#2\right]}
+\newcommand{\PPct}[2]{\mathbb{P}_t\left[#1\left|#2\right.\right]}
+\newcommand{\PPcct}[2]{\mathbb{P}_t\left[\left.#1\right|#2\right]}
+%parens
+\newcommand{\pa}[1]{\left(#1\right)}
+\newcommand{\sqpa}[1]{\left[#1\right]}
+\newcommand{\ac}[1]{\left\{#1\right\}}
+\newcommand{\ev}[1]{\left\{#1\right\}}
+\newcommand{\card}[1]{\left|#1\right|}
+
+
+\newcommand{\normtwo}[1]{\|#1\|_2}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\onenorm}[1]{\norm{#1}_1}
+\newcommand{\infnorm}[1]{\norm{#1}_\infty}
+\newcommand{\norminf}[1]{\infnorm{#1}}
+
+\newcommand{\abs}[1]{\left|#1\right|}
+
+\newcommand{\CommaBin}{\mathbin{\raisebox{0.5ex}{,}}}
+\newcommand*{\MyDef}{\mathrm{\tiny def}}
+\newcommand*{\eqdefU}{\ensuremath{\mathop{\overset{\MyDef}{=}}}}% Unscaled version
+\newcommand*{\eqdef}{\mathop{\overset{\MyDef}{\resizebox{\widthof{\eqdefU}}{\heightof{=}}{=}}}}
+%\newcommand{\eqdef}{\stackrel{{\rm def}}{=}}
+%\newcommand{\eqdef}{\stackrel{{\rm \tiny def}}{=}}
+\newcommand{\transpose}{^\mathsf{\scriptscriptstyle T}}
+
+%Calligraphic Shorthands
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cH}{\mathcal{H}}
+\newcommand{\cI}{\mathcal{I}}
+\newcommand{\cJ}{\mathcal{J}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\calL}{\cL}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\tcO}{\widetilde{\cO}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\tOO}{\wt{\OO}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\Sw}{\mathcal{S}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\T}{\cT}
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\X}{\cX}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+%Bolds Shorthands
+\newcommand{\ba}{{\bf a}}
+\newcommand{\bA}{{\bf A}}
+\newcommand{\bb}{{\bf b}}
+\newcommand{\bB}{{\bf B}}
+\newcommand{\bc}{{\bf c}}
+\newcommand{\bC}{{\bf C}}
+\newcommand{\bD}{{\bf D}}
+\newcommand{\bg}{{\bf g}}
+\newcommand{\bG}{{\bf G}}
+\newcommand{\bI}{{\bf I}}
+\newcommand{\bM}{{\bf M}}
+\newcommand{\bO}{\boldsymbol{O}}
+\newcommand{\bp}{\boldsymbol{p}}
+\newcommand{\bP}{{\bf P}}
+\newcommand{\br}{{\bf r}}
+\newcommand{\bR}{{\bf R}}
+\newcommand{\bQ}{{\bf Q}}
+\newcommand{\be}{{\bf e}}
+\newcommand{\bff}{{\bf f}}
+\newcommand{\bi}{{\bf i}}
+\newcommand{\bk}{{\bf k}}
+\newcommand{\bK}{{\bf K}}
+\newcommand{\bL}{{\bf L}}
+\newcommand{\bs}{{\bf s}}
+\newcommand{\bq}{{\bf q}}
+\newcommand{\bu}{{\bf u}}
+\newcommand{\bU}{{\bf U}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bV}{{\bf V}}
+\newcommand{\bw}{{\bf w}}
+\newcommand{\bW}{{\bf W}}
+\newcommand{\by}{{\bf y}}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bX}{{\bf X}}
+\newcommand{\bZ}{{\bf Z}}
+
+\newcommand{\eps}{\varepsilon}
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+\renewcommand{\bar}{\overline}
+
+\newcommand{\balpha}{{\boldsymbol \alpha}}
+\newcommand{\talpha}{\widetilde{\alpha}}
+\newcommand{\btheta}{{\boldsymbol \theta}}
+\newcommand{\tTheta}{{\widetilde\Theta}}
+\newcommand{\bdelta}{{\boldsymbol \delta}}
+\newcommand{\bDelta}{{\boldsymbol \Delta}}
+\newcommand{\bLambda}{{\boldsymbol \Lambda}}
+\newcommand{\bSigma}{{\boldsymbol \Sigma}}
+\newcommand{\bmu}{{\boldsymbol \mu}}
+\newcommand{\bxi}{{\boldsymbol \xi}}
+\newcommand{\bell}{\boldsymbol \ell}
+
+\newcommand{\nothere}[1]{}
+\newcommand{\moveb}{\\ \bigskip}
+\newcommand{\movebb}{\\\[-0.25em]}
+\newcommand{\moves}{\\ \smallskip}
+\newcommand{\movess}{\\\[-0.5em]}
+\newcommand{\movesss}{\smallskip}
+\newcommand{\bskip}{\vspace{\baselineskip}}
+\newcommand{\hbskip}{\vspace{.5\baselineskip}}
+
+% bandits
+\newcommand{\hloss}{\hat\ell}
+\newcommand{\bloss}{\boldsymbol  \ell}
+\newcommand{\hbl}{\hat{\bloss}}
+\newcommand{\hbL}{\wh{\bL}}
+\newcommand{\wh}{\widehat}
+\newcommand{\ti}{_{t,i}}
+\newcommand{\wt}{\widetilde}
+
+
+%% from single papers, but merged here
+% algo names
+\usepackage{xspace}
+\renewcommand{\ttdefault}{lmtt}
+%other algos
+\newcommand{\LP}{\texttt{LP}\xspace}
+\newcommand{\CMG}{\texttt{CMG}\xspace}
+%bandits
+\newcommand{\FPL}{\texttt{FPL}\xspace}
+\newcommand{\TS}{\texttt{TS}\xspace}
+\newcommand{\UCB}{\texttt{UCB}\xspace}
+\newcommand{\MOSS}{\texttt{MOSS}\xspace}
+\newcommand{\UCBE}{\texttt{UCB-E}\xspace}
+\newcommand{\ImprovedUCB}{\texttt{ImprovedUCB}\xspace}
+\newcommand{\klucb}{\texttt{KL-UCB}\xspace}
+\newcommand{\CUCB}{\texttt{CUCB}\xspace}
+\newcommand{\EXP}{\texttt{Exp3}\xspace}
+\newcommand{\exph}{\EXP}
+%linear bandits
+\newcommand{\LinearTS}{\texttt{LinearTS}\xspace}
+\newcommand{\ThompsonSampling}{\texttt{ThompsonSampling}\xspace}
+\newcommand{\SpectralEliminator}{\texttt{\textcolor[rgb]{0.5,0.2,0}{SpectralEliminator}}\xspace}
+\newcommand{\LinearEliminator}{\texttt{\textcolor[rgb]{0.5,0.2,0}{LinearEliminator}}\xspace}
+\newcommand{\LinUCB}{\texttt{LinUCB}\xspace}
+\newcommand{\LinRel}{\texttt{LinRel}\xspace}
+\newcommand{\KernelUCB}{\texttt{\textcolor[rgb]{0.5,0.2,0}{KernelUCB}}\xspace}
+\newcommand{\SupKernelUCB}{\texttt{\textcolor[rgb]{0.5,0.2,0}{SupKernelUCB}}\xspace}
+\newcommand{\GPUCB}{\texttt{GP-UCB}\xspace}
+\newcommand{\OFUL}{\texttt{OFUL}\xspace}
+\newcommand{\OPM}{\texttt{\textcolor[rgb]{0.5,0.2,0}{OPM}}\xspace}
+%graph bandits
+\newcommand{\CLUB}{\texttt{CLUB}\xspace}
+\newcommand{\GOBLin}{\texttt{GOB.Lin}\xspace}
+\newcommand{\UCBN}{\texttt{UCB-N}\xspace}
+\newcommand{\UCBmaxN}{\texttt{UCB-MaxN}\xspace}
+\newcommand{\GraphMOSS}{\texttt{\textcolor[rgb]{0.5,0.2,0}{GraphMOSS}}\xspace}
+\newcommand{\SpectralUCB}{\texttt{\textcolor[rgb]{0.5,0.2,0}{SpectralUCB}}\xspace}
+\newcommand{\CheapUCB}{\texttt{\textcolor[rgb]{0.5,0.2,0}{CheapUCB}}\xspace}
+\newcommand{\SpectralTS}{\texttt{\textcolor[rgb]{0.5,0.2,0}{SpectralTS}}\xspace}
+\newcommand{\SupLinRel}{\texttt{SupLinRel}\xspace}
+\newcommand{\SupLinUCB}{\texttt{SupLinUCB}\xspace}
+\newcommand{\imb}{\texttt{\textcolor[rgb]{0.5,0.2,0}{IMLinUCB}}\xspace}
+\newcommand{\NetBandits}{\texttt{NetBandits}\xspace}
+\newcommand{\BARE}{\texttt{\textcolor[rgb]{0.5,0.2,0}{BARE}}\xspace}
+\newcommand{\ELP}{\texttt{ELP}\xspace}
+\newcommand{\ELPP}{\texttt{ELP.P}\xspace}
+\newcommand{\expix}{\texttt{\textcolor[rgb]{0.5,0.2,0}{Exp3-IX}}\xspace}
+\newcommand{\expset}{\texttt{Exp3-SET}\xspace}
+\newcommand{\expdom}{\texttt{Exp3-DOM}\xspace}
+\newcommand{\expg}{\texttt{Exp3.G}\xspace}
+\newcommand{\fplbgr}{\texttt{FPL-BGR}\xspace}
+\newcommand{\fplix}{\texttt{\textcolor[rgb]{0.5,0.2,0}{FPL-IX}}\xspace}
+\newcommand{\comphedge}{\texttt{Component\-Hedge}\xspace}
+\newcommand{\hedge}{\texttt{Hedge}\xspace}
+\newcommand{\expxxx}{\texttt{\textcolor[rgb]{0.5,0.2,0}{Exp3-WIX}}\xspace}
+\newcommand{\expwix}{\texttt{\textcolor[rgb]{0.5,0.2,0}{Exp3-WIX}}\xspace}
+\newcommand{\expixa}{\texttt{Exp3-IXa}\xspace}
+\newcommand{\expixb}{\texttt{Exp3-IXb}\xspace}
+\newcommand{\expixt}{\texttt{Exp3-IXt}\xspace}
+\newcommand{\expcoop}{\texttt{Exp3-Coop}\xspace}
+\newcommand{\expres}{\texttt{\textcolor[rgb]{0.5,0.2,0}{Exp3-Res}}\xspace}
+
+%continuous bandits
+\newcommand{\StoSOO}{\texttt{\textcolor[rgb]{0.5,0.2,0}{StoSOO}}\xspace}
+\newcommand{\POO}{\texttt{\textcolor[rgb]{0.5,0.2,0}{POO}}\xspace}
+\newcommand{\DOO}{\texttt{DOO}\xspace}
+\newcommand{\SOO}{\texttt{SOO}\xspace}
+\newcommand{\Zooming}{\texttt{Zooming}\xspace}
+\newcommand{\UCT}{\texttt{UCT}\xspace}
+\newcommand{\HCT}{\texttt{HCT}\xspace}
+\newcommand{\SHOO}{\POO}
+\newcommand{\HOO}{\texttt{HOO}\xspace}
+\newcommand{\ATB}{\texttt{ATB}\xspace}
+\newcommand{\TZ}{\texttt{TaxonomyZoom}\xspace}
+\newcommand{\Direct}{\texttt{DiRect}\xspace}
+%extreme bandits
+\newcommand{\SiRI}{\texttt{\textcolor[rgb]{0.5,0.2,0}{SiRI}}\xspace}
+%planning "bandits"
+\newcommand{\olop}{\texttt{OLOP}\xspace}
+\newcommand{\stopalgo}{\texttt{StOP}\xspace}
+\newcommand{\metagrill}{\texttt{\textcolor[rgb]{0.5,0.2,0}{\textup{TrailBlazer}}}\xspace}
+%polymatroid bandits
+\newcommand{\greedy}{\texttt{Greedy}\xspace}
+\newcommand{\opm}{\texttt{\textcolor[rgb]{0.5,0.2,0}{OPM}}\xspace}
+
+%other algorithms
+\newcommand{\pagerank}{\texttt{PageRank}\xspace}
+
+
+\newcommand{\maxn}{\texttt{max}\xspace}
+\newcommand{\avgn}{\texttt{avg}\xspace}
+
+
+%kernelUCB
+\newcommand{\reg}{\gamma}
+\newcommand{\hmu}{\hat{\mu}}
+%\newcommand{\hm}{\hat{\mu}}
+\newcommand{\hw}{\hat{w}}
+\newcommand{\hth}{\hat{\theta}}
+\newcommand{\hs}{\hat{\sigma}}
+\newcommand{\td}{\tilde{d}}
+
+%graph bandit notation
+\newcommand{\etat}{\eta_t}
+\newcommand{\gammat}{\gamma_t}
+\newcommand{\nodes}{{\textcolor{green!80!black}{N}}}
+\newcommand{\rounds}{{\textcolor[rgb]{0.25,0.0,0.6}{T}}}
+\newcommand{\nodeset}{\cV}
+\newcommand{\edgeset}{\cE}
+\newcommand{\regret}{R_\rounds}
+\newcommand{\cgamma}{c_\gamma}
+\newcommand{\cgammat}{c_{\gamma_t}}
+\newcommand{\sumT}{\sum_{t = 1}^\rounds}
+\newcommand{\sumt}{\sum_{t=1}^\rounds}
+\newcommand{\sumtl}{\sum\limits_{t=1}^\rounds}
+\newcommand{\sumj}{\sum_{j\in \nodes_i^-}}
+\newcommand{\sumtj}{\sum_{j\in \nodes_{t,i}^-}}
+\newcommand{\sumi}{\sum_{i=1}^{\nodes}}
+\newcommand{\sumji}{\sum_{j\in \{\nodes_i^-\cup\{i\}\}}}
+\newcommand{\sumtji}{\sum_{j\in \{\nodes_{t,i}^-\cup\{i\}\}}}
+\newcommand{\dti}{d_{t,i}^-}
+\newcommand{\hdi}{\hat{d}_i^-}
+\newcommand{\hdk}{\hat{d}_k^-}
+\newcommand{\hd}{\hat{d}^-}
+\newcommand{\tti}{_{t+1,i}}
+\newcommand{\tj}{_{t,j}}
+\newcommand{\ji}{_{j,i}}
+\newcommand{\Ii}{_{I_t,i}}
+\newcommand{\pti}{p\ti}
+\newcommand{\pta}{p_{t,a}}
+\newcommand{\qti}{q\ti}
+\newcommand{\hpti}{\hat{p}\ti}
+\newcommand{\hpi}{\hat{p}_i}
+\newcommand{\hp}{\hat{p}}
+\newcommand{\hqti}{\hat{q}\ti}
+\newcommand{\ptj}{p_{t,j}}
+\newcommand{\qtj}{q_{t,j}}
+\newcommand{\hptj}{\hat{p}_{t,j}}
+\newcommand{\hqtj}{\hat{q}_{t,j}}
+\newcommand{\oti}{o\ti}
+\newcommand{\Oti}{O\ti}
+\newcommand{\loss}{\ell}
+\newcommand{\hLoss}{\hat{L}}
+\newcommand{\hL}{\wh{L}}
+\newcommand{\noise}{\xi}
+%spectral
+\newcommand{\dold}{d_{\scriptsize\mbox{old}}}
+\newcommand{\dnew}{d_{\scriptsize\mbox{new}}}
+%wix
+\newcommand{\gweight}{s}
+\newcommand{\avgalpha}{\alpha^*_{\text{avg}}}
+%bare
+\newcommand{\rkdual}{r_k^{\circ}}
+\newcommand{\rktdual}{r_{k,t}^{\circ}}
+\newcommand{\rkprimetdual}{r_{k',t}^{\circ}}
+\newcommand{\rkttdual}{r_{k,t+1}^{\circ}}
+\newcommand{\rkprimettdual}{r_{k',t+1}^{\circ}}
+\newcommand{\ridual}{r_i^{\circ}}
+\newcommand{\rstardual}{r_\star^{\circ}}
+\newcommand{\Ddual}{D^{\circ}}
+\newcommand{\Ddualset}{\mathcal D^{\circ}}
+%continuous bandit notation
+%\newcommand{\node}[2]{\circ[#1,#2]}
+\newcommand{\node}[2]{(#1,#2)}
+
+
+% =============================================================================
+% From mathdef.tex (Paper Dependent Stuff)
+% =============================================================================
+
+\newcommand{\disre}{\textsc{DisRe}\xspace}
+\newcommand{\hfssparse}{\textsc{Sparse-HFS}\xspace}
+\newcommand{\hfsstable}{\textsc{Stable-HFS}\xspace}
+\newcommand{\hfs}{\texttt{HFS}\xspace}
+\newcommand{\rls}{\texttt{LapSmo}\xspace}
+\newcommand{\stahfs}{\texttt{STA}\xspace}
+\newcommand{\simplehfs}{\textsc{Simple-HFS}\xspace}
+\newcommand{\subs}{\textsc{SubSampling}\xspace}
+\newcommand{\fergus}{\textsc{EigFun}\xspace}
+\newcommand{\onenn}{\textsc{1-NN}\xspace}
+
+\newcommand{\qbar}{\wb{q}}
+\newcommand{\ssl}{\textsc{SSL}\xspace}
+\newcommand{\scluster}{\textsc{SC}\xspace}
+\newcommand{\squeak}{\texttt{SQUEAK}\xspace}
+\newcommand{\gd}{\texttt{GD}\xspace}
+\newcommand{\lembed}{\textsc{LE}\xspace}
+\newcommand{\kn}{\texttt{kN}\xspace}
+\newcommand{\spect}{\textsc{spect}\xspace}
+\newcommand{\gspect}{$\gamma569Xl\textsc{spect}\xspace}
+\newcommand{\exact}{\texttt{EXACT}\xspace}
+\newcommand{\ltr}{\texttt{LTR}\xspace}
+
+\newcommand{\sampdist}{\rho}
+\newcommand{\bphi}{\boldsymbol{\phi}}
+
+\newcommand{\bomega}{\boldsymbol{\omega}}
+\newcommand{\bupsilon}{\boldsymbol{\upsilon}}
+%\newcommand{\bSigma}{\boldsymbol{\Sigma}}
+
+\newcommand{\bwavec}{\bomega}
+\newcommand{\buavec}{\boldsymbol{\upsilon}}
+\newcommand{\bvavec}{\boldsymbol{\theta}}
+\newcommand{\nystrom}{Nystr\"{o}m\xspace}
+\newcommand{\feasibleset}{\mathcal{S}}
+\newcommand{\coldict}{\mathcal{I}}
+\newcommand{\dictentry}{\wb{\bx}}
+\newcommand{\pvec}{\mathbf{v}}
+\newcommand{\afeatvec}{\widetilde{\boldsymbol{\phi}}}
+\newcommand{\pmat}{\mathbf{V}}
+
+\newcommand{\onlinesqueak}{\textsc{KORS}\xspace}
+\newcommand{\kons}{\textsc{KONS}\xspace}
+\newcommand{\ons}{\textsc{ONS}\xspace}
+\newcommand{\conskons}{\textsc{Con-KONS}\xspace}
+\newcommand{\bskons}{\textsc{B-KONS}\xspace}
+\newcommand{\batch}{\textsc{BATCH}\xspace}
+\newcommand{\skons}{\textsc{PROS-N-KONS}\xspace}
+\newcommand{\icmlskons}{\textsc{Sketched-KONS}\xspace}
+\newcommand{\fixskons}{\textsc{Fixed-SKONS}\xspace}
+\newcommand{\nysgd}{\textsc{NOGD}\xspace}
+\newcommand{\fogd}{\textsc{FOGD}\xspace}
+\newcommand{\dualgd}{\textsc{Dual-SGD}\xspace}
+
+% Aesthetics
+\def\:#1{\protect \ifmmode {\mathbf{#1}} \else {\textbf{#1}} \fi}
+\newcommand{\wrt}{w.r.t.\xspace}
+\newcommand{\defeq}{\stackrel{\mathclap{\normalfont\mbox{\tiny def}}}{=}}
+\newcommand{\maxund}[1]{\max\limits_{#1}}
+\newcommand{\minund}[1]{\min\limits_{#1}}
+\newcommand{\bigotime}{\mathcal{O}}
+\newcommand{\bigomegatime}{{\Omega}}
+\DeclareMathOperator*{\poly}{poly}
+
+\newcommand{\normempty}[1]{\left\Vert #1 \right\Vert}
+\DeclareMathOperator*{\Op}{\textbf{op}}
+\newcommand{\transp}{\mathsf{\scriptscriptstyle T}}
+\DeclareMathOperator*{\Tr}{Tr}
+\DeclareMathOperator*{\Det}{Det}
+\DeclareMathOperator*{\Ran}{Im}
+\DeclareMathOperator*{\Ker}{Ker}
+\DeclareMathOperator*{\Diag}{Diag}
+\DeclareMathOperator*{\Vecm}{Vec}
+\DeclareMathOperator*{\Rank}{Rank}
+\DeclareMathOperator*{\Dim}{Dim}
+\DeclareMathOperator*{\Row}{Row}
+\DeclareMathOperator*{\Col}{Col}
+\DeclareMathOperator*{\Nnz}{nnz}
+
+\newcommand{\probability}{\mathbb{P}}
+\newcommand{\probdist}{Pr}
+\DeclareMathOperator*{\expectedvalue}{\mathbb{E}}
+\DeclareMathOperator*{\variance}{\text{Var}}
+\newcommand{\expectedvalueover}[1]{\expectedvalue\limits_{#1}}
+\newcommand{\condbar}{\;\middle|\;}
+\newcommand{\gaussdistr}{\mathcal{N}}
+\newcommand{\uniformdistr}{\mathcal{U}}
+\newcommand{\bernoullidist}{\mathcal{B}}
+\newcommand{\filtration}{\mathcal{F}}
+\newcommand{\learningalg}{\mathcal{L}}
+\newcommand{\indvec}{J}
+\newcommand{\indfunc}{\mathbb{I}}
+
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\Natural}{\mathbb{N}}
+\newcommand{\statespace}{\mathcal{X}}
+\newcommand{\funcspace}{\mathcal{F}}
+\newcommand{\dataset}{\mathcal{D}}
+\newcommand{\trainingset}{\mathcal{S}}
+\newcommand{\testset}{\mathcal{T}}
+
+\newcommand{\laplacian}{\bL}
+\newcommand{\adjacency}{A}
+\newcommand{\Gg}{\mathcal{G}}
+\newcommand{\Hg}{\mathcal{H}}
+\newcommand{\Ag}{\mathcal{A}}
+\newcommand{\vertexset}{\mathcal{V}}
+
+\newcommand{\rkhs}{\mathcal{H}}
+\newcommand{\func}{f}
+\newcommand{\whfunc}{\wh{\mathsf{f}}}
+\newcommand{\wtfunc}{\wt{\mathsf{f}}}
+\newcommand{\hilbprod}[2]{\left\langle{#1},{#2}\right\rangle_\rkhs}
+
+\newcommand{\kerfunc}{\mathcal{K}}
+\newcommand{\kermatrix}{{\bK}}
+\newcommand{\featkermatrix}{\boldsymbol{\Phi}}
+\newcommand{\featvec}{\boldsymbol{\phi}}
+\newcommand{\deff}{d_{\text{eff}}}
+\newcommand{\donl}{d_{\text{onl}}}
+\newcommand{\bdeff}[1]{\wb{d}_{\text{eff}}(#1)}
+\newcommand{\adeff}[1]{\wt{d}_{\text{eff}}(#1)}
+\newcommand{\atau}{\wt{\tau}}
+\newcommand{\axi}{\wt{\xi}}
+\newcommand{\akermatrix}{\wt{\mathbf{K}}}
+\newcommand{\bkermatrix}{\mathbf{\wb{K}}}
+\newcommand{\selmatrix}{{\bS}}
+\newcommand{\selrmatrix}{{\bR}}
+
+% End of From mathdef.tex
+
+% === MERGED highlights ===
+% =============================================================================
+% MVA Graphs in Machine Learning - Shared Highlight Commands
+% Unified text and equation highlighting for all subdecks
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% Required packages (should be loaded in misomva.tex)
+% -----------------------------------------------------------------------------
+\usepackage[most]{tcolorbox}
+
+% -----------------------------------------------------------------------------
+% Equation Highlight Commands
+% Colored background for inline math
+% -----------------------------------------------------------------------------
+\newcommand{\highlight}[2]{%
+  \colorbox{#1}{$\displaystyle#2$}}
+
+% Equation highlights with semantic colors
+\newcommand{\hlrEq}[1]{\highlight{redp}{#1}}      % Red highlight for equations
+\newcommand{\hlbEq}[1]{\highlight{bluep}{#1}}     % Blue highlight for equations
+\newcommand{\hlgEq}[1]{\highlight{greenp}{#1}}    % Green highlight for equations
+
+% -----------------------------------------------------------------------------
+% Text Highlight Commands
+% Colored background for text
+% -----------------------------------------------------------------------------
+\newcommand{\hl}[3][\fboxsep1pt]{{#1\colorbox{#2}{#3}}}
+
+% Text highlights with semantic colors
+\newcommand{\hlr}[1]{\hl{redp}{#1}}               % Red highlight
+\newcommand{\hlg}[1]{\hl{greenp}{#1}}             % Green highlight
+\newcommand{\hlb}[1]{\hl{bluep}{#1}}              % Blue highlight
+
+% Bold text highlights
+\newcommand{\hlbr}[1]{\hl[\fboxsep0pt]{redp}{$\mathbf{#1}$}}
+\newcommand{\hlbg}[1]{\hl[\fboxsep0pt]{greenp}{$\mathbf{#1}$}}
+\newcommand{\hlbb}[1]{\hl[\fboxsep0pt]{bluep}{$\mathbf{#1}$}}
+
+% -----------------------------------------------------------------------------
+% Block Quote Environment
+% Modern styled callout boxes for important content
+% -----------------------------------------------------------------------------
+\newtcolorbox{blockquote}{
+  colback=mvaAccent!10,
+  colframe=mvaAccent!30,
+  grow to right by=-1mm,
+  grow to left by=-1mm,
+  boxrule=1pt,
+  boxsep=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  breakable,
+  arc=4pt
+}
+
+% Alternative callout styles
+\newtcolorbox{infobox}{
+  colback=mvaPrimary!8,
+  colframe=mvaPrimary!40,
+  boxrule=1pt,
+  boxsep=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  arc=4pt
+}
+
+\newtcolorbox{alertbox}{
+  colback=mvaAlert!8,
+  colframe=mvaAlert!40,
+  boxrule=1pt,
+  boxsep=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  arc=4pt
+}
+
+\newtcolorbox{successbox}{
+  colback=mvaSuccess!8,
+  colframe=mvaSuccess!40,
+  boxrule=1pt,
+  boxsep=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  arc=4pt
+}
+
+% =============================================================================
+
+
+
+
+% -----------------------------------------------------------------------------
+% Shared TikZ styles for graph visualization
+% -----------------------------------------------------------------------------
+% === MERGED tikzstyles ===
+% =============================================================================
+% MVA Graphs in Machine Learning - Shared TikZ Styles
+% Unified graph visualization styles for all subdecks
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% Graph Vertex Styles
+% -----------------------------------------------------------------------------
+\tikzset{
+  % Standard vertex style
+  vertex/.style={
+    circle,
+    fill=mvaPrimary!20,
+    minimum size=20pt,
+    inner sep=0pt,
+    font=\small
+  },
+  % Alternative name for compatibility
+  mvaVertex/.style={vertex},
+  % Selected/highlighted vertex
+  selected vertex/.style={
+    vertex,
+    fill=mvaAccent!40
+  },
+  mvaHighlightVertex/.style={selected vertex},
+}
+
+% -----------------------------------------------------------------------------
+% Graph Edge Styles
+% -----------------------------------------------------------------------------
+\tikzset{
+  % Standard edge style
+  edge/.style={
+    draw,
+    thick,
+    ->,
+    mvaPrimary!80
+  },
+  mvaEdge/.style={edge},
+  % Edge weight label
+  weight/.style={
+    font=\small
+  },
+  % Selected/highlighted edge
+  selected edge/.style={
+    draw,
+    line width=5pt,
+    -,
+    mvaAccent!50
+  },
+  mvaHighlightEdge/.style={selected edge},
+  % Ignored/dimmed edge
+  ignored edge/.style={
+    draw,
+    line width=5pt,
+    -,
+    mvaMuted!30
+  }
+}
+
+% -----------------------------------------------------------------------------
+% Special Node Styles
+% -----------------------------------------------------------------------------
+\tikzset{
+  % Labeled node (positive class)
+  positive node/.style={
+    vertex,
+    fill=mvaSuccess!40
+  },
+  % Labeled node (negative class)
+  negative node/.style={
+    vertex,
+    fill=mvaAlert!40
+  },
+  % Unlabeled node
+  unlabeled node/.style={
+    vertex,
+    fill=mvaMuted!20
+  }
+}
+
+% -----------------------------------------------------------------------------
+% Isara Logo - TikZ Vector Graphic
+% Beautiful vector representation of the Isara logo as a piece of art
+% -----------------------------------------------------------------------------
+
+% Helper commands to draw individual logo elements (for artistic use)
+% Accurate TikZ recreation of the Isara logo based on actual logo design
+\newcommand{\drawIsaraCircle}[1]{% #1 = color - double concentric circles
+  \draw[#1, line width=0.08, line cap=round] (0,0) circle (1.0);
+  \draw[#1, line width=0.08, line cap=round] (0,0) circle (0.88);
+}
+\newcommand{\drawIsaraMainCurve}[1]{% #1 = color - central thick calligraphic flowing B-like shape
+  % This is the dominant feature - a thick, smooth calligraphic stroke
+  % Upper left loop
+  \fill[#1]
+    (-0.48, 0.28)
+    .. controls (-0.62, 0.38) and (-0.68, 0.58) .. (-0.60, 0.72)
+    .. controls (-0.52, 0.82) and (-0.35, 0.85) .. (-0.18, 0.82)
+    .. controls (0.0, 0.78) and (0.15, 0.68) .. (0.25, 0.52)
+    .. controls (0.32, 0.40) and (0.35, 0.25) .. (0.32, 0.10)
+    .. controls (0.30, 0.0) and (0.25, -0.08) .. (0.18, -0.08)
+    .. controls (0.12, -0.08) and (0.08, -0.02) .. (0.05, 0.08)
+    % Central vertical segment
+    .. controls (0.02, 0.18) and (-0.02, 0.28) .. (-0.10, 0.35)
+    .. controls (-0.18, 0.42) and (-0.28, 0.45) .. (-0.38, 0.40)
+    .. controls (-0.42, 0.38) and (-0.45, 0.34) .. (-0.48, 0.28)
+    -- cycle;
+  % Lower right loop
+  \fill[#1]
+    (0.48, -0.28)
+    .. controls (0.62, -0.38) and (0.68, -0.58) .. (0.60, -0.72)
+    .. controls (0.52, -0.82) and (0.35, -0.85) .. (0.18, -0.82)
+    .. controls (0.0, -0.78) and (-0.15, -0.68) .. (-0.25, -0.52)
+    .. controls (-0.32, -0.40) and (-0.35, -0.25) .. (-0.32, -0.10)
+    .. controls (-0.30, 0.0) and (-0.25, 0.08) .. (-0.18, 0.08)
+    .. controls (-0.12, 0.08) and (-0.08, 0.02) .. (-0.05, -0.08)
+    % Central vertical segment
+    .. controls (-0.02, -0.18) and (0.02, -0.28) .. (0.10, -0.35)
+    .. controls (0.18, -0.42) and (0.28, -0.45) .. (0.38, -0.40)
+    .. controls (0.42, -0.38) and (0.45, -0.34) .. (0.48, -0.28)
+    -- cycle;
+  % Central connecting stroke
+  \fill[#1]
+    (-0.08, 0.35)
+    .. controls (-0.05, 0.30) and (0.0, 0.20) .. (0.0, 0.0)
+    .. controls (0.0, -0.20) and (-0.05, -0.30) .. (-0.08, -0.35)
+    .. controls (-0.12, -0.35) and (-0.18, -0.32) .. (-0.22, -0.25)
+    .. controls (-0.18, -0.18) and (-0.15, 0.0) .. (-0.15, 0.0)
+    .. controls (-0.15, 0.0) and (-0.18, 0.18) .. (-0.22, 0.25)
+    .. controls (-0.18, 0.32) and (-0.12, 0.35) .. (-0.08, 0.35)
+    -- cycle;
+}
+\newcommand{\drawIsaraTopSwirl}[1]{% #1 = color - thin outline curve upper left
+  \draw[#1, line width=0.06, line cap=round]
+    (-0.70, 0.35)
+    .. controls (-0.72, 0.50) and (-0.68, 0.65) .. (-0.55, 0.75)
+    .. controls (-0.40, 0.82) and (-0.22, 0.80) .. (-0.08, 0.72);
+}
+\newcommand{\drawIsaraBottomSwirl}[1]{% #1 = color - thin outline curve lower right
+  \draw[#1, line width=0.06, line cap=round]
+    (0.70, -0.35)
+    .. controls (0.72, -0.50) and (0.68, -0.65) .. (0.55, -0.75)
+    .. controls (0.40, -0.82) and (0.22, -0.80) .. (0.08, -0.72);
+}
+\newcommand{\drawIsaraLeftCurve}[1]{% #1 = color - thin outline curve right side of upper loop
+  \draw[#1, line width=0.06, line cap=round]
+    (0.38, 0.45)
+    .. controls (0.48, 0.58) and (0.52, 0.72) .. (0.48, 0.82)
+    .. controls (0.42, 0.88) and (0.32, 0.90) .. (0.20, 0.88);
+}
+\newcommand{\drawIsaraRightCurve}[1]{% #1 = color - thin outline curve left side of lower loop
+  \draw[#1, line width=0.06, line cap=round]
+    (-0.38, -0.45)
+    .. controls (-0.48, -0.58) and (-0.52, -0.72) .. (-0.48, -0.82)
+    .. controls (-0.42, -0.88) and (-0.32, -0.90) .. (-0.20, -0.88);
+}
+\newcommand{\drawIsaraInnerTopSwirl}[1]{% #1 = color - thin outline inner upper loop
+  \draw[#1, line width=0.06, line cap=round]
+    (-0.35, 0.52)
+    .. controls (-0.25, 0.62) and (-0.10, 0.65) .. (0.05, 0.58)
+    .. controls (0.15, 0.52) and (0.22, 0.42) .. (0.25, 0.28);
+}
+\newcommand{\drawIsaraInnerBottomSwirl}[1]{% #1 = color - thin outline inner lower loop
+  \draw[#1, line width=0.06, line cap=round]
+    (0.35, -0.52)
+    .. controls (0.25, -0.62) and (0.10, -0.65) .. (-0.05, -0.58)
+    .. controls (-0.15, -0.52) and (-0.22, -0.42) .. (-0.25, -0.28);
+}
+\newcommand{\drawIsaraInnerSwirl}[1]{% #1 = color, draws both inner swirls
+  \drawIsaraInnerTopSwirl{#1}
+  \drawIsaraInnerBottomSwirl{#1}
+}
+
+% Helper command to draw the complete Isara logo shape with gradient (used internally)
+% This draws all elements with white-to-blue gradient matching the actual logo
+\newcommand{\drawIsaraLogoShape}[1]{% #1 = base color (used for gradient creation)
+  \def\logoRadius{1.0}
+  % Define gradient shading from white to blue
+  \shadedraw[top color=white, bottom color=mvaPrimary!60, line width=0.08, line cap=round]
+    (0,0) circle (1.0);
+  \shadedraw[top color=white, bottom color=mvaPrimary!60, line width=0.08, line cap=round]
+    (0,0) circle (0.88);
+
+  % Central thick calligraphic stroke with gradient
+  % Upper left loop
+  \shade[top color=white, bottom color=mvaPrimary!60]
+    (-0.48, 0.28)
+    .. controls (-0.62, 0.38) and (-0.68, 0.58) .. (-0.60, 0.72)
+    .. controls (-0.52, 0.82) and (-0.35, 0.85) .. (-0.18, 0.82)
+    .. controls (0.0, 0.78) and (0.15, 0.68) .. (0.25, 0.52)
+    .. controls (0.32, 0.40) and (0.35, 0.25) .. (0.32, 0.10)
+    .. controls (0.30, 0.0) and (0.25, -0.08) .. (0.18, -0.08)
+    .. controls (0.12, -0.08) and (0.08, -0.02) .. (0.05, 0.08)
+    .. controls (0.02, 0.18) and (-0.02, 0.28) .. (-0.10, 0.35)
+    .. controls (-0.18, 0.42) and (-0.28, 0.45) .. (-0.38, 0.40)
+    .. controls (-0.42, 0.38) and (-0.45, 0.34) .. (-0.48, 0.28)
+    -- cycle;
+  % Lower right loop
+  \shade[top color=mvaPrimary!60, bottom color=white]
+    (0.48, -0.28)
+    .. controls (0.62, -0.38) and (0.68, -0.58) .. (0.60, -0.72)
+    .. controls (0.52, -0.82) and (0.35, -0.85) .. (0.18, -0.82)
+    .. controls (0.0, -0.78) and (-0.15, -0.68) .. (-0.25, -0.52)
+    .. controls (-0.32, -0.40) and (-0.35, -0.25) .. (-0.32, -0.10)
+    .. controls (-0.30, 0.0) and (-0.25, 0.08) .. (-0.18, 0.08)
+    .. controls (-0.12, 0.08) and (-0.08, 0.02) .. (-0.05, -0.08)
+    .. controls (-0.02, -0.18) and (0.02, -0.28) .. (0.10, -0.35)
+    .. controls (0.18, -0.42) and (0.28, -0.45) .. (0.38, -0.40)
+    .. controls (0.42, -0.38) and (0.45, -0.34) .. (0.48, -0.28)
+    -- cycle;
+  % Central connecting stroke
+  \shade[left color=white, right color=mvaPrimary!50]
+    (-0.08, 0.35)
+    .. controls (-0.05, 0.30) and (0.0, 0.20) .. (0.0, 0.0)
+    .. controls (0.0, -0.20) and (-0.05, -0.30) .. (-0.08, -0.35)
+    .. controls (-0.12, -0.35) and (-0.18, -0.32) .. (-0.22, -0.25)
+    .. controls (-0.18, -0.18) and (-0.15, 0.0) .. (-0.15, 0.0)
+    .. controls (-0.15, 0.0) and (-0.18, 0.18) .. (-0.22, 0.25)
+    .. controls (-0.18, 0.32) and (-0.12, 0.35) .. (-0.08, 0.35)
+    -- cycle;
+
+  % Outline curves with gradient
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (-0.70, 0.35)
+    .. controls (-0.72, 0.50) and (-0.68, 0.65) .. (-0.55, 0.75)
+    .. controls (-0.40, 0.82) and (-0.22, 0.80) .. (-0.08, 0.72);
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (0.70, -0.35)
+    .. controls (0.72, -0.50) and (0.68, -0.65) .. (0.55, -0.75)
+    .. controls (0.40, -0.82) and (0.22, -0.80) .. (0.08, -0.72);
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (0.38, 0.45)
+    .. controls (0.48, 0.58) and (0.52, 0.72) .. (0.48, 0.82)
+    .. controls (0.42, 0.88) and (0.32, 0.90) .. (0.20, 0.88);
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (-0.38, -0.45)
+    .. controls (-0.48, -0.58) and (-0.52, -0.72) .. (-0.48, -0.82)
+    .. controls (-0.42, -0.88) and (-0.32, -0.90) .. (-0.20, -0.88);
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (-0.35, 0.52)
+    .. controls (-0.25, 0.62) and (-0.10, 0.65) .. (0.05, 0.58)
+    .. controls (0.15, 0.52) and (0.22, 0.42) .. (0.25, 0.28);
+  \draw[white!90!mvaPrimary, line width=0.06, line cap=round]
+    (0.35, -0.52)
+    .. controls (0.25, -0.62) and (0.10, -0.65) .. (-0.05, -0.58)
+    .. controls (-0.15, -0.52) and (-0.22, -0.42) .. (-0.25, -0.28);
+}
+
+% Main Isara logo command - draws the complete logo as a TikZ vector graphic
+% Usage: \isaraLogo[scale=1.0, opacity=1.0, color=black]
+\newcommand{\isaraLogo}[1][]{%
+  \begin{tikzpicture}[#1, scale=1, baseline=0]
+    \drawIsaraLogoShape{black}
+  \end{tikzpicture}%
+}
+
+% =============================================================================
+
+
+
+
+% -----------------------------------------------------------------------------
+% Beamer theme configuration (2025 Modern Style)
+% -----------------------------------------------------------------------------
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% Block colors - using new palette
+\setbeamercolor{block title}{bg=mvaPrimary,fg=white}
+\setbeamercolor{block body}{bg=mvaBackground}
+
+% Alert and example blocks
+\setbeamercolor{block title alerted}{bg=mvaAlert,fg=white}
+\setbeamercolor{block body alerted}{bg=mvaAlert!5}
+\setbeamercolor{block title example}{bg=mvaSuccess,fg=white}
+\setbeamercolor{block body example}{bg=mvaSuccess!5}
+
+% Frame elements
+\setbeamercolor{frametitle}{fg=mvaPrimary}
+\setbeamercolor{framesubtitle}{fg=mvaMuted}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{subtitle}{fg=white!90}
+
+% Item colors
+\setbeamercolor{itemize item}{fg=mvaAccent}
+\setbeamercolor{itemize subitem}{fg=mvaPrimary}
+\setbeamercolor{enumerate item}{fg=mvaAccent}
+\setbeamercolor{enumerate subitem}{fg=mvaPrimary}
+
+% Structure colors
+\setbeamercolor{structure}{fg=mvaPrimary}
+\setbeamercolor{alerted text}{fg=mvaAlert}
+
+% -----------------------------------------------------------------------------
+% Spacing and Layout
+% -----------------------------------------------------------------------------
+\setbeamersize{text margin left=1.2cm, text margin right=1.2cm}
+\setlength{\parskip}{0.4em}
+
+% Block spacing
+\addtobeamertemplate{block begin}{\vskip 0.4em}{}
+\addtobeamertemplate{block end}{}{\vskip 0.4em}
+
+% Frame title spacing and styling
+\addtobeamertemplate{frametitle}{}{\vspace{0.3em}}
+\setbeamerfont{frametitle}{series=\bfseries}
+
+% -----------------------------------------------------------------------------
+% Item styling
+% -----------------------------------------------------------------------------
+\setbeamertemplate{itemize item}{\textbullet}
+\setbeamertemplate{itemize subitem}{\textendash}
+\setbeamertemplate{enumerate items}[default]
+
+% Font settings (fallback for pdflatex)
+\renewcommand{\sfdefault}{lmss}
+\sffamily
+
+% -----------------------------------------------------------------------------
+% Custom commands
+% -----------------------------------------------------------------------------
+\newcommand{\academicyear}{}
+\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+
+% Colored highlight boxes
+\newcommand{\yellbox}[1]{%
+  \tikz[baseline]{\node[inner sep=2pt,fill=mvaAccent!30,text=black,rounded corners=0.5mm,anchor=base]{#1};}}
+
+\newcommand{\questionbox}[1]{%
+  \tikz[baseline]{\node[inner sep=2pt,fill=mvaHighlight,text=black,rounded corners=0.5mm,anchor=base]{#1};}}
+
+\newcommand{\rightyellbox}[1]{\begin{flushright}\yellbox{#1}\end{flushright}}
+\newcommand{\rightquestionbox}[1]{\begin{flushright}\questionbox{#1}\end{flushright}}
+
+% Course info
+\newcommand{\courseurl}{https://misovalko.github.io/mva-ml-graphs.html}
+\newcommand{\instructoremail}{michal.valko@inria.fr}
+
+% =============================================================================
+
+
+% === MERGED SLIDE MACROS ===
+
+% === Macro: MakeNormalSlide ===
+
+\newcommand\MakeNormalSlide{
+% =============================================================================
+% Normal Slide Footer Template (2025 Modern Edition with Isara Logo)
+% =============================================================================
+
+% Clean white background with huge transparent Isara logo watermark
+% The logo is always there, subtly, like the foundation from which all content emerges
+% Using beautiful TikZ vector graphics - a piece of art
+\setbeamertemplate{background canvas}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    % Pure white background - no gradient to ensure text readability
+    \fill[white] (current page.south west) rectangle (current page.north east);
+
+    % Huge Isara logo - centered, visible watermark
+    % This represents the foundation, always present and visible
+    \node[opacity=0.25,anchor=center,inner sep=0] at (current page.center) {
+      \begin{tikzpicture}[scale=25, transform shape]
+        \drawIsaraLogoShape{mvaPrimary!50}
+      \end{tikzpicture}
+    };
+  \end{tikzpicture}%
+}
+\setbeamercolor{toto}{fg=blanc,bg=mvaPrimary}
+
+% Modern minimal footer
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=14pt]{toto}
+    \hspace{4mm}%
+    \raisebox{2.2ex}{\fontsize{8}{10}\selectfont Michal Valko -- Graphs in Machine Learning}%
+    \hfill%
+    \raisebox{2.2ex}{\fontsize{8}{10}\selectfont\insertframenumber/\inserttotalframenumber\hspace{4mm}\null}
+  \end{beamercolorbox}%
+}
+
+% Frame title styling
+\setbeamertemplate{frametitle}{%
+  \vspace{0.3em}%
+  \textbf{\insertframetitle}%
+  \ifx\insertframesubtitle\empty\else
+    \\[0.2em]{\small\textcolor{mvaMuted}{\insertframesubtitle}}%
+  \fi
+}
+
+}
+
+% === Macro: MakeTitleSlide ===
+
+\newcommand\MakeTitleSlide{
+% =============================================================================
+% Main Title Slide Template (2025 Modern Edition with Isara Logo)
+% =============================================================================
+% Used for Lecture 0 (Overview)
+
+% Modern gradient background with Isara logo - "born from it" design
+% The logo emerges from the depths, creating the foundation from which content arises
+% Using beautiful TikZ vector graphics - a piece of art with individual logo shapes
+\setbeamertemplate{background canvas}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    % Gradient background - deeper, richer
+    \shade[top color=mvaPrimary!95,middle color=mvaPrimary!85,bottom color=mvaPrimary!70!black] 
+      (current page.south west) rectangle (current page.north east);
+    
+    % Full Isara logo - large, emerging from bottom-center, creating the foundation
+    \node[opacity=0.35,anchor=south,inner sep=0,yshift=-0.5cm] at (current page.south) {
+      \begin{tikzpicture}[scale=14, transform shape]
+        \drawIsaraLogoShape{white}
+      \end{tikzpicture}
+    };
+    
+    % Individual logo shapes scattered artistically across the slide
+    % Circles emerging from various positions
+    \node[opacity=0.25,anchor=south west,inner sep=0,xshift=1.5cm,yshift=2cm,rotate=45] at (current page.south west) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.20,anchor=south east,inner sep=0,xshift=-1.5cm,yshift=2.5cm,rotate=-30] at (current page.south east) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.18,anchor=north west,inner sep=0,xshift=2cm,yshift=-1.5cm,rotate=60] at (current page.north west) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    
+    % Main curves floating around
+    \node[opacity=0.22,anchor=south west,inner sep=0,xshift=0.5cm,yshift=0.5cm,rotate=-15] at (current page.south west) {
+      \begin{tikzpicture}[scale=8, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.16,anchor=south east,inner sep=0,xshift=-0.5cm,yshift=0.5cm,rotate=12] at (current page.south east) {
+      \begin{tikzpicture}[scale=6, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.18,anchor=north west,inner sep=0,xshift=0.8cm,yshift=-0.8cm,rotate=28] at (current page.north west) {
+      \begin{tikzpicture}[scale=7, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    
+    % Swirls creating movement and flow
+    \node[opacity=0.20,anchor=west,inner sep=0,xshift=1cm,rotate=25] at (current page.west) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.18,anchor=east,inner sep=0,xshift=-1cm,rotate=-35] at (current page.east) {
+      \begin{tikzpicture}[scale=4.5, transform shape]
+        \drawIsaraBottomSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.15,anchor=north,inner sep=0,yshift=-2cm,rotate=45] at (current page.north) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+    
+    % Curves adding elegance
+    \node[opacity=0.16,anchor=north east,inner sep=0,xshift=-0.8cm,yshift=-0.8cm,rotate=-22] at (current page.north east) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraLeftCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.14,anchor=south,inner sep=0,yshift=1.5cm,xshift=-3cm,rotate=50] at (current page.south) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraRightCurve{white}
+      \end{tikzpicture}
+    };
+    
+    % Inner swirls for subtle detail
+    \node[opacity=0.12,anchor=center,inner sep=0,xshift=-4cm,yshift=1cm,rotate=-40] at (current page.center) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.10,anchor=center,inner sep=0,xshift=4cm,yshift=-1cm,rotate=55] at (current page.center) {
+      \begin{tikzpicture}[scale=2.5, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+    
+    % Radial gradient overlay to blend logo into background - creating depth
+    \shade[inner color=transparent,outer color=mvaPrimary!75!black] 
+      (current page.center) circle (9.5cm);
+    % Additional subtle radial from bottom to create "emerging" effect
+    \shade[inner color=mvaPrimary!40,outer color=transparent] 
+      ([yshift=-2cm]current page.south) ellipse (10cm and 6cm);
+  \end{tikzpicture}%
+}
+\setbeamertemplate{footline}{%
+  \hspace{1.8em}\textcolor{white!70}{\null\hfill\textbf{MVA}}\hspace{2em}\null\vspace*{3pt}}
+
+\begin{frame}
+% Prominent Isara logo on the first page - TikZ vector graphic
+\begin{tikzpicture}[remember picture,overlay]
+  % Logo in top-right corner, prominent but elegant
+  \node[anchor=north east,inner sep=0,xshift=-3cm,yshift=-1cm] at (current page.north east) {
+    \begin{tikzpicture}[scale=2.5, transform shape]
+      \drawIsaraLogoShape{white!85}
+    \end{tikzpicture}
+  };
+\end{tikzpicture}
+
+\begin{textblock*}{12cm}(4mm,40mm)
+  \textcolor{white}{%
+    {\fontsize{22}{26}\selectfont\textbf{Graphs in Machine Learning}}\\[4mm]
+    {\fontsize{11}{13}\selectfont Michal Valko}\\[1mm]
+    {\fontsize{9}{11}\selectfont\textit{Inria \& ENS Paris-Saclay, MVA}}\\[2mm]
+    \ifdefined\misoclasstinytitleslide
+      {\fontsize{7}{9}\selectfont\misoclasstinytitleslide}
+    \fi
+  }
+\end{textblock*}
+\begin{textblock*}{12cm}(60mm,40mm)
+  \includegraphics[width=6.5cm]{../img/peer_communities2.png}
+\end{textblock*}
+\vspace*{-4pt}
+\end{frame}
+
+\MakeNormalSlide
+
+}
+
+% === Macro: MakeTopicSlide ===
+
+\newcommand\MakeTopicSlide{
+% =============================================================================
+% Topic-Specific Title Slide Template (2025 Modern Edition with Isara Logo)
+% =============================================================================
+% Usage:
+%   \newcommand{\topictitle}{Spectral Clustering}
+%   \newcommand{\topicsubtitle}{Theory and Applications}  % optional
+%   \newcommand{\topiccredits}{Partially based on material by: ...}  % optional
+%   \input{../common/mvamlgraphstopic1slide}
+
+% Modern gradient background with Isara logo - "born from it" design
+% The logo emerges from the depths, creating the foundation from which content arises
+% Using beautiful TikZ vector graphics - a piece of art with individual logo shapes
+\setbeamertemplate{background canvas}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    % Gradient background - deeper, richer
+    \shade[top color=mvaPrimary!95,middle color=mvaPrimary!85,bottom color=mvaPrimary!70!black]
+      (current page.south west) rectangle (current page.north east);
+
+    % Full Isara logo - large, emerging from bottom-center, creating the foundation
+    \node[opacity=0.35,anchor=south,inner sep=0,yshift=-0.5cm] at (current page.south) {
+      \begin{tikzpicture}[scale=14, transform shape]
+        \drawIsaraLogoShape{white}
+      \end{tikzpicture}
+    };
+
+    % Individual logo shapes scattered artistically across the slide
+    % Circles emerging from various positions - artistic modern design
+    \node[opacity=0.18,anchor=south west,inner sep=0,xshift=1.5cm,yshift=2cm,rotate=45] at (current page.south west) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.15,anchor=south east,inner sep=0,xshift=-1.5cm,yshift=2.5cm,rotate=-30] at (current page.south east) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=north west,inner sep=0,xshift=2cm,yshift=-1.5cm,rotate=60] at (current page.north west) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+
+    % Main curves floating around - artistic modern design
+    \node[opacity=0.16,anchor=south west,inner sep=0,xshift=0.5cm,yshift=0.5cm,rotate=-15] at (current page.south west) {
+      \begin{tikzpicture}[scale=8, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=south east,inner sep=0,xshift=-0.5cm,yshift=0.5cm,rotate=12] at (current page.south east) {
+      \begin{tikzpicture}[scale=6, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.14,anchor=north west,inner sep=0,xshift=0.8cm,yshift=-0.8cm,rotate=28] at (current page.north west) {
+      \begin{tikzpicture}[scale=7, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+
+    % Swirls creating movement and flow - artistic modern design
+    \node[opacity=0.14,anchor=west,inner sep=0,xshift=1cm,rotate=25] at (current page.west) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=east,inner sep=0,xshift=-1cm,rotate=-35] at (current page.east) {
+      \begin{tikzpicture}[scale=4.5, transform shape]
+        \drawIsaraBottomSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.10,anchor=north,inner sep=0,yshift=-2cm,rotate=45] at (current page.north) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+
+    % Curves adding elegance - artistic modern design
+    \node[opacity=0.12,anchor=north east,inner sep=0,xshift=-0.8cm,yshift=-0.8cm,rotate=-22] at (current page.north east) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraLeftCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.10,anchor=south,inner sep=0,yshift=1.5cm,xshift=-3cm,rotate=50] at (current page.south) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraRightCurve{white}
+      \end{tikzpicture}
+    };
+
+    % Inner swirls for subtle detail - artistic modern design
+    \node[opacity=0.09,anchor=center,inner sep=0,xshift=-4cm,yshift=1cm,rotate=-40] at (current page.center) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.08,anchor=center,inner sep=0,xshift=4cm,yshift=-1cm,rotate=55] at (current page.center) {
+      \begin{tikzpicture}[scale=2.5, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+
+    % Radial gradient overlay to blend logo into background - creating depth
+    \shade[inner color=transparent,outer color=mvaPrimary!75!black]
+      (current page.center) circle (9.5cm);
+    % Additional subtle radial from bottom to create "emerging" effect
+    \shade[inner color=mvaPrimary!40,outer color=transparent]
+      ([yshift=-2cm]current page.south) ellipse (10cm and 6cm);
+  \end{tikzpicture}%
+}
+\setbeamertemplate{footline}{%
+  \hspace{1.8em}\textcolor{white!70}{\null\hfill\textbf{MVA}}\hspace{2em}\null\vspace*{3pt}}
+
+\begin{frame}
+% Modern artistic layout with ISARA logo - ultra-minimal white zone
+\begin{tikzpicture}[remember picture,overlay]
+  % Single smooth radial gradient from blue to white
+  % One continuous gradient zone with microscopic white core
+  % Ultra-extended outer radius with ultra-gentle opacity for extremely long, soft transitions
+
+  % Generate single continuous gradient - layers 1-100
+  % Smooth transition from blue to white with extreme extended reach across the slide
+  \foreach \i in {1,...,100} {
+    \pgfmathsetmacro{\radius}{11.0 - \i*0.104}
+    \pgfmathsetmacro{\whitePercent}{\i*\i/100}
+    \pgfmathsetmacro{\opacity}{0.02 + \i*0.01}
+    \shade[inner color=white!\whitePercent!mvaPrimary,outer color=white!\whitePercent!mvaPrimary,opacity=\opacity]
+      ([xshift=-0.8cm,yshift=-1.3cm]current page.north east) circle (\radius cm);
+  }
+
+  % Microscopic pure white core for logo background
+  \fill[white]
+    ([xshift=-0.8cm,yshift=-1.3cm]current page.north east) circle (0.6cm);
+
+  % ISARA logo in top-right corner - transparent background
+  \node[anchor=north east,inner sep=0,xshift=0.2cm,yshift=-0.3cm] at (current page.north east) {
+    \includegraphics[width=1.8cm]{../common/isara-logo.png}
+  };
+\end{tikzpicture}
+
+% Modern asymmetric text layout - positioned to avoid logo and graph
+\begin{textblock*}{11cm}(6mm,25mm)
+  \textcolor{white}{%
+    {\fontsize{24}{28}\selectfont\textbf{Graphs in Machine Learning}}\\[4mm]
+    {\fontsize{18}{22}\selectfont\textbf{\topictitle}}\\[3mm]
+    \ifdefined\topicsubtitle
+      {\fontsize{12}{14}\selectfont\topicsubtitle}\\[3mm]
+    \fi
+    {\fontsize{11}{13}\selectfont Michal Valko}\\[1mm]
+    {\fontsize{9}{11}\selectfont\textit{Inria \& ENS Paris-Saclay, MVA}}\\[4mm]
+    \ifdefined\topiccredits
+      {\fontsize{7}{9}\selectfont\topiccredits}
+    \else
+      {\fontsize{7}{9}\selectfont\misoclasstinytitleslide}
+    \fi
+  }
+\end{textblock*}
+% Graph visualization - positioned artistically to the right
+\begin{textblock*}{7cm}(60mm,32mm)
+  \includegraphics[width=6.5cm]{../img/peer_communities2.png}
+\end{textblock*}
+\vspace*{-4pt}
+\end{frame}
+
+\MakeNormalSlide
+
+}
+
+% === Macro: MakeLastSlide ===
+
+\newcommand\MakeLastSlide{
+% =============================================================================
+% Last Slide Template (2025 Modern Edition with Isara Logo)
+% =============================================================================
+
+% Modern gradient background with Isara logo - "born from it" design (returning to source)
+% The journey completes, content returns to its origin, merging back with the source
+% Using beautiful TikZ vector graphics - a piece of art
+\setbeamertemplate{background canvas}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    % Gradient background - deeper, richer
+    \shade[top color=mvaPrimary!95,middle color=mvaPrimary!85,bottom color=mvaPrimary!70!black]
+      (current page.south west) rectangle (current page.north east);
+
+    % Full Isara logo - large, emerging from bottom-center, creating the foundation
+    \node[opacity=0.35,anchor=south,inner sep=0,yshift=-0.5cm] at (current page.south) {
+      \begin{tikzpicture}[scale=14, transform shape]
+        \drawIsaraLogoShape{white}
+      \end{tikzpicture}
+    };
+
+    % Individual logo shapes scattered artistically across the slide
+    % Circles emerging from various positions - artistic modern design
+    \node[opacity=0.18,anchor=south west,inner sep=0,xshift=1.5cm,yshift=2cm,rotate=45] at (current page.south west) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.15,anchor=south east,inner sep=0,xshift=-1.5cm,yshift=2.5cm,rotate=-30] at (current page.south east) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=north west,inner sep=0,xshift=2cm,yshift=-1.5cm,rotate=60] at (current page.north west) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraCircle{white}
+      \end{tikzpicture}
+    };
+
+    % Main curves floating around - artistic modern design
+    \node[opacity=0.16,anchor=south west,inner sep=0,xshift=0.5cm,yshift=0.5cm,rotate=-15] at (current page.south west) {
+      \begin{tikzpicture}[scale=8, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=south east,inner sep=0,xshift=-0.5cm,yshift=0.5cm,rotate=12] at (current page.south east) {
+      \begin{tikzpicture}[scale=6, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.14,anchor=north west,inner sep=0,xshift=0.8cm,yshift=-0.8cm,rotate=28] at (current page.north west) {
+      \begin{tikzpicture}[scale=7, transform shape]
+        \drawIsaraMainCurve{white}
+      \end{tikzpicture}
+    };
+
+    % Swirls creating movement and flow - artistic modern design
+    \node[opacity=0.14,anchor=west,inner sep=0,xshift=1cm,rotate=25] at (current page.west) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.12,anchor=east,inner sep=0,xshift=-1cm,rotate=-35] at (current page.east) {
+      \begin{tikzpicture}[scale=4.5, transform shape]
+        \drawIsaraBottomSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.10,anchor=north,inner sep=0,yshift=-2cm,rotate=45] at (current page.north) {
+      \begin{tikzpicture}[scale=4, transform shape]
+        \drawIsaraTopSwirl{white}
+      \end{tikzpicture}
+    };
+
+    % Curves adding elegance - artistic modern design
+    \node[opacity=0.12,anchor=north east,inner sep=0,xshift=-0.8cm,yshift=-0.8cm,rotate=-22] at (current page.north east) {
+      \begin{tikzpicture}[scale=5, transform shape]
+        \drawIsaraLeftCurve{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.10,anchor=south,inner sep=0,yshift=1.5cm,xshift=-3cm,rotate=50] at (current page.south) {
+      \begin{tikzpicture}[scale=3.5, transform shape]
+        \drawIsaraRightCurve{white}
+      \end{tikzpicture}
+    };
+
+    % Inner swirls for subtle detail - artistic modern design
+    \node[opacity=0.09,anchor=center,inner sep=0,xshift=-4cm,yshift=1cm,rotate=-40] at (current page.center) {
+      \begin{tikzpicture}[scale=3, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+    \node[opacity=0.08,anchor=center,inner sep=0,xshift=4cm,yshift=-1cm,rotate=55] at (current page.center) {
+      \begin{tikzpicture}[scale=2.5, transform shape]
+        \drawIsaraInnerSwirl{white}
+      \end{tikzpicture}
+    };
+
+    % Radial gradient overlay to blend logo into background - creating depth
+    \shade[inner color=transparent,outer color=mvaPrimary!75!black]
+      (current page.center) circle (9.5cm);
+    % Additional subtle radial from bottom to create "emerging" effect
+    \shade[inner color=mvaPrimary!40,outer color=transparent]
+      ([yshift=-2cm]current page.south) ellipse (10cm and 6cm);
+  \end{tikzpicture}%
+}
+\setbeamertemplate{footline}{}
+
+\begin{frame}
+% Modern artistic layout with ISARA logo at bottom - ultra-minimal white zone
+\begin{tikzpicture}[remember picture,overlay]
+  % Single smooth radial gradient from blue to white
+  % One continuous gradient zone with microscopic white core
+  % Ultra-extended outer radius with ultra-gentle opacity for extremely long, soft transitions
+
+  % Generate single continuous gradient - layers 1-100
+  % Smooth transition from blue to white with extreme extended reach across the slide
+  \foreach \i in {1,...,100} {
+    \pgfmathsetmacro{\radius}{11.0 - \i*0.104}
+    \pgfmathsetmacro{\whitePercent}{\i*\i/100}
+    \pgfmathsetmacro{\opacity}{0.02 + \i*0.01}
+    \shade[inner color=white!\whitePercent!mvaPrimary,outer color=white!\whitePercent!mvaPrimary,opacity=\opacity]
+      ([xshift=1.5cm,yshift=2.0cm]current page.south west) circle (\radius cm);
+  }
+
+  % Microscopic pure white core for logo background
+  \fill[white]
+    ([xshift=1.5cm,yshift=2.0cm]current page.south west) circle (0.6cm);
+
+  % ISARA logo in bottom-left corner - transparent background
+  \node[anchor=south west,inner sep=0,xshift=0.5cm,yshift=1.0cm] at (current page.south west) {
+    \includegraphics[width=1.8cm]{../common/isara-logo.png}
+  };
+\end{tikzpicture}
+
+\begin{textblock*}{10cm}(30mm,45mm)
+  \textcolor{white}{%
+    \raggedright
+    {\fontsize{24}{28}\selectfont\textbf{Michal Valko}}\\[4mm]
+    {\fontsize{12}{14}\selectfont\ttfamily\instructoremail}\\[2mm]
+    {\fontsize{11}{13}\selectfont Inria \& ENS Paris-Saclay, MVA}\\[4mm]
+    {\fontsize{10}{12}\selectfont\ttfamily\url{\courseurl}}
+  }
+\end{textblock*}
+\vspace*{-4pt}
+\end{frame}
+
+% Reset to normal slide template
+\setbeamertemplate{background canvas}[vertical shading][top=blanc,middle=blanc,bottom=blanc]
+\setbeamercolor{toto}{fg=blanc,bg=mvaPrimary}
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=15.5pt]{toto}
+    \hspace{3mm}%
+    \includegraphics[width=14mm]{../common/logobastrans}%
+    \hspace{1.5cm}%
+    \raisebox{2.5ex}{Michal Valko -- Inria}%
+    \hfill%
+    \raisebox{2.5ex}{\insertframenumber/\inserttotalframenumber\hspace{5mm}\null}
+  \end{beamercolorbox}%
+}
+
+}

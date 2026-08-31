@@ -1,0 +1,21 @@
+parita_data.txt
+1
+0.1
+0.75
+0.01
+8
+2
+50
+1
+
+              training set data
+              ratio
+              error
+              alpha
+              momentum
+              inputs
+              nLayers
+              nNeurons...
+
+
+

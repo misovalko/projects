@@ -1,0 +1,305 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+% Modern color palette inspired by the web design
+\definecolor{primaryblue}{RGB}{37,99,235}
+\definecolor{lightblue}{RGB}{59,130,246}
+\definecolor{darkblue}{RGB}{30,64,175}
+\definecolor{accentgray}{RGB}{100,116,139}
+\definecolor{lightgray}{RGB}{248,250,252}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    urlcolor=lightblue,
+    citecolor=darkblue
+}
+
+% Section styling
+\titleformat{\section}
+  {\color{primaryblue}\Large\bfseries}
+  {\thesection}{1em}{}
+  [\titlerule]
+
+\titleformat{\subsection}
+  {\color{lightblue}\large\bfseries}
+  {\thesubsection}{1em}{}
+
+% Page styling
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{accentgray}\small Graphs in Machine Learning}
+\fancyhead[R]{\color{accentgray}\small TD1: Spectral Clustering}
+\fancyfoot[C]{\color{accentgray}\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{lightblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% Paragraph settings
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.8\baselineskip}
+
+% Code listing settings
+\lstset{
+backgroundcolor=\color{lightgray},
+basicstyle=\ttfamily\footnotesize,
+breakatwhitespace=false,
+breaklines=true,
+captionpos=b,
+commentstyle=\color{mygreen},
+escapeinside={\%*}{*)},
+extendedchars=true,
+frame=single,
+frameround=tttt,
+rulecolor=\color{lightblue},
+keepspaces=true,
+keywordstyle=\color{primaryblue}\bfseries,
+language=Python,
+numbers=left,
+numbersep=5pt,
+numberstyle=\tiny\color{mygray},
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+stepnumber=1,
+stringstyle=\color{mymauve},
+tabsize=2
+}
+
+% Custom boxes
+\newtcolorbox{infobox}{
+  colback=lightgray,
+  colframe=lightblue,
+  fonttitle=\bfseries,
+  title=Instructions,
+  arc=3mm,
+  boxrule=1.5pt
+}
+
+\newtcolorbox{questionbox}{
+  colback=lightgray,
+  colframe=primaryblue,
+  fonttitle=\bfseries,
+  title=Questions,
+  arc=3mm,
+  boxrule=1.5pt
+}
+
+\begin{document}
+
+% Title page
+\begin{center}
+    \includegraphics[width=0.4\textwidth]{../../../../../../images/mva/peer_communities2.png}\\[1cm]
+
+    {\Huge\color{primaryblue}\textbf{Practical Session 1}}\\[0.5cm]
+    {\LARGE\color{darkblue}Spectral Clustering}\\[1cm]
+
+    {\large\color{accentgray}
+    Graphs in Machine Learning\\
+    MVA Master Program -- ENS Paris-Saclay}\\[1.5cm]
+
+    {\color{accentgray}
+    \textit{michal.valko@inria.fr}\\
+    \textit{daniele.calandriello@inria.fr}\\
+    \textit{pierre.perrault@inria.fr}\\
+    \textit{omar.darwiche-domingues@inria.fr}}
+\end{center}
+
+\vfill
+
+\begin{tcolorbox}[colback=lightgray,colframe=lightblue,arc=2mm,boxrule=1pt]
+\textbf{About this Session}\\[0.3cm]
+In this practical session we will cover fundamental graph building
+techniques, and apply them to the Spectral Clustering problem.
+The session will be evaluated on a short written report and a final
+image segmentation implementation. During
+the TD we will implement all the necessary tools to do the
+segmentation and answer the
+report questions. All the code related to the TD must be submitted,
+to provide background for the image segmentation code evaluation.
+\end{tcolorbox}
+
+\newpage
+
+\section{Graph Construction}
+
+The file \path{generate_data.py} contains functions that will generate artificial
+data for the experiments, as described below. You can run the script to visualize the data.
+
+\begin{infobox}
+\textbf{Dataset Types:}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{$N$-Blob}: Sample random points in $\mathbb{R}^2$ according to $N$
+        Gaussian distributions with mean
+        $\mu_i = [\cos(2\pi i / N),\sin(2\pi i / N)]$ and variance $\text{Diag}(\sigma^2)$.
+    \item \textbf{Two Moons}: Sample random points shaped as two intertwined moons.
+    \item \textbf{Point and Circle}: Sample random points from a concentrated Gaussian
+        point in the middle and a wide circle around it.
+\end{itemize}
+\end{infobox}
+
+A prerequisite to build a similarity graph is to define a similarity function
+to score the distance between nodes in the graph.
+For the rest of the session we will use an inverse exponential function
+as the similarity measure, controlled by the Euclidean distance:
+\begin{equation}
+d(x_i, x_j) = \exp \left\{-\frac{\Vert x_i - x_j \Vert^2_2}{2\sigma^2}\right\}
+\end{equation}
+The variance $\sigma^2$ controls the bandwidth of the similarity.
+
+\subsection{Implementation Tasks}
+
+In the file \path{build_similarity_graph.py}, complete the following:
+\begin{itemize}[leftmargin=*]
+	\item  Write the code to build an $\varepsilon$-graph and a
+	(OR) $k$-nn graph. Details are in the source code.
+	\item Use \path{plot_similarity_graph} to visualize the graph for generated data.
+	      The function \path{plot_graph_matrix} in \path{utils.py} may be useful.
+	\item Complete the function \path{how_to_choose_epsilon}.
+	      You may use \path{min_span_tree} in \path{utils.py}.
+\end{itemize}
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*]
+    \item What is the purpose of the option parameter in \path{worst_case_blob}?
+    \item  What happens when you change the generating parameter of
+        \path{worst_case_blob} in \path{how_to_choose_epsilon}?
+        What if the parameter is very large?
+    \item Using \path{plot_similarity_graph}, compare $k$-nn to $\varepsilon$ graphs.
+          When is it easier to build a connected graph using $k$-nn? When using $\varepsilon$ graphs?
+\end{enumerate}
+\end{questionbox}
+
+\section{Spectral Clustering}
+
+In the file \path{spectral_clustering.py}, complete:
+\begin{itemize}[leftmargin=*]
+	\item \path{build_laplacian}
+	\item \path{spectral_clustering}
+\end{itemize}
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*]
+    \item Build a graph from \path{two_blobs_clustering} data, keeping
+        the graph connected. Motivate your eigenvector choices
+        and how you computed clustering assignments.
+        Compare with built-in $k$-means.
+    \item Build a graph from \path{two_blobs_clustering}, but
+        make the two components separate.
+        How do you choose eigenvectors? Motivate your answer.
+\end{enumerate}
+\end{questionbox}
+
+\subsection{Adaptive Eigenvector Selection}
+
+Complete \path{spectral_clustering_adaptive}, which uses \path{choose_eig_function}.
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*,resume]
+    \item Look at \path{find_the_bend}. Generate 4-blob data with
+        $\sigma^2=0.03$. Plot the first 15 eigenvalues.
+        Complete \path{choose_eig_function} to automatically choose
+        the number of eigenvectors. The rule must adapt to actual eigenvalues.
+    \item Increase variance to $\sigma^2=0.20$ while plotting
+        eigenvalues. Use \path{choose_eig_function}.
+        Do you see any difference?
+    \item When building cluster assignments, did you use thresholding,
+        $k$-means or both? When to use each?
+    \item What is another use of eigenvalue distributions during clustering,
+        beside choosing eigenvectors?
+\end{enumerate}
+\end{questionbox}
+
+\subsection{Complex Structures}
+
+Complete:
+\begin{itemize}[leftmargin=*]
+	\item \path{two_moons_clustering}
+	\item \path{point_and_circle_clustering}
+\end{itemize}
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*,resume]
+    \item  Plot results using spectral clustering and $k$-means in
+           \path{two_moons_clustering}. Notice differences?
+           Explain considering graph structure.
+    \item In \path{point_and_circle_clustering}, compare
+        spectral clustering using normal Laplacian $L$ and
+        random-walk regularized Laplacian $L_{rw}$.
+        Notice differences? Explain considering graph structure.
+\end{enumerate}
+\end{questionbox}
+
+\subsection{Parameter Sensitivity}
+
+How did you choose parameters when building the graph?
+We'll compare clustering solutions while changing parameters.
+We use the Adjusted Rand Index \cite{wagner2007comparing} to evaluate assignments,
+which outputs values between 0 (unrelated) and 1 (equal).
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*,resume]
+    \item Complete \path{parameter_sensitivity}, and
+        generate a plot of the ARI index while varying one parameter
+        in graph construction ($\varepsilon$ or $k$).
+        Comment on spectral clustering stability.
+    \item Without access to \emph{true} labels, how could we evaluate
+          clustering results?
+\end{enumerate}
+\end{questionbox}
+
+\section{Image Segmentation}
+
+Your final task is implementing image segmentation using spectral clustering.
+Complete \path{image_segmentation.py}.
+
+\begin{infobox}
+\textbf{Pointers:}
+\begin{itemize}[leftmargin=*]
+    \item Images are $50 \times 50$ pixels RGB in the data folder.
+        The image is loaded as $50 \times 50 \times 3$ matrix,
+        converted to $2500 \times 3$ where each pixel is an $\mathbb{R}^3$
+        vector in RGB space.
+    \item Images can be segmented using colors. Build a graph based on
+          color distance between pixels and cluster them.
+\end{itemize}
+\end{infobox}
+
+The function \path{image_segmentation} will plot your segmentation.
+Colors might be arbitrary since clustering labels are arbitrary---separation
+correctness is what matters.
+
+\begin{questionbox}
+\textbf{Final Questions:}
+\begin{enumerate}[leftmargin=*]
+    \item Document your implementation choices. Well-written, well-commented
+        code is sufficient. Include all related code in submission.
+    \item A full graph on $50 \times 50$ image has $50^2$ nodes.
+        Eigenvalue solving scales as $O(2^{34})$ (seconds to minutes on weak hardware).
+        Full HD ($1920 \times 1080$) scales as $O(2^{64})$ (about a month).
+        A full graph on millions of nodes requires ~1TB memory.
+        Can you think of two simple techniques to reduce computational and memory cost?
+    \item Did you use \path{eig} or \path{eigs}? What's the difference?
+        How do they scale to large graphs?
+\end{enumerate}
+\end{questionbox}
+
+\bibliographystyle{plain}
+\bibliography{td}
+
+\end{document}

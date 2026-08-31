@@ -1,0 +1,229 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Ulrike von Luxburg, \\[-1em] Gary Miller, Doyle \& Schnell, Daniel Spielman}
+\newcommand{\misoclassdate}{}
+\usetikzlibrary{graphs}
+
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Spectral Clustering: Relaxation}
+
+\newcommand{\topicsubtitle}{From Discrete to Continuous}
+
+\MakeTopicSlide
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Spectral Clustering: Cuts on graphs}
+
+\begin{center}
+% Manual layout for spectral clustering graph (spring layout needs lualatex)
+\begin{tikzpicture}[
+  nd/.style={circle, draw=mvaAccent, minimum size=6mm, inner sep=0pt, font=\small},
+  ed/.style={draw=mvaAccent, fill=mvaAccent, thick}]
+\node[nd] (A) at (0,2) {A};
+\node[nd] (B) at (1.5,2) {B};
+\node[nd] (C) at (0.75,0.8) {C};
+\node[nd] (D) at (2.5,0.8) {D};
+\node[nd] (E) at (1.5,-0.2) {E};
+\node[nd] (F) at (3.5,-0.5) {F};
+\node[nd] (G) at (4.5,0.8) {G};
+\node[nd] (H) at (4.5,-1.5) {H};
+\node[nd] (I) at (2.5,-1.8) {I};
+\node[nd] (J) at (3.5,-2.5) {J};
+\node[nd] (K) at (3.5,-3.8) {K};
+\draw[ed] (A)--(B); \draw[ed] (B)--(C); \draw[ed] (C)--(A);
+\draw[ed] (B)--(E); \draw[ed] (E)--(D); \draw[ed] (D)--(C); \draw[ed] (C)--(E);
+\only<1| handout:1>{\draw[ed] (E)--(F); \draw[ed] (D)--(G);}
+\only<2| handout:2>{\draw[mvaHighlight, thick] (E)--(F); \draw[mvaHighlight, thick] (D)--(G);}
+\only<3-| handout:3->{\draw[ed] (E)--(F); \draw[ed] (D)--(G);}
+\draw[ed] (F)--(G); \draw[ed] (F)--(I); \draw[ed] (I)--(J); \draw[ed] (J)--(H); \draw[ed] (H)--(F);
+\draw[ed] (G)--(H);
+\only<1-3| handout:1-2>{\draw[ed] (J)--(K);}
+\only<4| handout:3>{\draw[mvaHighlight, thick] (J)--(K);}
+\end{tikzpicture}
+
+\end{center}
+
+\begin{flushright}
+\only<2 | handout:2>{
+\yellbox {Defining the cut objective we get the clustering!}
+}
+
+\only<3,4| handout:3>{
+\textbf{MinCut}: ${\rm cut}(A,B)= \sum_{i\in A, j\in B} w_{ij} \qquad$ 
+\questionbox{Are we done?}  \\
+}
+\smallskip
+\only<4| handout:3>{
+{\tiny Can be solved efficiently, but maybe not what we want $\dots$.}
+}
+
+\end{flushright}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Spectral Clustering: Balanced Cuts}
+\vspace{-1.5em}
+\begin{flushright}
+\yellbox{Let's balance the cuts!}
+\end{flushright}
+\vspace{-1em}
+\pause
+\begin{block}{MinCut}
+\[{\rm cut}(A,B)= \sum_{i\in A, j\in B} w_{ij}\]
+\end{block}
+
+\pause
+
+\begin{block}{RatioCut}
+\[{\rm RatioCut}(A,B)= \sum_{i\in A, j\in B} w_{ij} \left( \frac{1}{|A|} + \frac{1}{|B|} \right) \]
+\end{block}
+
+\pause
+
+
+\begin{block}{Normalized Cut}
+\[{\rm NCut}(A,B)= \sum_{i\in A, j\in B} w_{ij} \left( \frac{1}{{\rm vol}(A)} + \frac{1}{{\rm vol}(B)} \right) \]
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Spectral Clustering: Balanced Cuts}
+
+\[{\rm RatioCut}(A,B)=  {\rm cut}(A,B) \left( \frac{1}{|A|} + \frac{1}{|B|} \right) \]
+\[{\rm NCut}(A,B)= {\rm cut}(A,B) \left( \frac{1}{{\rm vol}(A)} + \frac{1}{{\rm vol}(B)} \right) \]
+\bigskip
+Easily generalizable to $k \geq 2$
+\pause
+\medskip
+\begin{center}
+\questionbox{Can we compute this?}
+ \pause 
+RatioCut and NCut are NP hard :( 
+\pause 
+\bigskip
+\bigskip
+\yellbox{Approximate!}
+\end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Spectral Clustering: Relaxing Balanced Cuts}
+\begin{block}{Relaxation for (simple) balanced cuts for 2 sets}
+\[\min_{A,B} {\rm cut}(A,B) \quad {\rm s.t.} \quad  |A|=|B|\]
+\end{block}
+\bigskip \pause
+Graph function $\bff$ for cluster membership\pause : 
+$ f_i = 
+\begin{cases}
+1 & \mbox{if } V_i \in A, \\
+-1 & \mbox{if } V_i \in B. \\ 
+\end{cases}$
+\bigskip \pause
+\questionbox{What it is the cut value with this definition?}
+\[
+{\rm cut}(A,B) 
+= \pause \sum_{i\in A, j\in B} w_{i,j}
+= \tfrac14 \sum_{i,j}  w_{i,j} (f_i-f_j)^2
+= \tfrac12 \bff\transpose \bL \bff
+\]
+\pause
+\questionbox{What is the relationship with the \gcol{smoothness} of a graph function?}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Spectral Clustering: Relaxing Balanced Cuts}
+\[
+{\rm cut}(A,B) 
+= \sum_{i\in A, j\in B} w_{i,j}
+= \tfrac14 \sum_{i,j}  w_{i,j} (f_i-f_j)^2
+= \tfrac12 \bff\transpose \bL \bff
+\]
+\pause
+$|A| = |B| \implies \sum_i f_i = \pause 0 \implies \pause \bff \perp \bOne_\nodes$ 
+\\ \bigskip 
+$\|\bff\| = \pause \sqrt{\nodes}$ \pause
+
+\begin{center}
+\begin{block}{\centering objective function of spectral clustering}
+\[
+\min_{\bff} \bff\transpose \bL \bff \quad {\rm s.t.} 
+\quad f_i = \pm 1,
+\quad \bff \perp \bOne_\nodes, 
+\quad \|\bff\| =  \sqrt{\nodes}
+\]
+\end{block}
+\bigskip
+ \pause 
+Still NP hard :( \pause  $\quad \to \quad$
+\yellbox{Relax even further!} \\
+\pause \bigskip 
+\tikz[baseline]
+\node [cross out,draw=red,anchor=text] {$f_i = \pm 1$};
+$\quad \to \quad f_i \in \R$
+
+\end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Spectral Clustering: Relaxing Balanced Cuts}
+\begin{block}{\centering objective function of spectral clustering}
+\[
+\min_{\bff} \bff\transpose \bL \bff \quad {\rm s.t.} 
+\quad f_i \in \R,
+\quad \bff \perp \bOne_\nodes, 
+\quad \|\bff\| =  \sqrt{\nodes}
+\]
+\end{block}
+
+
+\only<2,3 | handout:1>{
+\begin{block}{\centering Rayleigh-Ritz theorem}
+If $\lambda_1 \leq \dots \leq \lambda_\nodes$ are the eigenvalues of real symmetric $\bL$ then
+\begin{align*}
+ \lambda_1 &= \min_{\bx \ne 0} \frac{\bx\transpose\bL \bx}{\bx\transpose\bx} = \min_{\bx\transpose\bx=1}\bx\transpose\bL \bx\\
+ \lambda_\nodes &= \max_{\bx \ne 0} \frac{\bx\transpose\bL \bx}{\bx\transpose\bx} = \max_{\bx\transpose\bx=1}\bx\transpose\bL \bx 
+\end{align*}
+\end{block}
+$\frac{\bx\transpose\bL \bx}{\bx\transpose\bx} \equiv$ \gcol{Rayleigh quotient}
+}
+
+\only<3| handout:1>{ \begin{center}\questionbox{How can we use it?} \end{center} }
+ 
+ \only<4| handout:2>{
+ \begin{block}{\centering Generalized Rayleigh-Ritz theorem (Courant-Fischer-Weyl)}
+ If $\lambda_1 \leq \dots \leq \lambda_\nodes$ are the eigenvalues of real symmetric $\bL$ 
+ and $\bv_1, \dots, \bv_\nodes$ the corresponding orthogonal eigenvectors, then for $k = 1:\nodes-1$
+ \begin{align*}
+  \lambda_{k+1} &= \min_{\bx \ne 0, \bx \perp \bv_1, \dots \bv_k} \frac{\bx\transpose\bL \bx}{\bx\transpose\bx} 
+      = \min_{\bx\transpose\bx=1, \bx \perp \bv_1, \dots \bv_k}\bx\transpose\bL \bx\\
+  \lambda_{\nodes-k} &= \max_{\bx \ne 0, \bx \perp \bv_n, \dots \bv_{\nodes-k+1}} \frac{\bx\transpose\bL \bx}{\bx\transpose\bx} 
+      = \max_{\bx\transpose\bx=1, \bx \perp \bv_\nodes, \dots \bv_{\nodes-k+1}}\bx\transpose\bL \bx 
+ \end{align*}
+ \end{block}
+ }
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\MakeLastSlide
+\end{document}

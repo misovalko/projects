@@ -1,0 +1,172 @@
+% !TEX TS-program = lualatex
+% !BIB TS-program = biber
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Mikhail Belkin, \\[-1em] 
+Jerry Zhu, Olivier Chapelle, Branislav Kveton}
+\newcommand{\misoclassdate}{}
+\begin{document}
+% Topic-specific title slide
+\newcommand{\topictitle}{Transductive Generalization Bounds}
+\newcommand{\topicsubtitle}{Stability-Based Bounds for SSL}
+\renewcommand{\misoclasstinytitleslide}{Partially based on material by:  Mikhail Belkin, Partha Niyogi, \\[-1em] Olivier Chapelle, Bernhard Sch\"olkopf}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Transductive Generalization Bounds}
+
+True risk vs.\,empirical risk
+\pause
+\begin{align*}
+  R_P(f)
+  \ = & \ \
+  \frac{1}{\nodes} \sum_i (f_i - y_i)^2 \\
+  \widehat{R}_P(f)
+  \ = & \ \
+  \frac{1}{n_l} \sum_{i \in l} (f_i - y_i)^2
+\end{align*}
+
+\pause
+
+We look for \emphcol{transductive} bounds in the form
+
+\begin{align*}
+  R_P(f) \ \leq & \ \
+  \widehat{R}_P(f) +
+  \mcolA{\mbox{errors}}
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Transductive Generalization Bounds}
+
+Bounding transductive error
+using stability analysis
+\begin{flushright}
+{\tiny \url{http://www.cs.nyu.edu/~mohri/pub/str.pdf}}
+\end{flushright}
+\pause
+\questionbox{How to bound $(f_i - y_i)^2$? }
+\moveb
+\pause
+We bound $(\ell_i^\star - y_i)^2$ with soft HFS (hard HFS is difficult):
+\pause
+
+\begin{align*}
+  \bell^\star = \min_{\bell \in \realset^\nodes} \
+  (\bell - \by)\transpose \bC (\bell - \by) +
+  \bell\transpose \bQ \bell
+\end{align*}
+
+\pause
+
+Closed form solution
+\[
+\bell^\star = \left( \bC^{-1}\bQ + \bI \right)^{-1}\by
+\]
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Transductive Generalization Bounds}
+Consider two datasets differing in exactly one \textit{labeled} point.
+\pause
+$\bell_1^\star = (\bC_1^{-1}\bQ + \bI)^{-1}\by_1$
+and 
+$\bell_2^\star = (\bC_2^{-1}\bQ + \bI)^{-1}\by_2$\\
+
+\bskip
+\pause
+\questionbox{What is the maximal difference $\beta \geq \norminf{\bell_2^\star - \bell_1^\star}$in the solutions?}
+\pause
+
+\bskip
+By the generalization bound of Belkin~\cite{belkin2004regularization}, w.p.$1 - \delta$
+\begin{flushright}
+\vskip -0.5em
+{\tiny
+\url{http://web.cse.ohio-state.edu/~mbelkin/papers/RSS_COLT_04.pdf}
+}
+\end{flushright}
+\begin{align*}
+  R_P(\bell^\star) \ \leq & \ \
+  \widehat{R}_P(\bell^\star) +
+  \underbrace{\beta + \sqrt{\frac{2 \ln(2 / \delta)}{n_l}}
+  (n_l \beta + 4)}_{\mbox{transductive error }
+  \Delta_T(\beta, n_l, \delta)}.
+  %\frac{\lambda_M(\bL) + \gamma_g}{\gamma_g^2 + 1}\right]
+\end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Transductive Generalization Bounds}
+\textbf{Bounding \emphcol{transductive} error} 
+\[
+ \norminf{\bell_2^\star - \bell_1^\star} 
+\leq  \alert{\beta} \leq \frac{\normtwo{\by_2 - \by_1}}{\frac{\lambda_m(\bQ)}{\lambda_M(\bC_1)} + 1}
+ + \frac{\lambda_M(\bQ) \normtwo{\bC_1^{-1}-\bC_2^{-1}
+}  \cdot \normtwo{\by_1}}{\left( \frac{\lambda_m(\bQ)}{\lambda_M(\bC_2)} + 1 \right)
+\left(  \frac{\lambda_m(\bQ)}{\lambda_M(\bC_1)} + 1  \right)}
+\]
+
+\pause
+Now, let us plug in the values for our problem.
+\pause
+\moveb
+Remember that
+$\lambda_m(\bQ) = \lambda_m(\bL) + \gamma_g$
+and 
+$\lambda_M(\bQ) = \lambda_M(\bL) + \gamma_g$.
+\pause
+Take $c_l = 1$ \pause and $c_l > c_u$.
+\pause
+We have $\abs{y_i} \leq 1$ \pause and $\abs{\ell_i^\star} \leq 1$. \pause
+\begin{align*}  
+  \beta \ \leq & \ \
+  2 \left[\frac{\sqrt{2}}{\gamma_g + 1} +
+  \sqrt{2 n_l} \frac{1 - c_u}{c_u}
+  \frac{\lambda_M(\bL) + \gamma_g}{\gamma_g^2 + 1}\right]
+\end{align*}
+\pause
+\rightyellbox{This algorithm is $\beta$-stable!}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Transductive Generalization Bounds}
+\textbf{Bounding \emphcol{transductive} error} 
+\begin{align*}
+  R_P(\bell^\star) \ \leq & \ \
+  \widehat{R}_P(\bell^\star) +
+  \underbrace{\beta + \sqrt{\frac{2 \ln(2 / \delta)}{n_l}}
+  (n_l \beta + 4)}_{\mbox{transductive error }
+  \Delta_T(\beta, n_l, \delta)} \\
+  \beta \ \leq & \ \
+  2 \left[\frac{\sqrt{2}}{\gamma_g + 1} +
+  \sqrt{2 n_l} \frac{1 - c_u}{c_u}
+  \frac{\lambda_M(\bL) + \gamma_g}{\gamma_g^2 + 1}\right]
+\end{align*}
+\questionbox{Does the bound say anything useful?} \\[0.5em]
+\pause
+\textbf{1)} The error is controlled.
+\pause \moveb
+\textbf{2)} Practical when error $\Delta_T(\beta, n_l, \delta)$ decreases at rate $O(n_l^{- \frac{1}{2}})$. 
+\pause
+Achieved when $\beta \! = \! O(1 / n_l)$.
+\pause
+That is, $\gamma_g \! = \! \Omega(n_l^\frac{3}{2})$.
+\pause
+\rightyellbox{We have an idea how to set $\gamma_g$!}
+
+\end{frame}
+
+
+\MakeLastSlide
+\end{document}

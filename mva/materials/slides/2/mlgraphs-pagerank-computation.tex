@@ -1,0 +1,68 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Google PageRank: Computation}
+
+\newcommand{\topicsubtitle}{Power Method and Large-Scale Implementation}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Andreas Krause, \\[-1em] Branislav Kveton, Michael Kearns}
+
+\MakeTopicSlide
+
+\begin{frame}
+
+\frametitle{Success story \#2 \emphcol{Google \pagerank}}
+
+\textbf{History:} {\small [Desikan, 2006]} 
+\begin{itemize}
+\item The anatomy of a large-scale hypertextual web
+search engine [Brin \& Page 1998] \pause
+\item  US patent for PageRank granted in 2001\pause
+\item  Google indexes 10's of billions of web pages
+(1 billion = $10^9$) \pause
+\item  Google serves $\geq 200$ million queries per day \pause
+\item  Each query processed by $\geq 1000$ machines \pause
+\item  All search engines combined process more
+than 500 million queries per day
+\end{itemize}
+
+
+\end{frame}
+\begin{frame}
+
+\frametitle{Success story \#2 \emphcol{Google \pagerank}}
+
+\begin{block}{}
+\emph{Problem:} Find an eigenvector of a stochastic matrix.  
+\end{block}
+ \pause
+\begin{itemize}
+\item  $n = 10^9$ !!! \pause
+\item luckily: \textbf{ sparse} \pause (average outdegree: 7) \pause
+%\item better than a simple centrality measure (e.g., degree) \pause
+\item power method \pause
+\end{itemize}
+\vspace{-1.5em}
+\begin{align*} % requires amsmath; align* for no eq. number
+   \onslide<6->{\bv_0 &= \left(1_A\quad 0_B\quad  0_C\quad  0_D\quad  0_E\quad  0_F\right)\transpose \\}
+   \onslide<7->{\bv_1 &=  \bG  \bv_0 \\} 
+   \onslide<8->{\bv_{t+1} &= \bG \bv_{t} } % \onslide<9->{= \bG^{t+1}\bv} 
+\end{align*}
+\onslide<9->{$\bv_{t+1} = \bv_{t} \implies \bG\bv_{t} = \bv_{t}$}
+\onslide<10->{\notecol{ \quad \tiny  and we found the steady vector}}
+\onslide<11->{\rightquestionbox{But wait,  $\bM$ is sparse, but $\bG$ is dense! What to do?}} 
+\onslide<12-|handout:0>{
+\begin{flushright}
+\vspace{-1em}
+\notecol{ \tiny we store only $\bM$ but do computations as with $\bG$ }
+\end{flushright}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\MakeLastSlide
+\end{document}

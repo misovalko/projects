@@ -1,0 +1,56 @@
+a       {color:#008BA4; text-decoration: none;}
+a:hover {color:#8282FF; text-decoration: underline;}
+
+
+body 	{text-align: justify; background: white; 
+       font-size: 11px; font-family : verdana, arial, helvetica; color: #555555 }
+td 	{font-size: 11px; font-family : verdana, arial, helvetica; color: #555555 }
+th 	{font-size: 11px; font-family : verdana, arial, helvetica; color: white; background-color: #6F6F6F;}
+ul    {font-size: 10px; font-family : verdana, arial, helvetica; }
+
+ol    {font-size: 10px; font-family : verdana, arial, helvetica; }
+
+blockquote { font-family : verdana, arial, helvetica; font-style: normal; color: #555555}
+p   {font-family : verdana, arial, helvetica; font-style: normal; color: #555555}
+
+
+.male {font-size: 10px; font-family : verdana, arial, helvetica; letter-spacing: 0px;}
+
+.txt { text-align: justify; font-size: 11px; font-family : verdana, arial, helvetica; color: #555555  }
+.txt-l { text-align: left; font-size: 10pt; font-family : verdana, arial, helvetica; color: #555555  }
+
+
+.zadania td {text-align: justify; font-size: 11px;}	
+
+.poradie td {text-align: left; font-size: 11px }
+.poradie th {text-align: left; color: green; font-size: 11px; background-color: white}
+
+.zadavanie td {text-align: left;}
+.zadavanie select {font-size: 8pt; font-family : verdana, arial, helvetica;  color: #555555; font-weight : bold; border: 0; }
+
+.veduci a  {font-size : 0.26cm; letter-spacing: 0px;}      
+.veduci td {font-weight: bold; text-align: center; letter-spacing: 4pt;}      
+
+.riesitel {font-size: 10px}
+.riesitel td {font-weight : bold; font-size: 11px}
+.riesitel th {font-weight : bold; font-size: 11px}
+
+.sustred td {font-size: 11px; font-weight: bold; }
+.sustred th {font-size: 11px; font-weight: bold; }
+
+.s td {text-align: center; font-size : 8pt; color:#555555;}
+
+.archiv td {text-align: center; font-weight: bold}    
+.archiv td a:hover {background-color: #8282FF; color: white; text-decoration: none}
+
+.portal {}
+
+.ludia {font-size: 11px; font-family : verdana, arial, helvetica;}
+
+.meno {font-size: 10px; font-family : verdana, arial, helvetica;}
+.pokec {font-size: 11px; font-family : verdana, arial, helvetica;}
+.ppokec {font-size: 11px; font-family : verdana, arial, helvetica;}
+
+input {font-family : verdana, arial, helvetica;  color: #555555; font-weight : normal; border: 0; background-color: #f0f0f0; font-size: 11px}
+textarea { font-family : verdana, arial, helvetica;  color: #555555; font-weight : normal; border: 0; background-color: #f0f0f0; font-size: 12px}
+select {font-size: 8pt; font-family : verdana, arial, helvetica;  color: #555555; font-weight : normal; }

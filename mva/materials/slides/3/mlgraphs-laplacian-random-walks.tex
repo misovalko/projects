@@ -1,0 +1,80 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Ulrike von Luxburg, \\[-1em] Gary Miller, Doyle \& Schnell, Daniel Spielman}
+\newcommand{\misoclassdate}{}
+\usetikzlibrary{graphs}
+
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Laplacian and Random Walks}
+
+\newcommand{\topicsubtitle}{Stationary Distribution}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Normalized Laplacians}
+
+\begin{block}{}
+$\bL_{sym}$ and $\bL_{rw}$ are PSD with non-negative real eigenvalues 
+\vspace{-0.25cm}
+$$0 = \lambda_1 \leq \lambda_2 \leq \lambda_3 \leq \dots \leq \lambda_\nodes.$$
+\vspace{-0.5cm} 
+\end{block}
+
+
+\begin{block}{}
+$(\lambda,\bu)$ is an eigenpair for $\bL_{rw}$ iff $(\lambda,\bu)$
+solve the generalized eigenproblem $\bL \bu = \lambda \bD \bu$.
+\end{block}\pause
+
+\begin{block}{}
+$(0,\bOne_\nodes)$ is an eigenpair for $\bL_{rw}$.
+\end{block}\pause
+
+\begin{block}{}
+$(0,\bD^{1/2}\bOne_\nodes)$ is an eigenpair for $\bL_{sym}$.
+\end{block}\pause
+
+\begin{block}{}
+Multiplicity of eigenvalue 0 of $\bL_{rw}$ or $\bL_{sym}$ equals
+to the number of connected components.
+\end{block}\pause
+\begin{flushright}
+\notecol{Proof: As for $\bL$.}\end{flushright}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Laplacian and Random Walks on Undirected Graphs}
+\begin{itemize}[<+-| alert@+>]\addtolength{\itemsep}{0.5\baselineskip}
+\item stochastic process: vertex-to-vertex jumping
+\item transition probability $v_i \to v_j$ is $p_{ij} = w_{ij}/d_i$ 
+\begin{itemize}
+\item $d_i \eqdef \sum_j w_{ij} $
+\end{itemize}
+\item transition matrix $\bP = (p_{ij})_{ij} = \bD^{-1}\bW$ (notice $\bL_{rw} = \bI - \bP$)
+\item if $G$ is connected and non-bipartite $\to$ unique 
+\textbf{stationary distribution} 
+$\pi = (\pi_1,\pi_2,\pi_3,\dots,\pi_\nodes)$ where $\pi_i = d_i/{\rm vol}(V)$
+\begin{itemize}
+\item ${\rm vol}(G) = {\rm vol}(V) = {\rm vol}(\bW) \eqdef \sum_i d_i = \sum_{i,j} w_{ij}$
+\end{itemize}
+\item $ \pi = \frac{{\mathbf 1\transpose}\bW}{\mathrm{vol}(\bW)}$ verifies $\pi \bP = \pi$ as:
+\end{itemize}
+\pause
+\begin{align*}
+\pi  \bP  &=  \frac{{\mathbf 1\transpose}\bW\bP}{\mathrm{vol}(\bW)}= \frac{{\mathbf
+1\transpose}\bD\bP}{\mathrm{vol}(\bW)} = \frac{{\mathbf 1\transpose}\bD\bD^{-1}\bW}{\mathrm{vol}(\bW)} =
+\frac{{\mathbf 1\transpose}\bW}{\mathrm{vol}(\bW)}= \pi
+%s  &=  {\mathbf 1}D/\mathrm{vol}(D) = {\mathbf 1}W/\mathrm{vol}(W)
+\end{align*} \pause
+\rightquestionbox{What's the difference from the \pagerank\!\!\!\textsuperscript{TM}?}
+\end{frame}
+
+
+\MakeLastSlide
+\end{document}

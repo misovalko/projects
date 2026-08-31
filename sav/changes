@@ -1,0 +1,91 @@
+plasyn 5.5
++ ak pri generovani spikov sa v dosledku zaokruhlovania stane ze sa vygeneruju 2 spiky v tom 
+istom case, tak sa medzi ne vsunie 1 krok
+
+plasyn 5.4
++ funkcia ReadMulti.. nacitany vystup z prechadzajucej simulacie, da postupne na vstup novej simukacie
+
+plasyn 5.3
++ vyhodnotenie loss function aj ked nie je spikena vystupe
+
+plasyn 5.2
++ hodnotenie regularity na zaklade lokalnych vlastnosti
++ moznost amplifikacie grafickeho vystupu
++ vypis koeficientov variacie
+- bug s dvojnasobnou simulaciou
+
+
+plasyn 5.1
++ moznost nastavenia od ktoreho kroku sa pocita statistika
++ localke vyhodnocovanie spravneho prepustenia regularity (3 spiky) 
+- bugs on empty input
+
+plasyn 5.0
++ vyhodnocovanie stratovej funkcie
++ generovanie distribucii zadanymi variacami a strednej hodnoty
++ spracovanie 
+
+plasyn 4.3
++ nastavitelna dlzka simulacie
+
+plasyn 4.2
+| vystup ak vnutorna nadobu je blizka stavu pred delta krokov 
+
+plasyn 4.1
++ rozne hodnoty pre toleranciu (1. rovnakych hladin, 2. rozlisitelnosti od 0)
+
+plasyn 4.0
+| novy model 
+- okno
+- pritekanie do vnutornej nadoby z ext
++ nastavenie moznosti o kolko z ext priteka
++ vytekanie vonkajsej nadoby
++ moznost zvolit ci je vytekanie absolutne alebo lin. zavisle od obsahu
++ moznost zvolit kedy sa pocita rovnost hladin (kvoli vystupu)
+
+plasyn 3.3
++ moznost rozne parametre gamma rozdelenia na podintervaloch
++ vizualizacia historia hladin nadob
++ zobrazovanie poctu spikov na vstupe, na vystupe a pocet roznych podintervaloch
+
+plasyn 3.2
+- vyrieseny problem s nahodnym generatorom 
+
+plasyn 3.1
++ seria testov
+| osetrene delenie 0, ak da rand, nulu, generuje sa znova (je to ok?)
+
+plasyn 3.0
++ pridane: generovanie gamma rozdelenia
++ moznost zrusit graficky vystup
++ moznost vypocitat naraz simulaciu bez Timera
+| co ak rand() vygeneruje 0?
+
+plasyn 2.3 
++realizovany napad z poznamky 2.2 ako moznost volby
++vypisuje mena vstupnych a vystupnych suborov
+
+plasyn 2.2
++ vystup nema 'jumping' charakter, vypocet je tiez 'kontinualny', 
+obsah hlavnej nadoby teraz presne zodpoveda poctu spikov v okne 
+| poznamka: toto vyzera by biologicky plauzibilnejsie, totiz napr. v modeli 2.1 si system pamatal
+kolko bol spikov v okne pri poslednom spiku po dlhu dobu
+| poznamka: vo verzi 2.1 bol prvy spike akoby ignorovany (brali sa tam len intervaly), 
+v tejto, aby nevznikali v prvej nadobe zaporne hodnoty a aby ta presne zopovedala poctu spikov v okne, 
+treba brat v uvahu aj prvy spike... toto mierne meni cas naucenia
+pozrovanie: tato verzia ma vedie k pochybnostiam k tvrdeniu, ze vzorky, ktore 
+poslal jano su nejako velmi zaujimave, jasne vidno, ze pocas 'pauzy' je cela pamat systemu 
+reprezentovane, jednou, ci dvoma 'jednotkami' v referecnej nadobe pre lubovolny patner
+| napad:preco sa refercna nadoba priblizuje iba ked je na vstupe spike? co tak umoznit aby 
+sa priblizovala v kazdom kroku
+
+plasyn 2.1
+- odstraneny bug: nulovanie pri novom vstupe
++ pridane: nastavenie tolerancie vyrovnanych hladin 
+
+plasyn 2.0
+| hladiny do nadob pribudaju s roznymi koeficientami + referenca sa snazi kopirovat prvu
+
+plasyn 1.0
+| 2 nadoby z definovatelnymi prietokmi medzi sebou a prostredim 
+

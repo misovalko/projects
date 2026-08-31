@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>PLASYN help</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+.style2 {color: blue}
+.style3 {color: red}
+.style5 {font-family: "Trebuchet MS", "Times New Roman", Times, serif}
+-->
+</style>
+</head>
+
+<body>
+<h2 align="center" class="style5"><strong>PLASYN v6.2 help</strong></h2>
+<div align="center" class="style5">
+  <table width="857" border="1" cellpadding="5" cellspacing="0">
+    <tr bgcolor="#eeeeee">
+      <td colspan="2"><div align="center"><strong>input<a name="1"></a></strong></div></td>
+    </tr>
+    <tr>
+      <td width="479"><ul>
+          <li>The input fields for <span class="style2">blue</span> and <span class="style3">red</span> compartment:
+            <ul>
+              <li><em>start </em>-  the start volume for compartment</li>
+              <li><em>gamma - </em>continuous saturation of compartment</li>
+              <li><em>delta</em> - proportional decrease of compartment volume after spike arrival </li>
+            </ul>
+          </li>
+          <li><em>epsilon </em>-  the maximal value for compartment volumes to be considered as an equal</li>
+          <li><em>time</em> -  the length of simulation</li>
+      </ul>
+        <blockquote>
+          <p>&nbsp;</p>
+      </blockquote></td>
+      <td width="352"><div align="center"><img src="input1.png" width="174" height="237"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>isi</em> - inter-spike interval of gamma distribution of input pattern</li>
+        <li><em>+/- </em>isi randomization of input patter </li>
+        <li><em>cv </em>- coefficient of variation of gamma distribution of input pattern</li>
+        <li><em>iteration </em>- multiple generation of input patterns by above criteria</li>
+      </ul></td>
+      <td> <div align="center"><img src="gamma1.png" width="120" height="106"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>different intervals </em>- enables different criteria (isi and CV) of one input pattern
+          <ul>
+            <li><em>by time - </em>enable definition of different criteria by time (number of steps)</li>
+            <li><em>by spikes </em>- enable change of criteria after optional number of generated events (spikes) </li>
+          </ul>
+        </li>
+      </ul></td>
+      <td><div align="center"><img src="input2.png" width="153" height="88"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>generation of input pattern - one train </li>
+      </ul></td>
+      <td><div align="center"><em><img src="gamma2.png" width="87" height="29"></em></div></td>
+    </tr>
+    <tr bgcolor="#aaaaaa">
+      <td colspan="2" bgcolor="#eeeeee"><div align="center"><strong><a name="2"></a>simulation</strong></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>simulate! - </em>start simulation</li>
+        <li><em>pause - </em>pause simulation (enable only during simulation)</li>
+        <li> <em>stop - </em>stop simulation (enable only during simulation)</li>
+      </ul></td>
+      <td><div align="center"><em><img src="sim1.png" width="83" height="77"></em></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>count! - </em>compute the simulation and display the results (without graphic trace)</li>
+        <li><em>process all - </em>computes multiple input patterns (defined in iteration field)</li>
+      </ul></td>
+      <td><div align="center"><img src="sim2.png" width="88" height="56"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>speed </em>- adjusts the speed of simulation (can be changes during the simulation)</li>
+      </ul></td>
+      <td><div align="center"><img src="sim3.png" width="80" height="48"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>graphic trace - </em>enables/disables the graphic trace</li>
+      </ul></td>
+      <td><div align="center"><img src="sim4.png" width="89" height="19"></div></td>
+    </tr>
+    <tr bgcolor="#eeeeee">
+      <td colspan="2"><div align="center"><strong>graphics during simulation<a name="3"></a></strong></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>current volumes representation</li>
+      </ul></td>
+      <td><div align="center"><img src="graph1.png" width="208" height="200"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>current volumes of compartments</li>
+      </ul></td>
+      <td><div align="center"><img src="graph2.png" width="226" height="28"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>difference between compartment volumes </li>
+      </ul></td>
+      <td><div align="center"><img src="graph3.png" width="101" height="33"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>input (lower) and output (upper) pattern, events (spikes) are displayed as the lines </li>
+      </ul></td>
+      <td><div align="center"><img src="graph4.png" width="214" height="61"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>graphic representation of compartment volumes during simulation (by time) </li>
+      </ul></td>
+      <td><div align="center"><img src="graph5.png" width="141" height="164"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>s</em> - number of input spikes</li>
+        <li><em>f </em>- number of output (fired) spikes</li>
+        <li><em>q </em> - ration s/f </li>
+      </ul></td>
+      <td><div align="center">
+        <p><img src="stat1.png" width="82" height="25"></p>
+        <p><img src="stat2.png" width="64" height="23"></p>
+      </div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li>coefficient of variation of input pattern</li>
+      </ul></td>
+      <td><div align="center"><img src="stat3.png" width="75" height="17"></div></td>
+    </tr>
+    <tr bgcolor="#eeeeee">
+      <td colspan="2"><div align="center"><strong>file functions<a name="4"></a></strong></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>Read... </em>- reads the file as an input pattern (comma separated occurrence of spikes) </li>
+        <li><em>ReadMulti ... - </em>reads the file with multiple inputs (potentially saved by the program)</li>
+      </ul></td>
+      <td><div align="center"><img src="file1.png" width="83" height="50"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>Save... - </em>saves the current output spike train to file</li>
+      </ul></td>
+      <td><div align="center"><img src="file2.png" width="86" height="36"></div></td>
+    </tr>
+    <tr>
+      <td><ul>
+        <li><em>ask file - </em>asks for filename before saving</li>
+        <li><em>del - </em>deletes file before writing</li>
+      </ul></td>
+      <td><div align="center"><img src="file3.png" width="96" height="20"></div></td>
+    </tr>
+  </table>
+</div>
+<p align="center" class="style5">&nbsp;</p>
+<p align="center" class="style5">&nbsp;</p>
+</body>
+</html>

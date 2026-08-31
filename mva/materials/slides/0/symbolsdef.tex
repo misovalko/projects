@@ -1,0 +1,183 @@
+% INRIA Template
+
+% Misc symbols
+\newcommand{\alg}{\mathcal A}
+\renewcommand{\Re}{\mathbb R}
+\def\argmax{\mathop{\rm arg\,max}}
+\def\argmin{\mathop{\rm arg\,min}}
+\def\arginf{\mathop{\rm arg\,inf}}
+
+\newcommand{\hy}{\hat y}
+\newcommand{\hp}{\hat p}
+\newcommand{\hq}{\hat q}
+\newcommand{\bhp}{\bold{\hat p}}
+\newcommand{\bhq}{\bold{\hat q}}
+\newcommand{\hsigma}{\hat \sigma}
+%\newcommand{\hvar}{\hsigma^2}
+\newcommand{\hR}{\widehat{R}}
+
+% MDP notation
+\newcommand{\MDP}{\mathcal M}
+\newcommand{\bMDP}{\overline{\MDP}}
+\newcommand{\discount}{\gamma}
+\newcommand{\state}{\mathcal{X}}
+\newcommand{\act}{\mathcal{A}}
+\newcommand{\Hyp}{\mathcal{H}}
+\newcommand{\distro}{\mathcal{P}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\Y}{\mathcal{Y}}
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\XA}{{\X\times\A}}
+\newcommand{\reward}{\mathcal{R}}
+\newcommand{\dynamics}{\mathcal{P}}
+\newcommand{\bReward}{\overline{\mathcal{R}}}
+\newcommand{\bDynamics}{\overline{\mathcal{P}}}
+\newcommand{\T}{{\mathcal{T}}}
+\newcommand{\bT}{{\overline{\mathcal{T}}}}
+\newcommand{\hT}{{\widehat{\mathcal{T}}}}
+\newcommand{\pol}{\pi}
+
+% Tasks, samples, and rollouts
+\newcommand{\nSamples}{L}
+
+\newcommand{\nTasks}{M}
+\newcommand{\sumTasks}{\sum_{m=1}^{\nTasks}}
+\newcommand{\avgTasks}{\frac{1}{M}\sumTasks}
+
+\newcommand{\nStates}{N}
+\newcommand{\sumStates}{\sum_{n=1}^{\nStates}}
+\newcommand{\avgStates}{\frac{1}{\nStates}\sumStates}
+
+\newcommand{\nStatesTask}{N_{m}}
+\newcommand{\sumStatesTask}{\sum_{n=1}^{\nStatesTask}}
+\newcommand{\avgStatesTask}{\frac{1}{\nStatesTask}\sumStatesTask}
+
+\newcommand{\nTot}{\nSamples}
+%\newcommand{\sumTot}{\sumTasks\sumStatesTask}
+\newcommand{\sumTot}{\sum_{l=1}^{\nTot}}
+\newcommand{\avgTot}{\frac{1}{\nTot}\sumTot}
+
+\newcommand{\nDist}{S}
+\newcommand{\sumDist}{\sum_{s=1}^{\nDist}}
+\newcommand{\avgDist}{\frac{1}{\nDist}\sumDist}
+
+\newcommand{\avgRatio}{\sumTasks \frac{\nStatesTask}{\nTot}}
+\newcommand{\avgRatioB}{\sumTasks \lambda_{m}}
+\newcommand{\avgRatioC}{\sum_{m=2}^\nTasks \lambda_{m}}
+
+%\newcommand{\nStateTask}{\nSamples}
+%\newcommand{\sumStateTask}{\sumTasks\sumStatesTask}
+%\newcommand{\avgStateTask}{\frac{1}{\nStateTask}\sumStateTask}
+
+\newcommand{\nActions}{|\act|}
+\newcommand{\sumActions}{\sum_{a\in\action}}
+\newcommand{\avgActions}{\frac{1}{\nActions}\sumActions}
+
+\newcommand{\taskDist}{\mathcal{E}}
+%\newcommand{\avgTaskDist}{\overline{\mathcal{E}}}
+\newcommand{\avgTaskDist}{\mathcal{E}}
+\newcommand{\hTaskDist}{\widehat{\mathcal{E}}}
+
+% Spaces and complexities
+\newcommand{\polSpace}{\Pi}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\hI}{\widehat{\mathcal{I}}}
+\newcommand{\FTrunc}{\tilde{\mathcal{F}}}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\borSpace}{\mathcal{B}}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\hB}{\widehat{\mathcal{B}}}
+\newcommand{\vSpace}{\mathcal{B}^V}
+\newcommand{\qSpace}{\mathcal{B}^Q}
+\newcommand{\vPiSpace}{\mathcal{B}^{\pol}}
+\newcommand{\mSpace}{\mathcal{S}}
+%\newcommand{\pseudoDim}{\mathcal{V}^+}
+\newcommand{\pseudoDim}[1]{V_{#1^+}}
+\newcommand{\cover}{\mathcal{N}}
+
+\newcommand{\Rmax}{R_{\max}}
+\newcommand{\Vfun}{V}
+\newcommand{\Vmax}{V_{\max}}
+\newcommand{\Qfun}{Q}
+\newcommand{\hQ}{\widehat{Q}}
+%\newcommand{\hQall}{\hQ_{all}}
+\newcommand{\hQall}{\hQ}
+\newcommand{\hQbat}{\hQ_{\text{BAT}}}
+\newcommand{\tQ}{\widetilde{Q}}
+\newcommand{\Qmax}{Q_{\max}}
+\newcommand{\estQfun}{\widehat{Q}}
+\newcommand{\trunc}{T}
+
+%\newcommand{\hlambda}{\hat\lambda}
+\newcommand{\hlambda}{\widehat{\lambda}}
+
+\newcommand{\indvector}{\mathbf{b}}
+\newcommand{\hindvector}{\hat{\mathbf{b}}}
+\newcommand{\indb}{b}
+
+\newcommand{\hf}{\hat{f}}
+\newcommand{\halpha}{{\hat{\alpha}}}
+\newcommand{\hbeta}{{\hat{\beta}}}
+
+% Misc
+\newcommand{\ind}[1]{\mathbb I\left\lbrace {#1} \right\rbrace}
+
+% Norms and errors
+\newcommand{\norm}[1]{\Arrowvert{#1}\Arrowvert}
+\newcommand{\normMu}[1]{||{#1}||_{1,\rho}}
+\newcommand{\normNu}[1]{||{#1}||_{1,\nu}}
+\newcommand{\err}{\varepsilon}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\noiseBound}{C}
+\newcommand{\noise}{\xi}
+\newcommand{\hnoise}{\hat{\xi}}
+
+% Expectation, covariance and probability
+\newcommand{\E}{\mathbb E}
+\newcommand{\expectA}[1]{\mathbb E \left[ {#1} \right]}
+\newcommand{\expectB}[2]{\mathbb E_{#1} \left[ {#2} \right]}
+\newcommand{\covA}[1]{\text{Cov} \left[ {#1} \right]}
+\newcommand{\probA}[1]{\mathbb P\left[ {#1} \right]}
+\newcommand{\probB}{p}
+\newcommand{\iid}{\stackrel{iid}{\sim}}
+
+\newcommand{\Prob}{\mathbb P}
+% Projections
+\newcommand{\hPi}{\hat{\Pi}}
+
+% Distributions
+\newcommand{\hrho}{\hat{\rho}}
+\newcommand{\hmu}{\hat{\mu}}
+\newcommand{\hvar}{\hat{\sigma}^2}
+
+% Extras
+\newcommand{\new}{\textrm{\scriptsize new}}
+\newcommand{\paragTitle}[1]{\textbf{#1.}}
+\newcommand{\TODO}[1]{(\textbf{TODO: {#1}})}
+\newcommand{\shrink}{\!\!\!}
+\newcommand{\comment}[1]{\textit{Comment: #1}}
+\newcommand{\textbi}[1]{\textbf{\textit{#1}}}
+%\newcommand{\eqref}[1]{(\ref{#1})}
+
+%\newcommand{\errExpSTL}[1][]{er_{\task_{#1}}}
+%\newcommand{\errExpSTLOpt}[1][]{er^*_{\task_{#1}}}
+%\newcommand{\dotprod}[2]{\langle #1, #2 \rangle}
+
+\newcommand{\lesson}[1]{
+\setlength{\fboxrule}{1.5pt}
+\fcolorbox{red}{white}{\mbox{#1}}
+}
+
+
+% Propositions
+%\newtheorem{lemma}{Lemma}
+\newtheorem{assumption}{Assumption}
+\newtheorem{principle}{Principle}
+%\newtheorem{corollary}{Corollary}
+%\newtheorem{proposition}{Proposition}
+%\newtheorem{definition}{Definition}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{remark}{Remark}

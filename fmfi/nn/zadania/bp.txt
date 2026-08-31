@@ -1,0 +1,74 @@
+NS    Zadanie 2       18 bodov          Odovzdanie:  8.-9.4.2003
+-----------------------------------------------------------------
+                   BACKPROP - Klasifikácia
+
+Zadanie úlohy
+Vytvorte program realizujúci algoritmus spätného sírenia chyby na 
+doprednej dvojvrstvovej sieti. Na zvolených vstupných dátach 
+dokumentujte naucenie siete. Na konci kazdého trénovacieho cyklu 
+testujte siet pomocou testovacích, ale aj trénovacích 
+vstupno-výstupných párov, zaznamenajte hodnotu kumulatívnej chyby 
+E a pocet správnych výsledkov. Jeden trénovací cyklus znamená 
+jeden prechod trénovacou mnozinou v náhodnom poradí. Pociatocné 
+váhy inicializujte ako náhodné císla napr. z intervalu (-0,5; 
+0,5). Pri klasifikácii (nie vsak pri výpocte chyby) povazujte 
+skutocný výstup neurónov za =1, ked je >=0,9 a za =0, ked je 
+<= 0,1.
+
+V prípade poctu skrytých neurónov, platí "nieco za nieco". Viac 
+skrytých neurónov vyzaduje viac výpoctov, ale siet môze 
+rýchlejsie konvergovat, ale aj nemusí. Mierou rýchlosti 
+konvergencie je pocet trénovacích cyklov potrebných na naucenie 
+siete. Preskúmajte túto optimalizáciu. Celkovo vyskúsajte aspon 
+3 rôzne pocty skrytých neurónov, napr. J > 20, J = 20 a J < 20, 
+a porovnajte výsledky.
+
+Pri trénovaní vyskúsajte nulové a nenulové momentum. Pridajte este
+jednu skrytú vrstvu a skúmajte, ci sa výkon siete zlepsí.
+Najskor skuste natrenovat NS na vsetkych datach, teda A_train
+bude zaroven aj A_test. Potom zvolte nahodne 20% dat ako A_test 
+a trenujte NS na zvysnych 80% dat. Potom otestujte schopnost NS 
+zovseobecnovat na A_test.
+
+Súbory pouzívané pocas trénovania siete
+Trénovacia, testovacia popr. aj validacná mnozina je zadaná vo 
+vstupnom súbore s presným formátom. Kazdý riadok reprezentuje 
+jeden vstupný vzor, spolocne s prislúchajúcim výstupom 
+reprezentujúcim zaradenie do triedy. Za hodnotou posledného 
+atribútu vstupného vzoru je oddelovac " | " za ktorým sa nachádza 
+zelaná hodnota zaradenia do triedy. Jednotlivé atribúty vstupného 
+vzoru nie sú priamo vstupy neurónovej siete, je potrebné ich 
+najskôr vhodne zakódovat. V súbore nie sú zadané pocty vstupných 
+atribútov a ani pocet vzorov. Tieto parametre si musí program 
+zistit prechodom cez celý vstupný súbor alebo inak. Výstupný 
+atribút je zvycajne jediný a je to zaradenie vzoru do triedy. 
+Ak v dátovom súbore nie je oddelovac, napriek tomu posledný 
+stlpec predstavuje kód triedy.
+
+Príklad obsahu súboru s oddelovacom:
+0	2	2	|	0
+3	0	1	|	0
+2	1	0	|	2
+1	2	1	|	1
+
+Kazdý vstupný atribút (polozka vstupného vektora) môze nadobúdat 
+hodnoty od 0 az po m, pricom v rôznych stlpcoch sa môze maximálna 
+hodnota - m lísit (je ju potrebné zistit). Pred spracovaním je 
+potrebné vstupy a výstupy vhodne zakódovat. Je mozné zvolit 
+napríklad nasledovné spôsoby kódovania:
+
+1. Binárne kódovanie: Atribút bude reprezentovaný n neurónmi, kde 
+2^n > m, ktoré budú kódovat vstupný symbol (hodnotu atribútu) 
+binárnym kódom prislúchajúcim symbolu. 
+
+2. Jeden z viacerých (One-Hot Encoding): Atribút bude 
+reprezentovaný m+1 neurónmi, (m+1 je pocet hodnôt, ktoré môze 
+atribút nadopbudnút). Vzdy je vysoko aktívny (aktivita = 1.0) 
+práve jeden z m+1 neurónov zodpovedajúci urcitej hodnote atribútu. 
+Ostatné sú neaktívne (aktivita = 0.0).
+
+3. Kódovanie reálnym císlom: Atribút bude reprezentovaný jediným 
+neurónom pricom jeho aktivita zodpovedá vstupnému symbolu 
+(konkrétnej hodnote, ktorú nadobúda atribút). Vtedy treba hodnoty 
+vstupov normalizovat vzhladom k pouzitej sigmoide 
+(napr. na interval 0-1).

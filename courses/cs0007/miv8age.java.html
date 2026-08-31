@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>M:\courses\cs0007\recitations\miv8age.java.html</title>
+<meta name="Generator" content="Vim/6.3">
+<meta http-equiv="content-type" content="text/html; charset=windows-1250">
+</head>
+<body bgcolor="#ffffff" text="#000000">
+<pre>
+<font color="#a020f0">import</font> tio.*;
+
+<font color="#2e8b57"><b>class</b></font> miv8age {
+  <font color="#2e8b57"><b>public</b></font> <font color="#2e8b57"><b>static</b></font> <font color="#2e8b57"><b>void</b></font> main(String[] args) {
+
+    <font color="#2e8b57"><b>int</b></font> years, days, seconds, hours, minutes;
+
+    System.out.print(<font color="#ff00ff">&quot;Please enter your age in years: &quot;</font>);
+    years=Console.in.readInt();
+
+    days=<font color="#ff00ff">365</font>*years;
+    hours=<font color="#ff00ff">24</font>*days;
+    minutes=<font color="#ff00ff">60</font>*hours;
+    seconds=<font color="#ff00ff">60</font>*minutes;
+
+    System.out.println(<font color="#ff00ff">&quot;You have spent &quot;</font> + seconds + <font color="#ff00ff">&quot; seconds in this world.&quot;</font>);
+  }
+
+}
+</pre>
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+</html>

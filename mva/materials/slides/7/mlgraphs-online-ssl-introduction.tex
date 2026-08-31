@@ -1,0 +1,143 @@
+% !TEX TS-program = lualatex
+% !BIB TS-program = biber
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Branislav Kveton, \\[-1em] 
+Mikhail Belkin, Jerry Zhu}
+\newcommand{\misoclassdate}{}
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Online SSL Introduction}
+
+\newcommand{\topicsubtitle}{Problem Setup and Challenges}
+\renewcommand{\misoclasstinytitleslide}{Partially based on material by:  Branislav Kveton, \\[-1em] Mikhail Belkin, Jerry Zhu}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{\emphcol{Online} SSL with Graphs}
+
+\textbf{Offline learning setup} \\
+
+Given $\{\bx_i\}_{i=1}^\nodes$ from $\R^d$ and 
+$\{y_i\}_{i=1}^{n_l}$, with $n_l\ll n$, find 
+$\{y_i\}_{i=n_l+1}^\nodes$ (\textbf{transductive}) or find $f$ predicting 
+$y$ well beyond that (\textbf{inductive}).
+\\ \smallskip \pause
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{../img/moviestrip}
+\\[0.5em] {\tiny Source: Sweeney Todd (2007)}
+\end{center}
+\pause
+
+\textbf{Online learning setup} \\
+
+At the beginning:  $\{\bx_i, y_i\}_{i=1}^{n_l}$ from $\R^d$ \\
+\pause
+At time $t$:\\
+\quad receive $\bx_t$\\ \pause
+\quad predict $y_t$
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{\emphcol{Online} SSL with Graphs}
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\WHILE{new unlabeled example $\bx_t$ comes}
+\STATE Add $\bx_t$ to graph $G(\bW)$  \pause
+\STATE Update $\bL_t$ \pause
+\STATE Infer labels 
+$$ \bff_{u} = \left( \bL_{uu} + \alert{\gamma_g \bI} \right)^{-1}(\bW_{ul}\bff_{l})$$ 
+\STATE \pause Predict $\widehat y_t = \pause \sgn\left(\bff_u\left(t\right)\right)$
+\ENDWHILE
+\end{algorithmic}
+\caption*{Online HFS: Straightforward solution}
+\end{algorithm}
+
+\pause 
+\questionbox{What is wrong with this solution?} \\[0.5em] 
+\pause
+\notecol{\quad The cost and memory of the operations.}
+\pause
+\rightquestionbox{What can we do?}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\hfs}{\bell^\star}
+\newcommand{\hfsoq}{\bell^{\rm q}}
+%\newcommand{\hfsq}{\ell^{\rm q}}
+\newcommand{\hfso}{\bell^{\rm o}}
+\newcommand{\W}{\bW}
+\newcommand{\Woq}{\bW^{\rm q}}
+\newcommand{\compactWoq}{\widetilde{\bW}^{\rm q}}
+\newcommand{\compactW}{\widetilde{\bW}}
+\newcommand{\Wo}{\bW^{\rm o}}
+\newcommand{\Lo}{\bL^{\rm o}}
+\newcommand{\Loq}{\bL^{\rm q}}
+\newcommand{\Do}{\bD^{\rm o}}
+\newcommand{\Doq}{\bD^{\rm q}}
+\newcommand{\Ko}{\bQ^{\rm o}}
+\newcommand{\Koq}{\bQ^{\rm q}}
+\newcommand{\Zo}{\bZ^{\rm o}}
+\newcommand{\Zoq}{\bZ^{\rm q}}
+\newcommand{\co}{c^{\rm o}}
+\newcommand{\coq}{c^{\rm q}}
+\newcommand{\ello}{\bell^{\rm o}}
+\newcommand{\elloq}{\bell^{\rm q}}
+\newcommand{\Rmultiplier}{m}
+
+\begin{frame}
+\frametitle{\emphcol{Online} SSL with Graphs}
+\yellbox{Let's keep only $k$ vertices!}\\[0.5em]
+\pause
+Limit memory to $k$ \emphcol{centroids} with $\compactWoq$ weights. \\[0.5em]
+\pause
+Each centroid represents \textit{several} others. \\[0.5em]
+\pause
+Diagonal $\bV \equiv$  \emphcol{multiplicity}. 
+\pause 
+We have $\bV_{ii}$ copies of centroid $i$.
+\\[0.5em]
+\pause
+\questionbox{Can we compute it compactly?}
+\pause Compact harmonic solution.
+\begin{align*}
+  \hfsoq =
+  (\Loq_{uu} + \gamma_g V)^{-1} \Woq_{ul} \bell_l
+\quad\mbox{where}\quad\Woq = V \compactWoq V
+\end{align*}
+\pause
+\questionbox{Proof?} \pause Using electric circuits.\\[0.5em]
+\pause
+\rightquestionbox{Why do we keep the multiplicities?}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{\emphcol{Online} SSL with Graphs}
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\STATE {\bf Input}
+\STATE \quad \alert{$k$} number of representative nodes \pause
+\STATE {\bf Initialization}
+\STATE \quad \alert{$\bV$} matrix of multiplicities with 1 on diagonal \pause
+\WHILE{new unlabeled example $\bx_t$ comes}
+\STATE Add $\bx_t$ to graph $G$  
+\IF{ \# nodes $> k$ } \STATE  \alert{quantize $G$} \ENDIF
+\STATE \pause Update $\bL_t$ of $G(\alert{\bV\bW\bV})$
+\STATE \pause Infer labels 
+\STATE Predict $\widehat y_t =  \sgn\left(\bff_u\left(t\right)\right)$
+\ENDWHILE
+\end{algorithmic}
+\caption*{Online HFS with Graph Quantization}
+\end{algorithm}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\MakeLastSlide
+\end{document}

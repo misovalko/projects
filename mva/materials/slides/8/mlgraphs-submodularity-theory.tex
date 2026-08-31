@@ -1,0 +1,153 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\begin{document}
+% Topic-specific title slide
+\newcommand{\topictitle}{Submodularity: Theory}
+\newcommand{\topicsubtitle}{Definition, Properties, and Greedy Algorithm}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Andreas Krause, \\[-1em] Branislav Kveton, Michael Kearns}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Submodularity: modeling diminishing returns} 
+Example: 
+$S = \{ \text{stuff} \} = \{ \text{bread, apple, tomato, \dots} \}$ \moves
+$f(V) =  \text{cost of getting products}\  V$ \moveb
+\pause
+{\tiny
+$f(\{ \text{bread}\} ) =  c(\text{bakery}) + c(\text{bread})$ \moves
+$f(\{ \text{bread}, \text{apple}\} ) =  c(\text{bakery}) + c(\text{bread}) + c(\text{market}) + c(\text{apple}\} )$ \moves
+$f(\{ \text{bread}, \text{tomato}\} ) =  c(\text{bakery}) + c(\text{bread}) + c(\text{market}) + c(\text{tomato} )$ \moves
+$f(\{ \text{bread}, \text{tomato},  \text{apple}\} ) =  c(\text{bakery}) + c(\text{bread}) + c(\text{market}) + c(\text{tomato}) + c(\text{apple})$ \moves
+}
+\pause
+\vspace{-0.5em}
+\rightyellbox{\small Adding an apple to the smaller set costs more!}
+\vspace{-0.5em}
+\pause
+{\footnotesize  
+\begin{align*}
+\{ \text{bread}\} &\mcolA{\subseteq} \{ \text{bread}, \text{tomato} \}  \\
+f(\{ \text{bread}, \text{apple}\} ) - f(\{ \text{bread}\} ) &\mcolA{>}
+f(\{ \text{bread}, \text{tomato}, \text{apple}\} ) - f(\{\text{tomato}, \text{bread}\} )
+\end{align*}
+} \\[-1.5em] 
+\pause
+\rightyellbox{\small Diminishing returns: Buying in bulk is cheaper!\vspace{-1em}}
+
+\pause
+\begin{block}{}%<1-| handout:1->%{Submodular function}
+  A \textbf{set function} on a discrete set $A$ is \textbf{submodular} if for any $S\subseteq T \subseteq A$  
+and for any $e \in A \setminus T$ 
+\[
+ f(S \cup \{ e \})  - f(S) \geq f(T \cup \{ e \})  - f(T)
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Submodularity: Application} 
+\questionbox{
+Link to our \textbf{product placement} problem on a \textbf{social network graph?}
+}
+\bskip
+
+%\onslide<1-| handout:1->{
+\textit{Objective:} Find $\argmax_{S\subseteq A, |S|\leq k} f(S)$\\
+\smallskip
+\pause
+\textit{Property:} NP-hard in general\\
+\smallskip
+\textit{Special case:} $f$ is  \textbf{nonnegative}, \textbf{submodular} and \textbf{monotone}.
+
+%\notecol{\tiny \qquad submodular?, nonnegative?, monotone?, $k$?}
+
+\pause
+%\moveb
+{\tiny \flushright \url{http://thibaut.horel.org/submodularity/papers/nemhauser1978.pdf}}
+
+\begin{block}{}%<4| handout:4>{}%{Characterization of the greedy solution}
+Let $S^\star = \argmax_{S\subseteq A, |S|\leq k} f(S)$ where $f$
+is monotonic and submodular set function
+and let $S_{\greedy}$ be a \textbf{greedy solution}. 
+\[
+ \text{Then \quad} f(S_{\greedy}) \geq \left(1-\tfrac{1}{e}\right)\cdot f(S^\star).
+\]
+\end{block}
+
+\pause
+\textbf{Other applications:} information, graph cuts, covering, \dots
+\end{frame}
+
+\begin{frame}
+\frametitle{Submodularity:  \greedy algorithm}  
+ \begin{algorithmic}[1]
+{\footnotesize
+  \STATE{\bfseries Input:} 
+  \STATE \quad $k$: the maximum allowed cardinality of the output
+  \STATE \quad $V$: a ground set 
+  \STATE \quad $f$: a monotone, non-negative, and submodular function
+  \STATE {\bfseries Run:}
+  \STATE  $S_0$ = \emptyset
+  \FOR{$i = 1$ {\bfseries to} $k$}
+\STATE  \alert<0>{$S_i \gets S_{i-1} \cup \left\{ \argmax_{a \in V \setminus S_{i-1} }  \left[ f\left(\left\{ a \right\} \cup S_{i-1} \right)  - f\left( S_{i-1}\right)  \right]\right\}$}
+\ENDFOR
+ \STATE{\bfseries Output:} 
+ \STATE  \quad Return $S_{\greedy} = S_k$
+}
+\begin{block}{}%<4| handout:4>{}%{Characterization of the greedy solution}
+Let $S^\star = \argmax_{S\subseteq A, |S|\leq k} f(S)$ where $f$
+is monotonic and submodular set function
+and let $S_{\greedy}$ be a \textbf{greedy solution}. 
+\[
+ \text{Then \quad} f(S_{\greedy}) \geq \left(1-\tfrac{1}{e}\right)\cdot f(S^\star).
+\]
+\end{block}
+\end{algorithmic}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Submodularity:  Approximation guarantee of \greedy}  
+Let $S_i$ be the $i$-th set selected by \greedy. We show
+\begin{align*}
+&f\left(S^\star\right) - f\left(S_{i-1}\right) 
+\leq  f\left(S^\star \cup S_{i-1} \right)  - f\left(S_{i-1}\right)  \\ %by monotinicity
+\onslide<2->{&\leq  f(a \cup S_{i-1}) - f(S_{i-1}) + f(S^\star / a \cup S_{i-1}) - f(S_{i-1})}\\   %telescoping + submodularit}
+\onslide<3->{&\leq  \sum_{a \in S^\star \setminus S_{i-1} } \left( f\left( \{ a \} \cup S_{i-1} \right)  - f\left( S_{i-1}\right)  \right)} \\   %telescoping + submodularit}
+\onslide<4->{&\leq  \sum_{a \in S^\star \setminus S_{i-1} } \left(  f\left(  S_{i} \right)  - f\left( S_{i-1}\right) \right)   %definition of the greedy algorithm}
+\leq  k \left( f\left(  S_{i} \right)  - f\left( S_{i-1}\right) \right)}
+\end{align*}
+\onslide<5->{Difference from the optimum of $S_{\greedy} = S_k$ after the $k$-th step \dots
+\begin{align*}
+ f(S^\star) - f(S_k) 
+ 	&=  f(S^\star) - f(S_{k-1}) -  \left( f\left(  S_{k} \right)  - f\left( S_{k-1}\right) \right) \\
+ 	&\leq f(S^\star) - f(S_{k-1})  - \frac{f(S^\star) - f(S_{k-1})}{k}\\
+&\leq  \left(1-\tfrac{1}{k}\right)\cdot (f(S^\star) - f(S_{k-1})) \leq \left(1-\tfrac{1}{k}\right)^k\cdot f(S^\star)
+\end{align*}}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Submodularity: Graph-related examples}  
+\begin{center}
+\begin{itemize}[<+-| alert@+>]\addtolength{\itemsep}{0.5\baselineskip}
+\item Influence maximization on networks (current example)
+\item Maximum-weight spanning trees
+\item Graph cuts
+\item Structure learning in graphical models (PGM course)
+\item More examples {\tiny \url{http://people.math.gatech.edu/~tetali/LINKS/IWATA/SFGT.pdf}}
+\item Deep Submodular Functions (2017)  {\tiny \url{https://arxiv.org/pdf/1701.08939.pdf}}
+\end{itemize}
+%\includegraphics[width=1.08\columnwidth]{../img/wordle}
+\end{center}
+
+\pause
+
+back to the influence-maximization example \dots
+\end{frame}
+
+\MakeLastSlide
+\end{document}

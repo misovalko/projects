@@ -1,0 +1,52 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\begin{document}
+% Topic-specific title slide
+\newcommand{\topictitle}{Introduction to Graphs in ML}
+\newcommand{\topicsubtitle}{Course Overview and Motivation}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Andreas Krause, \\[-1em] Branislav Kveton, Michael Kearns}
+
+\MakeTopicSlide
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{What will you learn in the Graphs in ML course?}
+
+\textbf{Concepts\pause, tools\pause, and methods\pause} to work with graphs in ML.  \\[2em]
+
+\pause Specific applications of graphs in ML. \\[2em]
+
+\pause Theoretical toolbox to analyze graph-based algorithms.\\[2em]
+
+
+\pause How to tackle: \emph{large graphs, online setting, graph construction} \dots  \\[2em]
+
+\pause One example: \yellbox{Online Semi-Supervised Face Recognition} 
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Two (main) sources of graphs in ML}
+
+\textbf{Natural graphs as models for networks}
+\begin{itemize}\addtolength{\itemsep}{.25\baselineskip}
+\item<2-> {given as an input} 
+\item<3-> discover interesting properties of the structure
+%\item is the object of study (anomaly detection)
+\end{itemize}
+
+%\pause
+\vspace{\baselineskip}
+\textbf{Constructed graphs as nonparametric basis}
+\begin{itemize}\addtolength{\itemsep}{0.25\baselineskip}
+\item<4-> we create (learn) the similarity structure from flat data
+\item<5-> it's a tool (e.g., nonparametric regularizer) to encode structural properties (e.g., independence, $\dots$)
+\end{itemize}
+\end{frame}
+
+
+\MakeLastSlide
+\end{document}

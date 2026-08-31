@@ -1,0 +1,85 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Ulrike von Luxburg, \\[-1em] Gary Miller, Doyle \& Schnell, Daniel Spielman}
+\newcommand{\misoclassdate}{}
+\usetikzlibrary{graphs}
+
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Movie Recommendations}
+
+\newcommand{\topicsubtitle}{Graph Distance Approaches}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Use of Laplacians: Movie recommendation}
+
+\rightquestionbox{How to do movie recommendation on a bipartite graph?}
+
+\tikz \graph[layered layout, level distance = 2.5cm, nodes={circle,draw=mvaAccent},edges={circle connection bar, draw=mvaAccent, fill=mvaAccent}] 
+{ 
+viewer$_1$ ["Adam"] --["\gcol{\tiny ranking}"] movie$_A$ [label=below:{\tiny Blade Runner 2049},];
+viewer$_1$ --["\gcol{\tiny ranking}"] movie$_B$ [label=below:{\tiny Cars 3 }];
+viewer$_2$ ["Barbara"] --["\gcol{\tiny ranking}"] movie$_B$;
+viewer$_2$ --["\gcol{\tiny ranking}"] movie$_C$ [label=below:{\tiny Capitaine Superslip}];
+viewer$_3$ ["Céline"];
+};
+\begin{flushright}
+\pause
+Question: \textit{Do we recommend \underline{Capitaine Superslip} to Adam?} \\
+\pause
+\rightyellbox{Let's compute some \textbf{${\rm score} (v,m)$}!} 
+
+\end{flushright}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Use of Laplacians: Movie recommendation}
+\questionbox{How to compute the \textbf{${\rm score} (v,m)$}?}
+\pause
+Using some \gcol{graph distance}!
+\pause
+\begin{block}{Idea$_1$: maximally weighted path}
+${\rm score} (v,m) = \max_{vPm} {\rm weight}(P) = \max_{vPm} \sum_{e\in P} {\rm ranking}(e)$
+\end{block}
+\pause
+\onslide<handout:0>{\notecol{%
+Problem: If there is a weak edge, the path should not be good.}}
+\pause
+\begin{block}{Idea$_2$: change the path weight}
+${\rm score}_2 (v,m) = \max_{vPm} {\rm weight}_2(P) = \max_{vPm} \min_{e\in P} {\rm ranking}(e)$
+\end{block}
+\pause
+\onslide<handout:0>{\notecol{%
+Problem of 1\&2: Additional paths does not improve the score. }}
+\pause
+\begin{block}{Idea$_3$: consider everything}
+${\rm score}_3 (v,m) = $ max flow from $m$ to $v$
+\end{block}
+\pause
+\onslide<handout:0>{\notecol{%
+Problem of 3: Shorter paths do not improve the score. }}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+\MakeLastSlide
+\end{document}

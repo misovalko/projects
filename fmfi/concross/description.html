@@ -1,0 +1,55 @@
+<html><!-- #BeginTemplate "/Templates/file.dwt" -->
+<head>
+<!-- #BeginEditable "doctitle" --> 
+<title>Podrobný popis...</title>
+<!-- #EndEditable --> 
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+<link rel="stylesheet" href="rp.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+<table border="0" align="center" width="90%" height="103">
+  <tr> 
+    <td width="100%" height="34"> 
+      <div align="right"><a href="index.html"><img src="images/spk.gif" width="282" height="44" border="0"></a></div>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">
+      <div align="center"><a href="index.html"><!-- #BeginEditable "nadpis" --><img src="images/description.gif" width="500" height="44" border="0"><!-- #EndEditable --></a></div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="100%"> 
+      <div align="left"> <!-- #BeginEditable "text" --> 
+        <p><br>
+          Podrobný popis pre používanie programu sa nachádza na stránkach <a href="control.html">Ovládanie</a>, 
+          <a href="solving.html">Riešenie </a>a <a href="creating.html">Navrhovanie</a>. 
+          Na tejto stránke nájdete popis štruktúry aplikácie.</p>
+        <p>Formulár main.dfm a jednotka <b>main.pas</b> v podstate len zachytávajú 
+          udalosti a vstupy od používateľa a predávajú ich objektu triedy <b>krížovka</b>, 
+          ktorá je nainštancovaná najviac raz a zadefinovnaná v jednotke <b>cross.pas</b>. 
+          Okrem nej sa tam nachádza aj trieda <b>políčko</b>. Políčko obsahu kompletnú 
+          informáciu o svojom type (písmeno, tajnička, popisy vľavo, vpravo), 
+          riadku, stĺpci a spolu s vlastnosťami aktívny, zvýraznený sa vie vykresliť 
+          a odpovedať na správy ako napr. zisti rozdiel medzi vloženým písmeno 
+          a správnym... Základnym prvkom triedy krížovka je pole objektov triedy 
+          políčko. Metódy triedy krížovka sú z veľkej miery prijímateľmi správ 
+          od formulára a po, či popri spracovaní využívajú inštančné metódy políčok. 
+          Pri prístupe ku Canvasu, ktorý objekt krížovka dostane od hlavného Formulára, 
+          používajú políčka parametre Formulára <b>Nastavenie</b>, v ktorom sa 
+          dajú vizuálne vlastnosti krížovky nastavovať. Formulár <b>rozmery </b>slúži 
+          len na zadanie nových veľkostí pri navrhovaní. Formulár <b>slovník </b>sprostredkúva 
+          prácu so slovníkom v režime navrhovania. Možno v ňom vyhľadať slovo 
+          podľa zadaného kritéria. Ďaľšie využitie je pri hľadaní vhodného slova 
+          do krížovky.</p>
+        <p>&nbsp;</p>
+        <!-- #EndEditable --></div>
+    </td>
+  </tr>
+</table>
+<div align="center"> <font size="-2" face="Verdana, Arial, Helvetica, sans-serif"><!-- #BeginDate format:acSw1m -->Thu, 30 May, 2002  16:39<!-- #EndDate --></font></div>
+<div align="center"></div>
+<p align="center">&nbsp; </p>
+</body>
+<!-- #EndTemplate --></html>

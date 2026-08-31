@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading List: Metric Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+	--primary: #7c3aed;
+	--primary-hover: #6d28d9;
+	--accent: #8b5cf6;
+	--text: #1a1a2e;
+	--text-light: #64748b;
+	--bg: #f8fafc;
+	--card-bg: #ffffff;
+	--border: #e2e8f0;
+	--tag-bg: #ede9fe;
+	--tag-text: #6d28d9;
+	--success: #059669;
+	--radius: 12px;
+	--shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+	--shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+	padding: 2rem;
+}
+
+.container { max-width: 1000px; margin: 0 auto; }
+
+header {
+	text-align: center;
+	margin-bottom: 2rem;
+	padding: 2rem;
+	background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+	border-radius: var(--radius);
+	color: white;
+}
+
+header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+header p { opacity: 0.9; font-size: 0.95rem; }
+
+.back-link {
+	display: inline-flex; align-items: center; gap: 0.5rem;
+	color: white; text-decoration: none; font-size: 0.875rem;
+	margin-bottom: 1rem; opacity: 0.9; transition: opacity 0.2s;
+}
+.back-link:hover { opacity: 1; }
+
+#qs {
+	background: var(--card-bg); border-radius: var(--radius); padding: 1.25rem;
+	margin-bottom: 1.5rem; box-shadow: var(--shadow);
+	display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;
+}
+#qs label { font-weight: 500; color: var(--text-light); font-size: 0.875rem; }
+#qsfield {
+	flex: 1; min-width: 200px; padding: 0.75rem 1rem;
+	border: 2px solid var(--border); border-radius: 8px; font-size: 1rem;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+#qsfield:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+#qsfield.invalidsearch { border-color: #ef4444; background: #fef2f2; }
+.search-btn { padding: 0.75rem 1.25rem; background: var(--border); border: none; border-radius: 8px; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: background 0.2s; }
+.search-btn:hover { background: #cbd5e1; }
+#stat { font-size: 0.875rem; color: var(--text-light); font-weight: 500; }
+#qssettings { display: none; }
+
+.references { display: flex; flex-direction: column; gap: 1rem; }
+
+.ref-card {
+	background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem;
+	box-shadow: var(--shadow); transition: box-shadow 0.2s, transform 0.2s;
+}
+.ref-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.ref-card.noshow { display: none; }
+.ref-card.highlight { border-left: 4px solid var(--primary); }
+
+.ref-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem; }
+.ref-year { background: var(--tag-bg); color: var(--tag-text); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+.ref-title { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; line-height: 1.4; }
+.ref-authors { color: var(--text-light); font-size: 0.95rem; margin-bottom: 0.75rem; }
+.ref-venue { font-size: 0.875rem; color: var(--text-light); font-style: italic; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+
+.ref-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ref-actions a, .ref-actions button { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 0.875rem; font-size: 0.8rem; font-weight: 500; border-radius: 6px; text-decoration: none; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-secondary:hover { background: #cbd5e1; }
+
+.ref-extra { display: none; margin-top: 1rem; padding: 1rem; background: #f1f5f9; border-radius: 8px; font-size: 0.875rem; }
+.ref-extra.show { display: block; }
+.ref-extra h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-light); margin-bottom: 0.5rem; }
+.ref-extra pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 6px; overflow-x: auto; font-size: 0.8rem; line-height: 1.5; }
+.ref-extra p { color: var(--text); line-height: 1.7; }
+
+footer { text-align: center; padding: 2rem; color: var(--text-light); font-size: 0.875rem; }
+footer a { color: var(--primary); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+	body { padding: 1rem; }
+	header { padding: 1.5rem; }
+	header h1 { font-size: 1.5rem; }
+	.ref-card { padding: 1rem; }
+	.ref-header { flex-direction: column-reverse; }
+	.ref-year { align-self: flex-start; }
+}
+</style>
+<script>
+let entryCards = [];
+document.addEventListener('DOMContentLoaded', function() {
+	entryCards = document.querySelectorAll('.ref-card[data-searchable]');
+	document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length;
+	document.getElementById('qsfield').addEventListener('keyup', quickSearch);
+});
+function quickSearch(e) {
+	const query = e.target.value.toLowerCase().trim();
+	if (!query) { entryCards.forEach(card => card.classList.remove('noshow')); document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length; e.target.classList.remove('invalidsearch'); return; }
+	try {
+		const regex = new RegExp(query, 'i'); let hits = 0;
+		entryCards.forEach(card => { if (regex.test(card.textContent)) { card.classList.remove('noshow'); hits++; } else { card.classList.add('noshow'); } });
+		document.getElementById('stat').textContent = hits + '/' + entryCards.length;
+		e.target.classList.remove('invalidsearch');
+	} catch(err) { e.target.classList.add('invalidsearch'); }
+}
+function clearSearch() { const field = document.getElementById('qsfield'); field.value = ''; field.dispatchEvent(new Event('keyup')); }
+function toggleInfo(id, type) { const el = document.getElementById(type + '_' + id); const card = document.getElementById(id); if (el) { el.classList.toggle('show'); card.classList.toggle('highlight', el.classList.contains('show')); } }
+</script>
+</head>
+<body>
+
+<div class="container">
+	<header>
+		<a href="../../comps.html" class="back-link">← Back to Comprehensive Exam</a>
+		<h1>📐 Metric Learning</h1>
+		<p>Reading list for PhD comprehensive exam • Dr. Hwa</p>
+	</header>
+
+<div id="qs">
+		<label for="qsfield">🔍 Search</label>
+		<input type="text" id="qsfield" placeholder="Search by author, title, year..." autocomplete="off" aria-label="Search papers">
+		<button class="search-btn" onclick="clearSearch()">Clear</button>
+		<span>Showing <span id="stat">0</span> papers</span>
+		<div id="qssettings"></div>
+	</div>
+
+	<div class="references">
+
+		<article class="ref-card" id="bar-hillel2005learning" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Learning a Mahalanobis Metric from Equivalence Constraints</div>
+					<div class="ref-authors">Bar-Hillel, A., Hertz, T., Shental, N. & Weinshall, D.</div>
+				</div>
+				<span class="ref-year">2005</span>
+			</div>
+			<div class="ref-venue">Journal of Machine Learning Research, Vol. 6, pp. 937-965</div>
+			<div class="ref-actions">
+				<a href="https://www.jmlr.org/papers/v6/bar-hillel05a.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('bar-hillel2005learning','bib')">📋 BibTeX</button>
+</div>
+			<div class="ref-extra" id="bib_bar-hillel2005learning">
+				<h4>BibTeX</h4>
+				<pre>@article{bar-hillel2005learning,
+  author = {Aharon Bar-Hillel and Tomer Hertz and Noam Shental and Daphna Weinshall},
+  title = {Learning a Mahalanobis Metric from Equivalence Constraints},
+  journal = {JMLR},
+  year = {2005},
+  volume = {6},
+  pages = {937-965}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="globerson2007visualizing" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Visualizing Pairwise Similarity via Semidefinite Programming</div>
+					<div class="ref-authors">Globerson, A. & Roweis, S.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">AISTATS 2007: The 11th International Workshop on Artificial Intelligence and Statistics</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.mlr.press/r4/globerson07a/globerson07a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('globerson2007visualizing','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_globerson2007visualizing">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{globerson2007visualizing,
+  author = {Globerson, A. and Roweis, S.},
+  title = {Visualizing pairwise similarity via semidefinite programming},
+  booktitle = {AISTATS},
+  year = {2007}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="globerson2006metric" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Metric Learning by Collapsing Classes</div>
+					<div class="ref-authors">Globerson, A. & Roweis, S.</div>
+				</div>
+				<span class="ref-year">2006</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 18, pp. 451-458</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.neurips.cc/paper/2005/hash/ad8e88c0f76fa4fc8e5474384142a00a-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('globerson2006metric','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_globerson2006metric">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{globerson2006metric,
+  author = {Amir Globerson and Sam Roweis},
+  title = {Metric Learning by Collapsing Classes},
+  booktitle = {NeurIPS 18},
+  year = {2006},
+  pages = {451--458}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="goldberger2004neighbourhood" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Neighbourhood Components Analysis</div>
+					<div class="ref-authors">Goldberger, J., Roweis, S.T., Hinton, G.E. & Salakhutdinov, R.</div>
+				</div>
+				<span class="ref-year">2004</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 17 (NeurIPS 2004)</div>
+			<div class="ref-actions">
+				<a href="https://www.cs.toronto.edu/~fritz/absps/nca.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('goldberger2004neighbourhood','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_goldberger2004neighbourhood">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{goldberger2004neighbourhood,
+  author = {Jacob Goldberger and Sam T. Roweis and Geoffrey E. Hinton and Ruslan Salakhutdinov},
+  title = {Neighbourhood Components Analysis},
+  booktitle = {NeurIPS},
+  year = {2004}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="hastie1996discriminant" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Discriminant Adaptive Nearest Neighbor Classification</div>
+					<div class="ref-authors">Hastie, T. & Tibshirani, R.</div>
+				</div>
+				<span class="ref-year">1996</span>
+			</div>
+			<div class="ref-venue">IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol. 18(6), pp. 607-616</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1109/34.506411" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('hastie1996discriminant','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_hastie1996discriminant">
+				<h4>BibTeX</h4>
+				<pre>@article{hastie1996discriminant,
+  author = {Hastie, T. and Tibshirani, R.},
+  title = {Discriminant adaptive nearest neighbor classification},
+  journal = {IEEE TPAMI},
+  year = {1996},
+  volume = {18},
+  number = {6},
+  pages = {607-616}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="hertz2006learning" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Learning a Kernel Function for Classification with Small Training Samples</div>
+					<div class="ref-authors">Hertz, T., Hillel, A.B. & Weinshall, D.</div>
+				</div>
+				<span class="ref-year">2006</span>
+			</div>
+			<div class="ref-venue">ICML '06: Proceedings of the 23rd International Conference on Machine Learning, pp. 401-408</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/1143844.1143895" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('hertz2006learning','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_hertz2006learning">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{hertz2006learning,
+  author = {Tomer Hertz and Aharon Bar Hillel and Daphna Weinshall},
+  title = {Learning a kernel function for classification with small training samples},
+  booktitle = {ICML '06},
+  year = {2006},
+  pages = {401--408}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="hillel2007learning" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Learning Distance Function by Coding Similarity</div>
+					<div class="ref-authors">Hillel, A.B. & Weinshall, D.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">ICML '07: Proceedings of the 24th International Conference on Machine Learning, pp. 65-72</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/1273496.1273505" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('hillel2007learning','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_hillel2007learning">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{hillel2007learning,
+  author = {Aharon Bar Hillel and Daphna Weinshall},
+  title = {Learning distance function by coding similarity},
+  booktitle = {ICML '07},
+  year = {2007},
+  pages = {65--72}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="schultz2003learning" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Learning a Distance Metric from Relative Comparisons</div>
+					<div class="ref-authors">Schultz, M. & Joachims, T.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 16 (NeurIPS 2003)</div>
+			<div class="ref-actions">
+				<a href="https://www.cs.cornell.edu/people/tj/publications/schultz_joachims_03a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('schultz2003learning','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_schultz2003learning">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{schultz2003learning,
+  author = {Matthew Schultz and Thorsten Joachims},
+  title = {Learning a distance metric from relative comparisons},
+  booktitle = {NeurIPS},
+  year = {2003}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="shalev-shwartz2004online" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Online and Batch Learning of Pseudo-Metrics</div>
+					<div class="ref-authors">Shalev-Shwartz, S., Singer, Y. & Ng, A.Y.</div>
+				</div>
+				<span class="ref-year">2004</span>
+			</div>
+			<div class="ref-venue">ICML '04: Proceedings of the 21st International Conference on Machine Learning</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/1015330.1015376" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('shalev-shwartz2004online','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_shalev-shwartz2004online">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{shalev-shwartz2004online,
+  author = {Shai Shalev-Shwartz and Yoram Singer and Andrew Y. Ng},
+  title = {Online and batch learning of pseudo-metrics},
+  booktitle = {ICML '04},
+  year = {2004}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="shental2003learning" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Learning Distance Functions using Equivalence Relations</div>
+					<div class="ref-authors">Shental, N. & Weinshall, D.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">ICML '03: Proceedings of the 20th International Conference on Machine Learning, pp. 11-18</div>
+			<div class="ref-actions">
+				<a href="https://aaai.org/papers/icml03-005-learning-distance-functions-using-equivalence-relations" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 Link</a>
+				<button class="btn-secondary" onclick="toggleInfo('shental2003learning','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_shental2003learning">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{shental2003learning,
+  author = {Noam Shental and Daphna Weinshall},
+  title = {Learning Distance Functions using Equivalence Relations},
+  booktitle = {ICML},
+  year = {2003},
+  pages = {11--18}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="torresani2007large" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Large Margin Component Analysis</div>
+					<div class="ref-authors">Torresani, L. & Lee, K.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 19, pp. 1385-1392</div>
+			<div class="ref-actions">
+				<a href="https://papers.nips.cc/paper/2006/hash/dc6a7e655d7e5840e66733e9ee67cc69-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('torresani2007large','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_torresani2007large">
+				<h4>BibTeX</h4>
+				<pre>@incollection{torresani2007large,
+  author = {Lorenzo Torresani and Kuang-chih Lee},
+  title = {Large Margin Component Analysis},
+  booktitle = {NeurIPS 19},
+  year = {2007},
+  pages = {1385--1392}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="valko2008distance" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Distance Metric Learning for Conditional Anomaly Detection</div>
+					<div class="ref-authors">Valko, M. & Hauskrecht, M.</div>
+				</div>
+				<span class="ref-year">2008</span>
+			</div>
+			<div class="ref-venue">FLAIRS 2008: 21st International Florida Artificial Intelligence Research Society Conference</div>
+			<div class="ref-actions">
+				<a href="../../publications/valko2008distance.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('valko2008distance','bib')">📋 BibTeX</button>
+				<button class="btn-secondary" onclick="toggleInfo('valko2008distance','abs')">📝 Abstract</button>
+			</div>
+			<div class="ref-extra" id="abs_valko2008distance">
+				<h4>Abstract</h4>
+				<p>Anomaly detection methods can be very useful in identifying unusual or interesting patterns in data. A recently proposed conditional anomaly detection framework extends anomaly detection to the problem of identifying anomalous patterns on a subset of attributes in the data. The work presented in this paper focuses on instance-based methods for detecting conditional anomalies. The methods depend heavily on the distance metric that lets us identify examples in the dataset that are most critical for detecting the anomaly. To optimize the performance of the anomaly detection methods we explore and study metric learning methods.</p>
+			</div>
+			<div class="ref-extra" id="bib_valko2008distance">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{valko2008distance,
+  author = {Michal Valko and Milos Hauskrecht},
+  title = {Distance Metric Learning for Conditional Anomaly Detection},
+  booktitle = {FLAIRS},
+  year = {2008}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="weinberger2006distance" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Distance Metric Learning for Large Margin Nearest Neighbor Classification</div>
+					<div class="ref-authors">Weinberger, K., Blitzer, J. & Saul, L.</div>
+				</div>
+				<span class="ref-year">2006</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 18, pp. 1473-1480</div>
+			<div class="ref-actions">
+				<a href="https://papers.nips.cc/paper_files/paper/2005/hash/a7f592cef8b130a6967a90617db5681b-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('weinberger2006distance','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_weinberger2006distance">
+				<h4>BibTeX</h4>
+				<pre>@incollection{weinberger2006distance,
+  author = {Kilian Weinberger and John Blitzer and Lawrence Saul},
+  title = {Distance Metric Learning for Large Margin Nearest Neighbor Classification},
+  booktitle = {NeurIPS 18},
+  year = {2006},
+  pages = {1473--1480}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="weinberger2007metric" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Metric Learning for Kernel Regression</div>
+					<div class="ref-authors">Weinberger, K. & Tesauro, G.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">AISTATS 2007: Proceedings of the 11th International Conference on Artificial Intelligence and Statistics</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.mlr.press/r5/weinberger07a/weinberger07a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('weinberger2007metric','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_weinberger2007metric">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{weinberger2007metric,
+  author = {Weinberger, K.Q. and Tesauro, G.},
+  title = {Metric Learning for Kernel Regression},
+  booktitle = {AISTATS},
+  year = {2007}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="weinberger2008fast" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Fast Solvers and Efficient Implementations for Distance Metric Learning</div>
+					<div class="ref-authors">Weinberger, K.Q. & Saul, L.K.</div>
+				</div>
+				<span class="ref-year">2008</span>
+			</div>
+			<div class="ref-venue">ICML '08: Proceedings of the 25th International Conference on Machine Learning, pp. 1160-1167</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1145/1390156.1390302" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('weinberger2008fast','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_weinberger2008fast">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{weinberger2008fast,
+  author = {Kilian Q. Weinberger and Lawrence K. Saul},
+  title = {Fast solvers and efficient implementations for distance metric learning},
+  booktitle = {ICML '08},
+  year = {2008},
+  pages = {1160--1167}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="xing2003distance" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Distance Metric Learning with Application to Clustering with Side-Information</div>
+					<div class="ref-authors">Xing, E.P., Ng, A.Y., Jordan, M.I. & Russell, S.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 15, pp. 505-512</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.neurips.cc/paper_files/paper/2002/file/c3e4035af2a1cde9f21e1ae1951ac80b-Paper.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('xing2003distance','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_xing2003distance">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{xing2003distance,
+  author = {Eric P. Xing and Andrew Y. Ng and Michael I. Jordan and Stuart Russell},
+  title = {Distance metric learning, with application to clustering with side-information},
+  booktitle = {NeurIPS 15},
+  year = {2003},
+  pages = {505--512}
+}</pre>
+			</div>
+		</article>
+
+	</div>
+
+	<footer>
+		<p>Reading list for PhD Comprehensive Exam, September 2008</p>
+		<p>Originally generated by <a href="https://www.jabref.org">JabRef</a> • Modernized 2025</p>
+	</footer>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+</html>

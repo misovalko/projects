@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Michal Valko" />
+    <meta name="keywords" content="multi-armed bandits, research groups, SequeL, INRIA, Peter Auer, Csaba Szepesvari" />
+    <meta name="description" content="Links to research groups and web resources for multi-armed bandit algorithms." />
+    <title>Bandit Links - Research Groups and Resources</title>
+    <link rel="shortcut icon" href="../../images/common/micon6.webp" />
+<link rel="stylesheet" href="../../luky.min.css" title="base" type="text/css" />
+<style>
+        /* Modern clean design */
+        h2 {
+            color: #2c5aa0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5em;
+            margin-top: 2.5em;
+            margin-bottom: 1em;
+            font-size: 1.6em;
+            font-weight: 600;
+        }
+
+        #content p {
+            line-height: 1.7;
+            margin-bottom: 1.1em;
+            color: #334155;
+        }
+
+        /* Grid layout for researcher cards - super compact */
+        .researcher-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.8em;
+            margin: 1.5em 0;
+        }
+
+        /* Researcher cards - tiny, colorful, sexy */
+        .researcher-card {
+            background: linear-gradient(135deg, rgba(44, 90, 160, 0.05) 0%, rgba(74, 144, 226, 0.08) 100%);
+            border-left: 3px solid #4a90e2;
+            border-radius: 8px;
+            padding: 0.6em 0.8em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 4px rgba(44, 90, 160, 0.1);
+            position: relative;
+        }
+
+        .researcher-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.18);
+            border-left-color: #2c5aa0;
+            background: linear-gradient(135deg, rgba(44, 90, 160, 0.08) 0%, rgba(74, 144, 226, 0.12) 100%);
+        }
+
+        .researcher-card h3 {
+            margin: 0 0 0.2em 0;
+            padding-left: 0;
+            font-size: 0.9em;
+        }
+
+        .researcher-card h3::before {
+            display: none;
+        }
+
+        .researcher-card h3 a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .researcher-card h3 a:hover {
+            color: #4a90e2;
+            text-decoration: underline;
+        }
+
+        .researcher-card p {
+            color: #64748b;
+            margin: 0;
+            font-size: 0.75em;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Color variations */
+        .researcher-card:nth-child(6n+1) {
+            border-left-color: #4a90e2;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05) 0%, rgba(74, 144, 226, 0.08) 100%);
+        }
+
+        .researcher-card:nth-child(6n+2) {
+            border-left-color: #6366f1;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.08) 100%);
+        }
+
+        .researcher-card:nth-child(6n+3) {
+            border-left-color: #8b5cf6;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.08) 100%);
+        }
+
+        .researcher-card:nth-child(6n+4) {
+            border-left-color: #ec4899;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(236, 72, 153, 0.08) 100%);
+        }
+
+        .researcher-card:nth-child(6n+5) {
+            border-left-color: #f43f5e;
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.05) 0%, rgba(244, 63, 94, 0.08) 100%);
+        }
+
+        .researcher-card:nth-child(6n) {
+            border-left-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.08) 100%);
+        }
+
+        /* Link cards */
+        .link-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5em 2em;
+            margin: 1em 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
+        }
+
+        .link-card a {
+            color: #008BA4;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .link-card a:hover {
+            color: #8282FF;
+            text-decoration: underline;
+        }
+
+        /* Research group table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        table td {
+            padding: 1.2em;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        table tr:hover {
+            background: #f8fafc;
+        }
+
+        table td:first-child {
+            font-weight: 600;
+        }
+
+        table td:nth-child(2) {
+            color: #64748b;
+        }
+
+        #content a {
+            color: #008BA4;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        #content a:hover {
+            color: #8282FF;
+            text-decoration: underline;
+        }
+
+        /* Intro box */
+        .intro-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 1.8em;
+            border-radius: 16px;
+            margin-bottom: 2.5em;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5em;
+            padding: 0.6em 1.2em;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 8px;
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="supertoplt">
+			<div id="supertoprt">
+				<div id="supertop"></div>
+			</div>
+		</div>
+		<div id="lt">
+			<div id="rt">
+				<div id="top"><span class="nadpis">Michal Valko : Projects</span></div>
+				<div id="menu">
+					<div class="menulink">
+						<a href="../../index.html">Intro</a>
+						<a href="../../research.html">Publications</a>
+						<a href="../../projects.html" class="active">Projects</a>
+						<a href="../../mva-ml-graphs.html">Teaching</a>
+						<a href="../../press.html">Press</a>
+						<a href="../../talks.html">Talks</a>
+						<a href="../../service.html">Service</a>
+						<a href="../../experience.html">Experience</a>
+					</div>
+					<br />
+					<span class="male"><a href="mailto:michal.valko@inria.fr" aria-label="Email Michal Valko">michal.valko@inria.fr</a></span>
+					<div class="sidebar-social-icons">
+						<a href="https://scholar.google.com/citations?user=jrazNCQAAAAJ" class="scholar" title="Google Scholar" aria-label="Google Scholar profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M320 32L0 160l320 128 320-128L320 32zM64 224v128l256 128 256-128V224L320 352 64 224z"/></svg></a>
+						<a href="https://github.com/misovalko" class="github" title="GitHub" aria-label="GitHub profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z"/></svg></a>
+						<a href="https://x.com/misovalko" class="twitter" title="Twitter/X" aria-label="X profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
+					<a href="https://www.linkedin.com/in/michalvalko/" class="linkedin" title="LinkedIn" aria-label="LinkedIn profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a> <a href="https://orcid.org/0009-0009-2673-0144" class="orcid" title="ORCID" aria-label="ORCID profile" rel="me noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M294.75 188.19h-45.92V342h47.47c67.62 0 83.12-51.34 83.12-76.91 0-41.64-26.54-76.9-84.67-76.9zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm-80.79 360.76h-29.84v-207.5h29.84zm-14.92-231.14a19.57 19.57 0 1 1 19.57-19.57 19.64 19.64 0 0 1-19.57 19.57zM300 369h-81V143.26h81c62.52 0 113 28.05 113 113.42C413 322.38 364.87 369 300 369z"/></svg></a>
+					</div>
+					<div class="centered">
+						<a href="../../images/common/gr20.webp"><picture><source srcset="../../images/common/mvgr20.webp" type="image/webp"><img src="../../images/common/mvgr20.webp" alt="Portrait photo of Michal Valko" loading="lazy" decoding="async" /></picture></a><br />
+						<br />
+						<a href="https://isara.io" rel="noopener noreferrer"><picture><source srcset="../../images/common/isara.webp" type="image/webp"><img src="../../images/common/isara.webp" alt="Isara Labs logo" height="40" loading="lazy" decoding="async"></picture></a><br />
+						<a href="https://www.inria.fr/"><picture><source srcset="../../images/common/INRIA-CORPO-CMJN.webp" type="image/webp"><img src="../../images/common/INRIA-CORPO-CMJN.webp" alt="Inria logo" height="32" loading="lazy" decoding="async"></picture></a><br />
+						<a href="https://www.master-mva.com/"><img src="../../images/common/mva.webp" alt="MVA Master program logo" height="40" loading="lazy" /></a><br /><br />
+												<div class="sidebar-students">
+						<div class="sidebar-student"><a href="https://giorgio-racca.github.io/"><picture><source srcset="../../images/students/giorgio.webp" type="image/webp"><img src="../../images/students/giorgio.webp" alt="Giorgio" loading="lazy" decoding="async" /></picture></a><span>Giorgio</span></div>
+						<div class="sidebar-student"><a href="https://d-tiapkin.github.io/"><picture><source srcset="../../images/students/daniil.webp" type="image/webp"><img src="../../images/students/daniil.webp" alt="Daniil" loading="lazy" decoding="async" /></picture></a><span>Daniil</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.com/citations?user=FJ9U_2oAAAAJ&hl=fr"><picture><source srcset="../../images/students/lisa.webp" type="image/webp"><img src="../../images/students/lisa.webp" alt="Lisa" loading="lazy" decoding="async" /></picture></a><span>Lisa</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Côme_Fiegel1"><picture><source srcset="../../images/students/come.webp" type="image/webp"><img src="../../images/students/come.webp" alt="Côme" loading="lazy" decoding="async" /></picture></a><span>Côme</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Jean_Tarbouriech1"><picture><source srcset="../../images/students/jean.webp" type="image/webp"><img src="../../images/students/jean.webp" alt="Jean" loading="lazy" decoding="async" /></picture></a><span>Jean</span></div>
+						<div class="sidebar-student"><a href="https://menardprr.github.io/"><picture><source srcset="../../images/students/pierre1.webp" type="image/webp"><img src="../../images/students/pierre1.webp" alt="Pierre" loading="lazy" decoding="async" /></picture></a><span>Pierre</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Omar_Darwiche_Domingues1"><picture><source srcset="../../images/students/omar.webp" type="image/webp"><img src="../../images/students/omar.webp" alt="Omar" loading="lazy" decoding="async" /></picture></a><span>Omar</span></div>
+						<div class="sidebar-student"><a href="https://edouardoyallon.github.io/"><picture><source srcset="../../images/students/edouard.webp" type="image/webp"><img src="../../images/students/edouard.webp" alt="Édouard" loading="lazy" decoding="async" /></picture></a><span>Édouard</span></div>
+						<div class="sidebar-student"><a href="https://fr.linkedin.com/in/pierre-perrault-642b82131"><picture><source srcset="../../images/students/pierre2.webp" type="image/webp"><img src="../../images/students/pierre2.webp" alt="Pierre" loading="lazy" decoding="async" /></picture></a><span>Pierre</span></div>
+						<div class="sidebar-student"><a href="https://xuedong.github.io/"><picture><source srcset="../../images/students/xuedong.webp" type="image/webp"><img src="../../images/students/xuedong.webp" alt="Xuedong" loading="lazy" decoding="async" /></picture></a><span>Xuedong</span></div>
+						<div class="sidebar-student"><a href="https://guilgautier.github.io/"><picture><source srcset="../../images/students/guillaume.webp" type="image/webp"><img src="../../images/students/guillaume.webp" alt="Guillaume" loading="lazy" decoding="async" /></picture></a><span>Guillaume</span></div>
+						<div class="sidebar-student"><a href="https://www.linkedin.com/in/julien-seznec-29364a104/?ppe=1"><picture><source srcset="../../images/students/julien.webp" type="image/webp"><img src="../../images/students/julien.webp" alt="Julien" loading="lazy" decoding="async" /></picture></a><span>Julien</span></div>
+						<div class="sidebar-student"><a href="https://openreview.net/profile?id=~Jean-Bastien_Grill2"><picture><source srcset="../../images/students/jean-bastien.webp" type="image/webp"><img src="../../images/students/jean-bastien.webp" alt="Jean-Bastien" loading="lazy" decoding="async" /></picture></a><span>Jean-Bastien</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.it/citations?user=R7c1UMMAAAAJ"><picture><source srcset="../../images/students/daniele.webp" type="image/webp"><img src="../../images/students/daniele.webp" alt="Daniele" loading="lazy" decoding="async" /></picture></a><span>Daniele</span></div>
+						<div class="sidebar-student"><a href="https://scholar.google.com/citations?user=2FaMLggAAAAJ"><picture><source srcset="../../images/students/tomas.webp" type="image/webp"><img src="../../images/students/tomas.webp" alt="Tomáš" loading="lazy" decoding="async" /></picture></a><span>Tomáš</span></div>
+					</div>
+		</div>
+					</div>
+				</div>
+				<div id="content">
+
+                <a href="index.html" class="back-link">← Back to Bandits</a>
+
+                <h1>Links & Groups</h1>
+
+                <div class="intro-box">
+                    Links to research groups working on multi-armed bandit algorithms and web resources.
+                </div>
+
+                <h2>Web Links</h2>
+
+                <div class="link-card">
+                    <a href="https://en.wikipedia.org/wiki/Multi-armed_bandit">Wikipedia: Multi-armed bandit</a>
+                </div>
+
+                <h2>Leading Researchers</h2>
+
+                <div class="researcher-grid">
+                    <div class="researcher-card">
+                        <h3><a href="https://tor-lattimore.com/">Tor Lattimore</a></h3>
+                        <p>DeepMind - Theoretical foundations, textbook author</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://sites.ualberta.ca/~szepesva/">Csaba Szepesvári</a></h3>
+                        <p>DeepMind & U. Alberta - Theory and algorithms, textbook author</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://www.microsoft.com/en-us/research/people/sebubeck/">Sébastien Bubeck</a></h3>
+                        <p>OpenAI (formerly Microsoft Research) - Theoretical advances</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://web.stanford.edu/~bvr/">Benjamin Van Roy</a></h3>
+                        <p>Stanford University - Thompson Sampling, posterior sampling</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://dylanfoster.net/">Dylan Foster</a></h3>
+                        <p>Microsoft Research - Contextual bandits, online learning</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://www.cs.columbia.edu/~djhsu/">Daniel Hsu</a></h3>
+                        <p>Columbia University - Statistical learning, contextual bandits</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://alekh.net/">Alekh Agarwal</a></h3>
+                        <p>Microsoft Research - Contextual bandits at scale</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://people.eecs.berkeley.edu/~russell/">Stuart Russell</a></h3>
+                        <p>UC Berkeley - Applications to AI safety and decision making</p>
+                    </div>
+                </div>
+
+                <h2>Research Teams</h2>
+
+                <div class="researcher-grid">
+                    <div class="researcher-card">
+                        <h3><a href="https://www.di.ens.fr/sierra/">SIERRA Team</a></h3>
+                        <p>INRIA & ENS Paris - Sequential learning and RL</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://scool.inria.fr/">SCOOL Team</a></h3>
+                        <p>INRIA Lille - Statistical online learning</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://deepmind.google/">DeepMind</a></h3>
+                        <p>London, UK - Large-scale applications, theory</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://www.microsoft.com/en-us/research/group/machine-learning-research-group/">MSR ML Group</a></h3>
+                        <p>Microsoft Research - Contextual bandits, Vowpal Wabbit</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://bair.berkeley.edu/">BAIR</a></h3>
+                        <p>UC Berkeley - Deep RL and bandits</p>
+                    </div>
+
+                    <div class="researcher-card">
+                        <h3><a href="https://ai.stanford.edu/">Stanford AI Lab</a></h3>
+                        <p>Stanford University - Theory and applications</p>
+                    </div>
+                </div>
+
+                <div id="modified">mv</div>
+            </div>
+        </div>
+    </div>
+    <div id="downlt"><div id="downrt"><div id="down"></div></div></div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+
+</html>

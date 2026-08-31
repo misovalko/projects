@@ -1,0 +1,339 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{algorithm,algorithmic,caption}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{natbib}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+% Modern color palette
+\definecolor{primaryblue}{RGB}{37,99,235}
+\definecolor{lightblue}{RGB}{59,130,246}
+\definecolor{darkblue}{RGB}{30,64,175}
+\definecolor{accentgray}{RGB}{100,116,139}
+\definecolor{lightgray}{RGB}{248,250,252}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    urlcolor=lightblue,
+    citecolor=darkblue
+}
+
+% Section styling
+\titleformat{\section}
+  {\color{primaryblue}\Large\bfseries}
+  {\thesection}{1em}{}
+  [\titlerule]
+
+\titleformat{\subsection}
+  {\color{lightblue}\large\bfseries}
+  {\thesubsection}{1em}{}
+
+% Page styling
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{accentgray}\small Graphs in Machine Learning}
+\fancyhead[R]{\color{accentgray}\small TD2: Semi-Supervised Learning}
+\fancyfoot[C]{\color{accentgray}\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{lightblue}\leaders\hrule height \headrulewidth\hfill}}
+
+% Paragraph settings
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.8\baselineskip}
+
+% Custom boxes
+\newtcolorbox{infobox}{
+  colback=lightgray,
+  colframe=lightblue,
+  fonttitle=\bfseries,
+  title=Implementation,
+  arc=3mm,
+  boxrule=1.5pt
+}
+
+\newtcolorbox{questionbox}{
+  colback=lightgray,
+  colframe=primaryblue,
+  fonttitle=\bfseries,
+  title=Questions,
+  arc=3mm,
+  boxrule=1.5pt
+}
+
+\newtcolorbox{algobox}{
+  colback=lightgray,
+  colframe=darkblue,
+  fonttitle=\bfseries,
+  title=Algorithm,
+  arc=3mm,
+  boxrule=1.5pt
+}
+
+\begin{document}
+
+% Title page
+\begin{center}
+    \includegraphics[width=0.4\textwidth]{../../../../../../images/mva/peer_communities2.png}\\[1cm]
+
+    {\Huge\color{primaryblue}\textbf{Practical Session 2}}\\[0.5cm]
+    {\LARGE\color{darkblue}Semi-Supervised Learning}\\[1cm]
+
+    {\large\color{accentgray}
+    Graphs in Machine Learning\\
+    MVA Master Program -- ENS Paris-Saclay}\\[1.5cm]
+
+    {\color{accentgray}
+    \textit{michal.valko@inria.fr}\\
+    \textit{daniele.calandriello@inria.fr}\\
+    \textit{omar.darwiche-domingues@inria.fr}\\
+    \textit{pierre.perrault@inria.fr}}
+\end{center}
+
+\vfill
+
+\begin{tcolorbox}[colback=lightgray,colframe=lightblue,arc=2mm,boxrule=1pt]
+\textbf{About this Session}\\[0.3cm]
+All the code related to the TD must be submitted along with a written report.
+\end{tcolorbox}
+
+\newpage
+
+\section{Harmonic Function Solution (HFS)}
+
+Semi-supervised learning (SSL) studies learning from both labeled and
+unlabeled examples. This paradigm is useful for real-world problems where
+data is abundant but labeling resources are limited.
+
+\subsection{Notation}
+
+\begin{itemize}[leftmargin=*]
+	\item $G=(V, E)$ is a weighted graph where
+	$V=\{x_{1}, \ldots, x_{n}\}$ is the vertex set and $E$ is the edge set
+	\item Each edge $e_{ij}\in E$ has weight $w_{ij}$. If no edge exists, $w_{ij}=0$.
+	\item Each node has label $y_{i}\in \mathbb{R}$.
+	\item Only subset $S \subset V$, $|S| = l$ of node labels are revealed;
+	the remaining $u = n - l$ nodes are in subset $T = V\backslash S$.
+\end{itemize}
+
+We wish to predict values of vertices in $T$ by exploiting graph structure.
+Since we believe close nodes (similar) should share similar labels,
+each node should be surrounded by nodes with the same label.
+
+For recovered labels encoded in vector $f \in \mathbb{R}^n$:
+\begin{equation}
+f_i = \frac{\sum_{i\sim j} f_j w_{ij}}{\sum_{i\sim j} w_{ij}}
+\end{equation}
+where $f_i = f(x_i)$.
+
+\subsection{Random Walk Interpretation}
+
+If weight $w_{ij}$ expresses moving tendency from $x_i$ to $x_j$,
+transition probabilities are:
+\begin{equation}
+P(j|i) = \frac{w_{ij}}{\sum_k w_{ik}}
+\end{equation}
+A stationary distribution gives a valid solution.
+
+\subsection{Smoothness Preference}
+
+This can be expressed as a penalty on non-smooth solutions using Laplacian $L$:
+\begin{equation}
+\Omega(f)=\sum_{i\sim j}w_{ij}(f_{i}-f_{j})^{2} = f^{T}Lf
+\end{equation}
+
+Initially, we assume labeled data is always correct and enforce labels exactly.
+This promotes smoothness on unlabeled points while guaranteeing correct labels:
+
+\begin{align*}
+\min_{f \in \mathbb{R}^{n} }
+&  \sum_{i,j=1}^{n} w_{ij} \left( f(x_i)  - f(x_j)  \right)^2 \\
+s.t. \quad & y_i  = f(x_i)   \quad \forall i = 1,\dots,l
+\end{align*}
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*]
+	\item Complete \path{hard_hfs} and \path{two_moons_hfs}.
+		Select uniformly 4 labels ($S$), compute labels for
+		unlabeled nodes ($T$) using hard-HFS.
+		Plot resulting labeling and accuracy.
+	\item At home, run \path{two_moons_hfs} using \path{data_2moons_large.mat}
+		(1000 samples). Sample only 4 labels. What can go wrong?
+\end{enumerate}
+\end{questionbox}
+
+\subsection{Soft-HFS}
+
+When labels are noisy or some samples are mislabeled, relabeling might be
+beneficial. Soft-HFS balances smoothness and satisfying training labels.
+
+Define $C$ and $y$ as:
+\begin{equation}
+C_{ii} =
+\begin{cases}
+c_l & \text{for labeled examples}  \\
+c_u & \text{otherwise}
+\end{cases}
+\quad\quad
+y_i =
+\begin{cases}
+\text{true label} & \text{for  labeled examples}  \\
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+Soft-HFS objective:
+\begin{equation}
+	\min_{f \in \mathbb{R}^n}  (f - y)^\top C (f - y) + f^\top L f
+\end{equation}
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*,resume]
+	\item Complete \path{soft_hfs} and test with \path{two_moons_hfs}.
+		Complete \path{hard_vs_soft_hfs}. Compare soft-HFS and hard-HFS results.
+\end{enumerate}
+\end{questionbox}
+
+\section{Face Recognition with HFS}
+
+We apply HFS to face recognition---classifying faces as different persons.
+Since faces share common features, we leverage large quantities
+of unlabeled data to improve accuracy.
+
+Complete \path{offline_face_recognition} to classify faces and plot results.
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*]
+	\item How did you manage to label more than two classes?
+	\item Which preprocessing steps (e.g., \path{cv.GaussianBlur}, \path{cv.equalizeHist})
+	did you apply before constructing the similarity graph? Which gave best performance?
+	\item Does HFS reach good performance on this task?
+\end{enumerate}
+\end{questionbox}
+
+\subsection{Dataset Augmentation}
+
+Try augmenting the dataset with more unlabeled data. In \path{extended_dataset.tar.gz}
+you'll find additional pictures to expand the dataset.
+
+Modify \path{offline_face_recognition_augmented} for your extended dataset:
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*,resume]
+	\item Did adding more data improve performance? If so, which kind?
+	\item If performance doesn't improve, justify why. Which additional
+	data degrades performance instead of improving it?
+\end{enumerate}
+\end{questionbox}
+
+\section{Online SSL}
+
+SSL is designed for problems where collecting large supervised training data
+is difficult, but obtaining unlabeled samples from the same process is inexpensive.
+
+In stream processing, few labeled examples are provided initially to set
+the system bias while unlabeled examples are gathered online and update
+the bias continuously.
+
+\subsection{Computational Challenges}
+
+In online learning, after the game starts we don't observe any more true labels $y_t$.
+To adapt to environment changes, we rely on indirect feedback like data structure.
+
+When $t$ becomes large, naive hard-HFS (recomputing from scratch) has prohibitive costs.
+In streaming settings with near real-time requirements, we need scalable time and
+memory costs.
+
+Since most HFS operations scale with nodes, subsampling is effective:
+compute approximate solutions on smaller subsets that generalize well.
+
+Incremental $k$-centers \cite{charikar2004incremental} guarantees on distortion
+allow us to provide theoretical guarantees.
+
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		{\small
+			\STATE  \textbf{Input:} unlabeled $x_t$, centroids $C_{t - 1}$, multiplicities $v_{t-1}$, taboo list $b$
+			\IF{$(|C_{t - 1}| = k)$}
+				\STATE $c_1, c_2 \gets $ two closest centroids with at least one not in $b$
+				\STATE // Decide $c_{\text{rep}}$ (represents both) and $c_{\text{add}}$ (represents $x_t$)
+				\IF{$c_1$ in $b$}
+					\STATE $c_{\text{rep}} \gets c_1$, $c_{\text{add}} \gets c_2$
+				\ELSIF{$c_2$ in $b$}
+					\STATE $c_{\text{rep}} \gets c_2$, $c_{\text{add}} \gets c_1$
+				\ELSIF{$v_{t-1}(c_2) \leq  v_{t-1}(c_1)$}
+					\STATE $c_{\text{rep}} \gets c_1$, $c_{\text{add}} \gets c_2$
+				\ELSE
+					\STATE $c_{\text{rep}} \gets c_2$, $c_{\text{add}} \gets c_1$
+				\ENDIF
+				\STATE $v_t \gets v_{t-1}$
+				\STATE $v_t(c_{\text{rep}}) \gets v_t(c_{\text{rep}}) + v_t(c_{\text{add}})$
+				\STATE $c_{\text{add}} \gets x_t$, $v_t(c_{\text{add}}) = 1$
+			\ELSE
+				\STATE  $C_t \gets C_{t - 1}.\text{append}(x_t)$
+				\STATE  $v_t \gets v_{t-1}.\text{append}(1)$
+			\ENDIF
+		}
+	\end{algorithmic}
+	\caption{Incremental $k$-centers}
+\end{algorithm}
+
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		\STATE  \textbf{Input:} $t$, centroids $C_t$, multiplicities $v_t$, labels $y$
+		\STATE $V \gets \text{diag}(v_t)$
+		\STATE $[\widetilde{W}_q]_{ij} \gets$ weight between centroids $i$ and $j$
+		\STATE Compute Laplacian $L$ of graph represented by $W_q = V\widetilde{W}_qV$
+		\STATE  // Infer labels using hard-HFS
+		\STATE $\widehat{y_t} \gets \text{hardHFS}(L, y)$
+		\STATE // Remark: $x_t$ is always present in reduced graph and doesn't share centroids
+	\end{algorithmic}
+	\caption{Online HFS with Graph Quantization}
+\end{algorithm}
+
+\subsection{Practical Considerations}
+
+\begin{infobox}
+\begin{itemize}[leftmargin=*]
+	\item Labeled nodes are fundamentally different. Keep them separate, never merge.
+	      Taboo list $b$ tracks nodes that cannot be merged.
+	\item In streaming, it's preferable to pay small cost at every step
+	      for smooth execution. Centroids update at every step.
+	\item When a new node arrives with too many centroids, we choose
+	      two closest centroids $c_{\text{add}}$ and $c_{\text{rep}}$.
+	      $c_{\text{add}}$ forgets the old centroid and points to new sample;
+	      $c_{\text{rep}}$ represents all nodes that belonged to $c_{\text{add}}$.
+\end{itemize}
+\end{infobox}
+
+Use \path{create_user_profile} in \path{helper_online_ssl.py} to capture
+training set of your face and someone else's. Faces are preprocessed and saved in
+\path{data/faces}, loaded by \path{online_face_recognition}.
+
+\begin{questionbox}
+\begin{enumerate}[leftmargin=*]
+	\item Complete \path{online_ssl_update_centroids} using Algorithm 1.
+	\item Complete \path{online_ssl_compute_solution} following Algorithm 2.
+	\item Read \path{preprocess_face} in \path{helper_online_ssl.py} and run \path{online_face_recognition}.
+	Include resulting frames (not too similar) showing faces correctly labeled,
+	commenting on implementation choices.
+	\item What happens if an unknown person's face is captured?
+	Modify code to disregard unrecognizable faces.
+	Include frames showing unknown faces correctly labeled as unknown.
+\end{enumerate}
+\end{questionbox}
+
+\bibliographystyle{plain}
+\bibliography{td}
+
+\end{document}

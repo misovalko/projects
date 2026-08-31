@@ -1,0 +1,445 @@
+% !TEX TS-program = lualatex
+% !BIB TS-program = biber
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Rob Fergus, Nikhil Srivastava,\\[-1em] 
+Yiannis Koutis, Joshua Batson, Daniel Spielman}
+%{Partially based on material by:  Branislav Kveton,  \\[-1em]  Partha Niyogi, Rob Fergus}
+\newcommand{\misoclassdate}{}
+\input{../common/misomva}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage[customcolors]{hf-tikz}
+\usepackage{color}
+\usepackage{cancel}
+%\usepackage[defaultmono]{droidmono}
+\newcommand{\nbskip}{\vspace{-\baselineskip}}
+%\newcommand{\hbskip}{\vspace{.5\baselineskip}}
+\newcommand{\nhbskip}{\vspace{-.5\baselineskip}}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+
+\lstset{ %
+backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+basicstyle=\fdmfamily\footnotesize,        % the size of the fonts that are used for the code
+breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+breaklines=true,                 % sets automatic line breaking
+captionpos=b,                    % sets the caption-position to bottom
+commentstyle=\color{mygreen},    % comment style
+deletekeywords={\dots},            % if you want to delete keywords from the given language
+escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+frame=single,	                   % adds a frame around the code
+keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+language=Python,                 % the language of the code
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+otherkeywords={*,\dots},            % if you want to add more keywords to the set
+numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+numbersep=5pt,                   % how far the line-numbers are from the code
+numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+showstringspaces=false,          % underline spaces within strings only
+showtabs=false,                  % show tabs within strings adding particular underscores
+stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+tabsize=2,	                   % sets default tabsize to 2 spaces
+title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+
+\newcommand{\consindent}[1]{
+    \begin{itemize}
+        \item[{\includegraphics[height=0.7\baselineskip]{../img/arrow_list}}] #1
+    \end{itemize}
+}
+
+
+%%% part daniele
+\usepackage{etex}
+\TPshowboxesfalse
+\textblockorigin{0mm}{0mm}
+
+\definecolor{rouge1}{RGB}{226,0,38}  % red P
+\definecolor{orange1}{RGB}{243,154,38}  % orange P
+\definecolor{jaune}{RGB}{254,205,27}  % jaune P
+\definecolor{blanc}{RGB}{255,255,255} % blanc P
+
+\definecolor{rouge2}{RGB}{230,68,57}  % red S
+\definecolor{orange2}{RGB}{236,117,40}  % orange S
+\definecolor{taupe}{RGB}{134,113,127} % taupe S
+\definecolor{gris}{RGB}{91,94,111} % gris S
+\definecolor{bleu1}{RGB}{38,109,131} % bleu S
+\definecolor{bleu2}{RGB}{28,50,114} % bleu S
+\definecolor{vert1}{RGB}{133,146,66} % vert S
+\definecolor{vert3}{RGB}{20,200,66} % vert S
+\definecolor{vert2}{RGB}{157,193,7} % vert S
+\definecolor{darkyellow}{RGB}{233,165,0}  % orange S
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
+\definecolor{darkgray}{rgb}{0.6,0.6,0.6}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded]
+\setbeamercolor{block title}{bg=bleu2,fg=white}%bg=background, fg= foreground
+\setbeamercolor{block body}{bg=lightgray}%bg=background, fg= foreground
+
+\renewcommand{\sfdefault}{lmss}
+\sffamily
+
+%\newcommand{\ycol}[1]{\textcolor{darkyellow}{\textit{#1}}}
+
+\newcommand{\rcolb}[1]{\textcolor{red}{\textit{\textbf{#1}}}}
+\newcommand{\gcolb}[1]{\textcolor{vert3}{\textit{\textbf{#1}}}}
+\newcommand{\bcolb}[1]{\textcolor{blue}{\textit{\textbf{#1}}}}
+\newcommand{\ycolb}[1]{\textcolor{darkyellow}{\textit{\textbf{#1}}}}
+
+\newcommand{\eqrcol}[1]{\textcolor{red}{#1}}
+\newcommand{\eqgcol}[1]{\textcolor{vert3}{#1}}
+\newcommand{\eqbcol}[1]{\textcolor{blue}{#1}}
+\newcommand{\eqrcolb}[1]{\textcolor{red!70}{\mathbf{#1}}}
+\newcommand{\eqgcolb}[1]{\textcolor{vert3!70}{\mathbf{#1}}}
+\newcommand{\eqbcolb}[1]{\textcolor{blue!70}{\mathbf{#1}}}
+\newcommand{\eqycol}[1]{\textcolor{darkyellow}{#1}}
+
+%\newcommand{\otoprule}{\midrule[\heavyrulewidth]}
+
+\colorlet{redp}{red!20} % vert S
+\colorlet{greenp}{vert3!20} % vert S
+\colorlet{bluep}{blue!20} % vert S
+
+\usepackage{adjustbox}
+
+% Highlight and cancel commands are defined in misomva.tex
+
+\newcommand{\bookboxx}[1]{
+\par\medskip\noindent
+\framebox[\columnwidth]{
+\begin{minipage}{0.98\columnwidth} {\par\smallskip#1\par\smallskip} \end{minipage} } \par\medskip }
+
+\setbeamersize{text margin left=1cm,text margin right=1cm}
+\tikzstyle{every picture}+=[remember picture]
+
+\newcommand{\incarrow}{{\includegraphics[height=0.7\baselineskip]{../img/arrow_list}}}
+\newcommand{\consarrow}{{\hspace*{.1pt} \includegraphics[height=0.7\baselineskip]{../img/arrow_list}}\;}
+
+% Change margins for slides
+\newenvironment{changemargin}[2]{% 
+  \begin{list}{}{% 
+    \setlength{\topsep}{0pt}% 
+    \setlength{\leftmargin}{#1}% 
+    \setlength{\rightmargin}{#2}% 
+    \setlength{\listparindent}{\parindent}% 
+    \setlength{\itemindent}{\parindent}% 
+    \setlength{\parsep}{\parskip}% 
+  }% 
+  \item[]}{\end{list}} 
+
+
+\newcommand{\ie}{i.e.\xspace}
+\newcommand{\eg}{e.g.\xspace}
+
+\newcommand{\greycite}[1]{{\small \textcolor{gray}{\cite{#1}}}}
+%%%
+
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Spectral Graph Sparsifiers in ML}
+
+\newcommand{\topicsubtitle}{Ridge Sparsifiers and Applications}
+\renewcommand{\misoclasstinytitleslide}{Partially based on material by:  Rob Fergus, Nikhil Srivastava,\\[-1em] Yiannis Koutis, Joshua Batson, Daniel Spielman}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Spectral Graph Sparsification: Intuition}
+\bigskip
+\questionbox{What it this rescaling $\bv_e = \bL_G^{-1/2}\bb_e$ doing to the norm?}
+\[
+\norm{\bv_e}^2 \pause = \norm{\bL_G^{-1/2}\bb_e}^2 
+\pause = \bb_e  \transpose \bL_G^{-1} \bb_e 
+\onslide<5->{= R_{\text{eff}}(e)}
+\]
+\pause 
+\moveb
+\textbf{Random walk intuition: } \hlb{inverse} of number of alternative paths
+\pause 
+\moveb
+\textbf{Electrical intuition: }We want to find an electrically similar $H$ and the importance 
+of the edge is its effective resistance $R_{\text{eff}}(e)$.
+\notecol{\tiny\qquad $R_{\text{eff}}(e)$ is the potential difference between the nodes when injecting a unit current  }
+\pause 
+\moveb
+%\moveb
+\rightyellbox{Edges with higher $R_{\text{eff}}$ are more \emphcol{electrically significant}! }
+
+\end{frame}
+\begin{frame}
+\frametitle{Spectral Graph Sparsification: Intuition}
+\bigskip
+\questionbox{What are we doing by choosing H?}
+\pause 
+\begin{center}
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[
+    vector/.style={->, thick, black!70!white, shorten >=1pt},
+    sparsevector/.style={->, thick, orange!80!red, shorten >=1pt},
+    labelbox/.style={draw, rounded corners, fill=white, opacity=0.8, text opacity=1, inner sep=3pt, font=\small}
+]
+
+    % Left side: Many vectors in a green circle
+    \begin{scope}[xshift=0cm]
+        \fill[green!10!white, opacity=0.5] (0,0) circle (1.5cm);
+        \draw[green!70!black, dashed, thick] (0,0) circle (1.5cm);
+
+        % Many black vectors
+        \foreach \angle in {0, 10, \dots, 350} {
+            \draw[vector] (0,0) -- (\angle:1.4cm);
+        }
+        \node[labelbox, below=0.3cm] at (0,-1.5) {m vectors in $\mathbb{R}^n$};
+    \end{scope}
+
+    % Right side: Fewer vectors
+    \begin{scope}[xshift=5cm]
+        % No background circle, just vectors
+        % Fewer orange vectors
+        \foreach \angle in {0, 45, \dots, 315} {
+            \draw[sparsevector] (0,0) -- (\angle:1.4cm);
+        }
+        \node[labelbox, below=0.3cm] at (0,-1.5) {$\tilde{O}(n)$ vectors in $\mathbb{R}^n$};
+    \end{scope}
+
+\end{tikzpicture}
+}
+\end{center}
+\pause 
+\yellbox{We take a subset of these $\be_e$s and scale them!}
+\begin{flushright}
+{\tiny \url{https://math.berkeley.edu/~nikhil/}}
+\end{flushright}
+\end{frame}
+\begin{frame}
+\frametitle{Spectral Graph Sparsification: Intuition}
+\bigskip
+\questionbox{What kind of scaling go we want?}
+\pause 
+\begin{center}
+\usetikzlibrary{arrows.meta}
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}
+
+    % ===== Left side - Many vectors =====
+    \begin{scope}[xshift=0cm]
+        % Green filled circle with dashed boundary
+        \fill[green!20] (0,0) circle (2.5cm);
+        \draw[dashed, very thick] (0,0) circle (2.5cm);
+        
+        % Many black arrows from center (v_e vectors)
+        \foreach \angle in {0, 25, 50, 80, 110, 140, 165, 190, 220, 250, 280, 310, 340} {
+            \draw[-{Stealth[length=8pt]}, thick] (0,0) -- (\angle:1.8);
+        }
+        
+        % Label v_e
+        \node[font=\large\itshape] at (1.5, -2) {$v_e$};
+        
+        % Label "m vectors in R^n" in box
+        \node[draw=blue!60, fill=white, rounded corners, font=\large] at (1.5, 3.2) 
+            {\textbf{m} vectors in $\mathbf{R}^n$};
+    \end{scope}
+    
+    % ===== Right side - Ellipse with fewer vectors =====
+    \begin{scope}[xshift=7cm]
+        % Blue filled ellipse with dashed boundary
+        \fill[blue!20] (0,0) ellipse (3cm and 2cm);
+        \draw[dashed, very thick] (0,0) ellipse (3cm and 2cm);
+        
+        % Black cross axes (κ) - extending to ellipse edges
+        \draw[thick] (-3, 0) -- (3, 0);
+        \draw[thick] (0, -2) -- (0, 2);
+        
+        % Label κ (kappa)
+        \node[font=\large\itshape] at (2.2, -1.2) {$\kappa$};
+        
+        % Orange arrows from center (s_e v_e vectors) - fewer
+        \draw[-{Stealth[length=10pt]}, orange, very thick] (0,0) -- (30:1.5);
+        \draw[-{Stealth[length=10pt]}, orange, very thick] (0,0) -- (80:1.2);
+        \draw[-{Stealth[length=10pt]}, orange, very thick] (0,0) -- (150:1.3);
+        \draw[-{Stealth[length=10pt]}, orange, very thick] (0,0) -- (200:1.4);
+        \draw[-{Stealth[length=10pt]}, orange, very thick] (0,0) -- (290:1.1);
+        
+        % Label s_e v_e
+        \node[font=\large\itshape, orange] at (0.8, -1.8) {$s_e v_e$};
+        
+        % Label "O~(n) vectors in R^n" in box
+        \node[draw=blue!60, fill=white, rounded corners, font=\large] at (1, 3.2) 
+            {$\mathbf{O}$\textsuperscript{$\sim$}$(n)$ vectors in $\mathbf{R}^n$};
+    \end{scope}
+    
+\end{tikzpicture}
+}
+\end{center}
+\pause 
+\yellbox{Such that the blue ellipsoid looks like identity!} \\
+\pause 
+\vspace{-0.2em}
+\notecol{\tiny\qquad \qquad the blue eigenvalues are between 1 and $\kappa$}
+\vspace{-1em}
+\begin{flushright}
+{\tiny \url{https://math.berkeley.edu/~nikhil/}}
+\end{flushright}
+\end{frame}
+\begin{frame}
+\frametitle{Spectral Graph Sparsification}
+Todo: Given $\bI = \sum_e \bv_e \bv_e \transpose$, find a sparse reweighting.
+\moveb 
+Randomized algorithm that finds $\bs$:
+\pause 
+\begin{itemize}%\addtolength{\itemsep}{0.75\baselineskip}
+\item[] \hspace*{-.75cm}Sample $n \log n / \eps^2$ with replacement $p_i \propto \norm{\bv_e}^2$ (resistances) \pause 
+\item[] \hspace*{-.75cm}Reweigh $s_i = \tfrac{1}{p_i}$  unbiased $\mathbb{E}[\sum_i s_i \bv_i \bv_i] = \sum_e s_e p_e \bv_e \bv_e = \sum_e \bv_e \bv_e$ \pause 
+\end{itemize} 
+\bskip
+\questionbox{Does this work?} 
+\pause 
+\begin{block}{Application of Matrix Chernoff Bound by Rudelson (1999) }
+\[
+1 - \eps \prec \lambda\left(\sum_e s_e \bv_e \bv_e  \transpose \right) \prec 1+\eps
+\]
+\end{block}
+\pause 
+\vspace{-0.5em}
+\notecol{\tiny\qquad finer bounds now available}\\ \smallskip
+%\pause 
+
+\end{frame}
+\begin{frame}
+\frametitle{Ridge Spectral Graph Sparsification: Intuition}
+\begin{definition}\label{def:exact-lev-scores}
+\normalfont
+\textbf{$\gamma$-effective resistance:}
+$\hleb{r_{e}(\gamma)} = \:b_e^\transp(\laplacian_{G} + \gamma\:I)^{-1}\:b_e$
+%\vspace{0.2in}
+
+\hbskip
+\textbf{Effective dim.:}
+$\hlbg{\deff( \gamma )} = \sum_{e} r_{e}(\gamma) 
+	= \hlbb{\sum_{i=1}^n \frac{\lambda_i(\laplacian_G)}{\lambda_i(\laplacian_G) + \gamma}}
+\hleg{\vphantom{\sum_{i=1}^n(\laplacian_G)}\leq n}$
+\end{definition}
+
+\hbskip
+\pause
+Interpretation as inverse of alternative paths (mostly) lost
+
+\pause
+\hbskip
+Most existing graph algorithms inapplicable \greycite{kyng2016framework}
+
+Most existing RLA algorithms too slow \greycite{cohen2017input}
+
+\pause
+\hbskip
+Adapt SOA algorithm for kernel matrix approximation\\
+{\small \textcolor{gray}{\textsc{SQUEAK}, \cite{calandriello2017distributed}}}
+
+\end{frame}
+\begin{frame}
+\frametitle{Spectral Graph Sparsification}
+
+We want to make this algorithm fast.
+\pause 
+\questionbox{How can we compute the effective resistances?}
+\moveb
+\pause 
+Solve a linear system $\wh{\bx} = \argmin_{\bx} \norm{\bL_{G}\bx - \bb_e}$
+and then $R_{\text{eff}} = \bb_e \transpose \wh{\bx}$
+\pause
+\begin{align*}
+\action<+->{\text{Gaussian Elimination} \qquad  & \cO(n^3)}\\
+\action<+->{\text{Fast Matrix Multiplication}  \qquad  & \cO(n^{2.37})}\\
+\action<+->{\text{Spielman \& Teng (2004)} \qquad  & \cO(m \log^{30}n)}\\
+\action<+->{\text{Koutis, Miller, and Peng (2010)} \qquad & \cO(m \log n)}
+\end{align*}
+\vspace{-1\baselineskip}
+\begin{itemize}[<+->]
+\item Fast solvers for SDD systems:
+\consindent{\yellbox{use sparsification internally}\\*
+\notecol{\tiny\qquad all the way until you hit the turtles}}
+%\item[] \questionbox{still unfeasible when $m$ is large}}
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Spectral Graph Sparsification}
+\questionbox{Chicken and egg problem}
+\begin{itemize}
+\item[] {\small We need $R_{\text{eff}}$ to compute a sparsifier  $H$ \includegraphics[height=0.7\baselineskip]{../img/arrow_list_rot}}
+\consindent{We need a sparsifier $H$ to compute $R_{\text{eff}}$}
+\end{itemize}
+\pause
+\vspace{\baselineskip}
+Sampling according to approximate effective resistances $R_{\text{eff}} \leq \wt{R}_{\text{eff}} \leq \alpha R_{\text{eff}}$ give approximate sparsifier $\bL_{G} \preceq \bL_{H} \preceq \alpha\kappa \bL_{G}$
+\pause
+\vspace{\baselineskip}
+
+Start with poor approximation $\wt{R}_{\text{eff}} \sim 1/n$ and poor sparsifier $n \bI$.
+\pause
+\begin{itemize}
+\item[]  {\small Use $\wt{R}_{\text{eff}}$ to compute an improved approximate sparsifier $H$ \includegraphics[height=0.7\baselineskip]{../img/arrow_list_rot}}
+\consindent{Use the sparsifier $H$ to compute improved approximate $\wt{R}_{\text{eff}}$}
+\end{itemize}
+
+\pause
+\vspace{\baselineskip}
+Computing $\wt{R}_{\text{eff}}$ using the sparsifier is fast ($m = \bO(n\log(n))$),
+and not too many iterations are necessary.
+\end{frame}
+\begin{frame}
+\frametitle{What can I use sparsifiers for?}
+\begin{itemize}[<+->]
+\item Graph linear systems: minimum cut, maximum flow, Laplacian regression,
+SSL
+\item More in general, solving Strongly Diagonally Dominant (SDD) linear systems
+\consindent{electric circuit, fluid equations, finite elements methods}
+
+\item Various embeddings: k-means, spectral clustering.
+\end{itemize}
+\bigskip
+
+\questionbox{But what if my problems have no use for spectral guarantees?}
+\notecol{\tiny\qquad Or if my boss does not trust approximation methods}
+\end{frame}
+
+
+\MakeLastSlide
+\end{document}
+
+\MakeLastSlide
+\end{document}

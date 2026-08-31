@@ -1,0 +1,141 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Ulrike von Luxburg, \\[-1em] Gary Miller, Doyle \& Schnell, Daniel Spielman}
+\newcommand{\misoclassdate}{}
+\usetikzlibrary{graphs}
+
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Normalized Laplacians}
+
+\newcommand{\topicsubtitle}{$L_{\mathrm{sym}}$ and $L_{\mathrm{rw}}$}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Smoothness of the Function and Laplacian}
+\begin{block}{}
+$$
+S_G(\bff)  = \bff\transpose\bL\bff =
+ \bff\transpose\bQ\bLambda\bQ\transpose\bff = 
+\balpha\transpose\bLambda\balpha = 
+\|\balpha\|^2_{\bLambda}=\sum_{i=1}^\nodes\lambda_i\alpha_i^2
+$$
+ \end{block}
+
+Eigenvectors are graph functions too!\\
+\smallskip \pause
+\questionbox{What is the smoothness of an eigenvector?}\\
+\smallskip \pause
+Spectral coordinates of eigenvector $\bv_k$: $\bQ\transpose\bv_k =  \pause \be_k$
+\pause
+\begin{block}{}
+$$
+S_G(\bv_k)\! = \! \bv_k\transpose\bL\bv_k \!=\!
+ \bv_k\transpose\bQ\bLambda\bQ\transpose\bv_k = 
+\be_k\transpose\bLambda\be_k = 
+\|\be_k\|^2_{\bLambda}=\sum_{i=1}^\nodes\lambda_i(\be_k)_i^2 \pause = \lambda_k
+$$
+ \end{block}
+\pause
+The smoothness of $k$-th eigenvector is the $k$-th eigenvalue.
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Laplacian of the Complete Graph $K_\nodes$}
+
+What is the eigenspectrum of $\bL_{K_\nodes}$?
+
+\begin{columns}[c]
+\column{0.8in}
+\tikz \graph[nodes={circle,draw},edges={circle connection bar, fill}] 
+{ subgraph K_n [n=5, counterclockwise] };
+
+\column{2in}
+\begin{center}
+ {\scriptsize
+\specialcell{
+\begin{math}
+\bL_{K_\nodes} = \left(
+\begin{array}{ccccc}
+\nodes -1 & -1 & -1 & -1 & -1 \\
+ -1 & \nodes-1 & -1 & -1 & -1 \\
+ -1 & -1 & \nodes-1 & -1 & -1 \\
+ -1 & -1 & -1 & \nodes-1 & -1 \\
+ -1 & -1 & -1 & -1 & \nodes-1 \\
+\end{array}
+\right)
+\end{math}
+}
+}
+
+\end{center}
+\end{columns}
+
+\pause
+\bigskip
+
+From before: we know that $(0, \bOne_\nodes)$ is an eigenpair.
+
+\begin{block}{}
+
+If $\bv \ne 0_\nodes$ and $\bv \perp \bOne_\nodes \implies \sum_i \bv_i = 0$. 
+\pause
+To get the other eigenvalues, we compute $(\bL_{K_\nodes}\bv)_1$ and divide by $\bv_1$ (wlog $\bv_1 \ne 0$). 
+\pause
+\vspace{-1em}
+$$ 
+(\bL_{K_\nodes}\bv)_1 = (\nodes-1)\bv_1 -  \sum_{i=2}^\nodes \bv_i = \nodes \bv_1. 
+$$
+\end{block}
+\pause
+\begin{flushright}
+What are the remaining eigenvalues/vectors? 
+\vspace{0.2em}
+\pause
+\onslide<handout:0>{\notecol{\tiny \\ Answer: $\nodes-1$ eigenvectors $\perp \bOne_\nodes$ for eigenvalue $\nodes$ with multiplicity $\nodes-1$.\\}}
+\vspace{-0.5em}
+%\gcol{\tiny  Question: What changes for \textbf{weighted} complete graphs?}
+\end{flushright}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Normalized Laplacians}
+
+\begin{align*}
+\onslide<1->{ \bL_{un} &= \bD - \bW }  \\ 
+\onslide<2->{ \bL_{sym} &= \bD^{-1/2}\bL\bD^{-1/2} = \bI - \bD^{-1/2}\bW\bD^{-1/2} } \\ 
+\onslide<3->{ \bL_{rw} &= \bD^{-1}\bL = \bI- \bD^{-1}\bW }  
+\end{align*}
+
+
+\onslide<4->{
+\begin{block}{}
+$$\bff\transpose\bL_{sym}\bff = \frac{1}{2}\sum_{i,j\leq \nodes}w_{i,j}%
+\left(\frac{f_i}{\sqrt{d_i}}-\frac{f_j}{\sqrt{d_j}}\right)^2$$
+\end{block}
+}
+
+\onslide<5->{
+\begin{block}{}
+$(\lambda,\bu)$ is an eigenpair for $\bL_{rw}$ iff 
+$(\lambda,\bD^{1/2}\bu)$ is an eigenpair for $\bL_{sym}$
+\end{block}\pause
+}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\MakeLastSlide
+\end{document}

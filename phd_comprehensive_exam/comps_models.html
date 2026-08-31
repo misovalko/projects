@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading List: Probabilistic Graphical Models</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+	--primary: #008BA4;
+	--primary-hover: #006d82;
+	--accent: #5C6BC0;
+	--text: #1a1a2e;
+	--text-light: #64748b;
+	--bg: #f8fafc;
+	--card-bg: #ffffff;
+	--border: #e2e8f0;
+	--tag-bg: #e0f2fe;
+	--tag-text: #0369a1;
+	--success: #059669;
+	--radius: 12px;
+	--shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+	--shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+	font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+	padding: 2rem;
+}
+
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+header {
+	text-align: center;
+	margin-bottom: 2rem;
+	padding: 2rem;
+	background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+	border-radius: var(--radius);
+	color: white;
+}
+
+header h1 {
+	font-size: 1.75rem;
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}
+
+header p {
+	opacity: 0.9;
+	font-size: 0.95rem;
+}
+
+.back-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: white;
+	text-decoration: none;
+	font-size: 0.875rem;
+	margin-bottom: 1rem;
+	opacity: 0.9;
+	transition: opacity 0.2s;
+}
+
+.back-link:hover { opacity: 1; }
+
+/* Search */
+#qs {
+	background: var(--card-bg);
+	border-radius: var(--radius);
+	padding: 1.25rem;
+	margin-bottom: 1.5rem;
+	box-shadow: var(--shadow);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	align-items: center;
+}
+
+#qs label {
+	font-weight: 500;
+	color: var(--text-light);
+	font-size: 0.875rem;
+}
+
+#qsfield {
+	flex: 1;
+	min-width: 200px;
+	padding: 0.75rem 1rem;
+	border: 2px solid var(--border);
+	border-radius: 8px;
+	font-size: 1rem;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#qsfield:focus {
+	outline: none;
+	border-color: var(--primary);
+	box-shadow: 0 0 0 3px rgba(0,139,164,0.1);
+}
+
+#qsfield.invalidsearch {
+	border-color: #ef4444;
+	background: #fef2f2;
+}
+
+.search-btn {
+	padding: 0.75rem 1.25rem;
+	background: var(--border);
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 0.875rem;
+	font-weight: 500;
+	transition: background 0.2s;
+}
+
+.search-btn:hover { background: #cbd5e1; }
+
+#stat {
+	font-size: 0.875rem;
+	color: var(--text-light);
+	font-weight: 500;
+}
+
+#qssettings { display: none; }
+
+/* Reference cards */
+.references {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.ref-card {
+	background: var(--card-bg);
+	border-radius: var(--radius);
+	padding: 1.5rem;
+	box-shadow: var(--shadow);
+	transition: box-shadow 0.2s, transform 0.2s;
+		}
+
+.ref-card:hover {
+	box-shadow: var(--shadow-lg);
+	transform: translateY(-1px);
+		}
+
+.ref-card.noshow { display: none; }
+.ref-card.highlight { border-left: 4px solid var(--primary); }
+
+.ref-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.ref-year {
+	background: var(--tag-bg);
+	color: var(--tag-text);
+	padding: 0.25rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.ref-title {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--text);
+	margin-bottom: 0.5rem;
+	line-height: 1.4;
+}
+
+.ref-authors {
+	color: var(--text-light);
+	font-size: 0.95rem;
+	margin-bottom: 0.75rem;
+}
+
+.ref-venue {
+	font-size: 0.875rem;
+	color: var(--text-light);
+	font-style: italic;
+	margin-bottom: 1rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.ref-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.ref-actions a, .ref-actions button {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.375rem;
+	padding: 0.5rem 0.875rem;
+	font-size: 0.8rem;
+	font-weight: 500;
+	border-radius: 6px;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s;
+	border: none;
+	font-family: inherit;
+}
+
+.btn-primary {
+	background: var(--primary);
+	color: white;
+}
+
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-secondary {
+	background: var(--border);
+	color: var(--text);
+}
+
+.btn-secondary:hover { background: #cbd5e1; }
+
+/* Expandable content */
+.ref-extra {
+	display: none;
+	margin-top: 1rem;
+	padding: 1rem;
+	background: #f1f5f9;
+	border-radius: 8px;
+	font-size: 0.875rem;
+}
+
+.ref-extra.show { display: block; }
+
+.ref-extra h4 {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-light);
+	margin-bottom: 0.5rem;
+		}		
+
+.ref-extra pre {
+	background: #1e293b;
+	color: #e2e8f0;
+	padding: 1rem;
+	border-radius: 6px;
+	overflow-x: auto;
+	font-size: 0.8rem;
+	line-height: 1.5;
+}
+
+.ref-extra p {
+	color: var(--text);
+	line-height: 1.7;
+}
+
+footer {
+	text-align: center;
+	padding: 2rem;
+	color: var(--text-light);
+	font-size: 0.875rem;
+		}		
+
+footer a { color: var(--primary); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+	body { padding: 1rem; }
+	header { padding: 1.5rem; }
+	header h1 { font-size: 1.5rem; }
+	.ref-card { padding: 1rem; }
+	.ref-header { flex-direction: column-reverse; }
+	.ref-year { align-self: flex-start; }
+}
+</style>
+<script>
+// Search functionality
+let entryCards = [];
+let prevSearch = '';
+
+document.addEventListener('DOMContentLoaded', function() {
+	entryCards = document.querySelectorAll('.ref-card[data-searchable]');
+	document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length;
+	document.getElementById('qsfield').addEventListener('keyup', quickSearch);
+});
+
+function quickSearch(e) {
+	const query = e.target.value.toLowerCase().trim();
+	if (!query) {
+		entryCards.forEach(card => card.classList.remove('noshow'));
+		document.getElementById('stat').textContent = entryCards.length + '/' + entryCards.length;
+		e.target.classList.remove('invalidsearch');
+		return;
+	}
+	
+	try {
+		const regex = new RegExp(query, 'i');
+		let hits = 0;
+		entryCards.forEach(card => {
+			const text = card.textContent;
+			if (regex.test(text)) {
+				card.classList.remove('noshow');
+				hits++;
+	} else {
+				card.classList.add('noshow');
+	}
+		});
+		document.getElementById('stat').textContent = hits + '/' + entryCards.length;
+		e.target.classList.remove('invalidsearch');
+	} catch(err) {
+		e.target.classList.add('invalidsearch');
+	}
+}
+
+function clearSearch() {
+	const field = document.getElementById('qsfield');
+	field.value = '';
+	field.dispatchEvent(new Event('keyup'));
+	}
+		
+function toggleInfo(id, type) {
+	const el = document.getElementById(type + '_' + id);
+	const card = document.getElementById(id);
+	if (el) {
+		el.classList.toggle('show');
+		card.classList.toggle('highlight', el.classList.contains('show'));
+	}
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+	<header>
+		<a href="../../comps.html" class="back-link">← Back to Comprehensive Exam</a>
+		<h1>📚 Probabilistic Graphical Models</h1>
+		<p>Reading list for PhD comprehensive exam • Dr. Hauskrecht</p>
+	</header>
+
+<div id="qs">
+		<label for="qsfield">🔍 Search</label>
+		<input type="text" id="qsfield" placeholder="Search by author, title, year..." autocomplete="off" aria-label="Search papers">
+		<button class="search-btn" onclick="clearSearch()">Clear</button>
+		<span>Showing <span id="stat">0</span> papers</span>
+		<div id="qssettings"></div>
+	</div>
+
+	<div class="references">
+
+		<article class="ref-card" id="blei2003latent" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Latent Dirichlet Allocation</div>
+					<div class="ref-authors">Blei, D.M., Ng, A.Y. & Jordan, M.I.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Journal of Machine Learning Research, Vol. 3, pp. 993-1022</div>
+			<div class="ref-actions">
+				<a href="https://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('blei2003latent','bib')">📋 BibTeX</button>
+</div>
+			<div class="ref-extra" id="bib_blei2003latent">
+				<h4>BibTeX</h4>
+				<pre>@article{blei2003latent,
+  author = {David M. Blei and Andrew Y. Ng and Michael I. Jordan},
+  title = {Latent dirichlet allocation},
+  journal = {J. Mach. Learn. Res.},
+  publisher = {MIT Press},
+  year = {2003},
+  volume = {3},
+  pages = {993--1022}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="charniak1991bayesiana" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Bayesian Networks Without Tears</div>
+					<div class="ref-authors">Charniak, E.</div>
+				</div>
+				<span class="ref-year">1991</span>
+			</div>
+			<div class="ref-venue">AI Magazine, Vol. 12(4), pp. 50-63</div>
+			<div class="ref-actions">
+				<a href="https://pages.cs.wisc.edu/~dyer/cs540/handouts/charniak.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('charniak1991bayesiana','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_charniak1991bayesiana">
+				<h4>BibTeX</h4>
+				<pre>@article{charniak1991bayesiana,
+  author = {Eugene Charniak},
+  title = {Bayesian networks without tears},
+  journal = {AI Mag.},
+  year = {1991},
+  volume = {12},
+  number = {4},
+  pages = {50--63}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="dash2002exact" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Exact Model Averaging with Naive Bayesian Classifiers</div>
+					<div class="ref-authors">Dash, D. & Cooper, G.F.</div>
+				</div>
+				<span class="ref-year">2002</span>
+			</div>
+			<div class="ref-venue">ICML '02: Proceedings of the Nineteenth International Conference on Machine Learning, pp. 91-98</div>
+			<div class="ref-actions">
+				<a href="https://proceedings.mlr.press/r4/dash03a/dash03a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('dash2002exact','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_dash2002exact">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{dash2002exact,
+  author = {Denver Dash and Gregory F. Cooper},
+  title = {Exact model averaging with naive Bayesian classifiers},
+  booktitle = {ICML '02},
+  publisher = {Morgan Kaufmann},
+  year = {2002},
+  pages = {91--98}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="eaton2007bayesian" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Bayesian Structure Learning Using Dynamic Programming and MCMC</div>
+					<div class="ref-authors">Eaton, D. & Murphy, K.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">Proceedings of the 23rd Conference on Uncertainty in Artificial Intelligence (UAI-07)</div>
+			<div class="ref-actions">
+				<a href="https://www.cs.ubc.ca/~murphyk/Papers/eaton-uai07.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('eaton2007bayesian','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_eaton2007bayesian">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{eaton2007bayesian,
+  author = {D. Eaton and K. Murphy},
+  title = {Bayesian structure learning using dynamic programming and MCMC},
+  booktitle = {UAI '07},
+  year = {2007}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="ghahramani2000graphical" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Graphical Models and Variational Methods</div>
+					<div class="ref-authors">Ghahramani, Z. & Beal, M.J.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">Advanced Mean Field Methods - Theory and Practice, MIT Press</div>
+			<div class="ref-actions">
+				<a href="https://mlg.eng.cam.ac.uk/zoubin/papers/varintro.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('ghahramani2000graphical','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_ghahramani2000graphical">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{ghahramani2000graphical,
+  author = {Zoubin Ghahramani and Matthew J. Beal},
+  title = {Graphical models and variational methods},
+  booktitle = {Advanced Mean Field Methods},
+  publisher = {MIT Press},
+  year = {2000}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="ghahramani1997factorial" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Factorial Hidden Markov Models</div>
+					<div class="ref-authors">Ghahramani, Z. & Jordan, M.I.</div>
+				</div>
+				<span class="ref-year">1997</span>
+			</div>
+			<div class="ref-venue">Machine Learning, Vol. 29(2-3), pp. 245-273</div>
+			<div class="ref-actions">
+				<a href="https://www.ee.columbia.edu/~sfchang/course/svia-F03/papers/factorial-HMM-97.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('ghahramani1997factorial','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_ghahramani1997factorial">
+				<h4>BibTeX</h4>
+				<pre>@article{ghahramani1997factorial,
+  author = {Zoubin Ghahramani and Michael I. Jordan},
+  title = {Factorial Hidden Markov Models},
+  journal = {Mach. Learn.},
+  year = {1997},
+  volume = {29},
+  number = {2-3},
+  pages = {245--273}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="jordan2003introduction" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">An Introduction to Probabilistic Graphical Models</div>
+					<div class="ref-authors">Jordan, M.I.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Unpublished manuscript, UC Berkeley</div>
+			<div class="ref-actions">
+				<a href="https://people.eecs.berkeley.edu/~jordan/prelims/" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 Link</a>
+				<button class="btn-secondary" onclick="toggleInfo('jordan2003introduction','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_jordan2003introduction">
+				<h4>BibTeX</h4>
+				<pre>@unpublished{jordan2003introduction,
+  author = {Jordan, Michael I.},
+  title = {An Introduction to Probabilistic Graphical Models},
+  year = {2003}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="koivisto2004exact" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Exact Bayesian Structure Discovery in Bayesian Networks</div>
+					<div class="ref-authors">Koivisto, M. & Sood, K.</div>
+				</div>
+				<span class="ref-year">2004</span>
+			</div>
+			<div class="ref-venue">Journal of Machine Learning Research, Vol. 5, pp. 549-573</div>
+			<div class="ref-actions">
+				<a href="https://www.jmlr.org/papers/volume5/koivisto04a/koivisto04a.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('koivisto2004exact','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_koivisto2004exact">
+				<h4>BibTeX</h4>
+				<pre>@article{koivisto2004exact,
+  author = {M. Koivisto and K. Sood},
+  title = {Exact Bayesian Structure Discovery in Bayesian Networks},
+  journal = {JMLR},
+  year = {2004},
+  volume = {5},
+  pages = {549--573}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="koller2007bayesian" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Bayesian Networks and Beyond</div>
+					<div class="ref-authors">Koller, D. & Friedman, N.</div>
+				</div>
+				<span class="ref-year">2007</span>
+			</div>
+			<div class="ref-venue">Draft, later published as "Probabilistic Graphical Models" (MIT Press, 2009)</div>
+			<div class="ref-actions">
+				<a href="https://mitpress.mit.edu/9780262013192/probabilistic-graphical-models/" class="btn-primary" target="_blank" rel="noopener noreferrer">📖 Book</a>
+				<button class="btn-secondary" onclick="toggleInfo('koller2007bayesian','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_koller2007bayesian">
+				<h4>BibTeX</h4>
+				<pre>@book{koller2009pgm,
+  author = {Daphne Koller and Nir Friedman},
+  title = {Probabilistic Graphical Models: Principles and Techniques},
+  publisher = {MIT Press},
+  year = {2009}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="lafferty2001conditional" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Conditional Random Fields: Probabilistic Models for Segmenting and Labeling Sequence Data</div>
+					<div class="ref-authors">Lafferty, J.D., McCallum, A. & Pereira, F.C.N.</div>
+				</div>
+				<span class="ref-year">2001</span>
+			</div>
+			<div class="ref-venue">ICML '01: Proceedings of the Eighteenth International Conference on Machine Learning, pp. 282-289</div>
+			<div class="ref-actions">
+				<a href="https://www.cis.upenn.edu/~pereira/papers/crf.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('lafferty2001conditional','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_lafferty2001conditional">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{lafferty2001conditional,
+  author = {John D. Lafferty and Andrew McCallum and Fernando C. N. Pereira},
+  title = {Conditional Random Fields},
+  booktitle = {ICML '01},
+  year = {2001},
+  pages = {282--289}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="visweswaran2005instance-specific" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Instance-Specific Bayesian Model Averaging for Classification</div>
+					<div class="ref-authors">Visweswaran, S. & Cooper, G.F.</div>
+				</div>
+				<span class="ref-year">2005</span>
+			</div>
+			<div class="ref-venue">Neural Information Processing Systems 17, pp. 1449-1456</div>
+			<div class="ref-actions">
+				<a href="https://papers.nips.cc/paper_files/paper/2004/hash/e6acf4b0f69f6f6e60e9a815938aa1ff-Abstract.html" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('visweswaran2005instance-specific','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_visweswaran2005instance-specific">
+				<h4>BibTeX</h4>
+				<pre>@incollection{visweswaran2005instance-specific,
+  author = {Shyam Visweswaran and Gregory F. Cooper},
+  title = {Instance-Specific Bayesian Model Averaging for Classification},
+  booktitle = {NeurIPS 17},
+  year = {2005},
+  pages = {1449-1456}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="wainwright2003graphical" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Graphical Models, Exponential Families, and Variational Inference</div>
+					<div class="ref-authors">Wainwright, M.J. & Jordan, M.I.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">Technical Report 649, UC Berkeley</div>
+			<div class="ref-actions">
+				<a href="https://www.eecs.berkeley.edu/~wainwrig/Papers/WaiJorVariational03.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('wainwright2003graphical','bib')">📋 BibTeX</button>
+				<button class="btn-secondary" onclick="toggleInfo('wainwright2003graphical','abs')">📝 Abstract</button>
+			</div>
+			<div class="ref-extra" id="abs_wainwright2003graphical">
+				<h4>Abstract</h4>
+				<p>The formalism of probabilistic graphical models provides a unifying framework for the development of large-scale multivariate statistical models. Working with exponential family representations, and exploiting the conjugate duality between the cumulant generating function and the entropy, we develop general variational representations of the problems of computing marginal probabilities and modes.</p>
+			</div>
+			<div class="ref-extra" id="bib_wainwright2003graphical">
+				<h4>BibTeX</h4>
+				<pre>@techreport{wainwright2003graphical,
+  author = {Wainwright, Martin J. and Jordan, Michael I.},
+  title = {Graphical models, exponential families, and variational inference},
+  year = {2003}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="xing2003generalized" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">A Generalized Mean Field Algorithm for Variational Inference in Exponential Families</div>
+					<div class="ref-authors">Xing, E.P., Jordan, M.I. & Russell, S.J.</div>
+				</div>
+				<span class="ref-year">2003</span>
+			</div>
+			<div class="ref-venue">UAI '03: Proceedings of the Conference on Uncertainty in AI, pp. 583-591</div>
+			<div class="ref-actions">
+				<a href="https://auai.org/uai2003/proceedings/xiang-p578.pdf" class="btn-primary" target="_blank" rel="noopener noreferrer">📄 PDF</a>
+				<button class="btn-secondary" onclick="toggleInfo('xing2003generalized','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_xing2003generalized">
+				<h4>BibTeX</h4>
+				<pre>@inproceedings{xing2003generalized,
+  author = {Eric P. Xing and Michael I. Jordan and Stuart J. Russell},
+  title = {A generalized mean field algorithm for variational inference},
+  booktitle = {UAI},
+  year = {2003},
+  pages = {583-591}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="yedidia2005constructing" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Constructing Free-Energy Approximations and Generalized Belief Propagation Algorithms</div>
+					<div class="ref-authors">Yedidia, J., Freeman, W. & Weiss, Y.</div>
+				</div>
+				<span class="ref-year">2005</span>
+			</div>
+			<div class="ref-venue">IEEE Transactions on Information Theory, Vol. 51(7), pp. 2282-2312</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1109/TIT.2005.850085" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('yedidia2005constructing','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_yedidia2005constructing">
+				<h4>BibTeX</h4>
+				<pre>@article{yedidia2005constructing,
+  author = {Yedidia, J.S. and Freeman, W.T. and Weiss, Y.},
+  title = {Constructing free-energy approximations and generalized belief propagation algorithms},
+  journal = {IEEE Trans. Inf. Theory},
+  year = {2005},
+  volume = {51},
+  number = {7},
+  pages = {2282-2312}
+}</pre>
+			</div>
+		</article>
+
+		<article class="ref-card" id="zheng2000lazy" data-searchable>
+			<div class="ref-header">
+				<div>
+					<div class="ref-title">Lazy Learning of Bayesian Rules</div>
+					<div class="ref-authors">Zheng, Z. & Webb, G.I.</div>
+				</div>
+				<span class="ref-year">2000</span>
+			</div>
+			<div class="ref-venue">Machine Learning, Vol. 41(1), pp. 53-84</div>
+			<div class="ref-actions">
+				<a href="https://doi.org/10.1023/A:1007613203719" class="btn-primary" target="_blank" rel="noopener noreferrer">🔗 DOI</a>
+				<button class="btn-secondary" onclick="toggleInfo('zheng2000lazy','bib')">📋 BibTeX</button>
+			</div>
+			<div class="ref-extra" id="bib_zheng2000lazy">
+				<h4>BibTeX</h4>
+				<pre>@article{zheng2000lazy,
+  author = {Zijian Zheng and Geoffrey I. Webb},
+  title = {Lazy Learning of Bayesian Rules},
+  journal = {Mach. Learn.},
+  year = {2000},
+  volume = {41},
+  number = {1},
+  pages = {53--84}
+}</pre>
+			</div>
+		</article>
+
+	</div>
+
+	<footer>
+		<p>Reading list for PhD Comprehensive Exam, December 2008</p>
+		<p>Originally generated by <a href="https://www.jabref.org">JabRef</a> • Modernized 2025</p>
+	</footer>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
+</button>
+<script>
+(function(){
+var btn=document.getElementById('backToTop');
+if(!btn)return;
+window.addEventListener('scroll',function(){
+btn.classList.toggle('visible',window.scrollY>300);
+});
+btn.addEventListener('click',function(){
+window.scrollTo({top:0,behavior:'smooth'});
+});
+})();
+</script>
+</body>
+</html>

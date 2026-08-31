@@ -1,0 +1,23 @@
+# LaTeX auxiliary files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.bcf
+*.run.xml
+*.blg
+*.bbl
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.xdv
+
+# Backup files
+*.backup
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

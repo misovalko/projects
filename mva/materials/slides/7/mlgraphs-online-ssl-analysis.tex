@@ -1,0 +1,262 @@
+% !TEX TS-program = lualatex
+% !BIB TS-program = biber
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Branislav Kveton, \\[-1em] 
+Mikhail Belkin, Jerry Zhu}
+\newcommand{\misoclassdate}{}
+
+% Harmonic function solutions: offline (\hat{f}_s), online (\hat{f}_{so}), online quantized (\hat{f}_{soq})
+\renewcommand{\hfs}{\hat{f}_s}           % Vector: offline harmonic function solution (overrides misomva.tex)
+\newcommand{\hfso}{\hat{f}_{so}}         % Vector: online harmonic function solution
+\newcommand{\hfsoq}{\hat{f}_{soq}}       % Vector: online quantized harmonic function solution
+% Label vectors
+\renewcommand{\bell}{\hat{\ell}}         % Estimated label vector (overrides misomva.tex)
+\newcommand{\ello}{\hat{\ell}_o}         % Online estimated label vector
+\newcommand{\elloq}{\hat{\ell}_{oq}}     % Online quantized estimated label vector
+% Laplacian matrices
+\newcommand{\Lo}{\hat{L}_o}              % Online Laplacian
+\newcommand{\Loq}{\hat{L}_{oq}}          % Online quantized Laplacian
+% Kernel matrices
+\newcommand{\Ko}{\hat{K}_o}              % Online kernel matrix
+\newcommand{\Koq}{\hat{K}_{oq}}          % Online quantized kernel matrix
+\newcommand{\pertK}{\tilde{K}}           % Perturbed kernel matrix
+% Degree matrices
+\newcommand{\Do}{\hat{D}_o}              % Online degree matrix
+% Other matrices/vectors
+\newcommand{\Zoq}{\hat{Z}_{oq}}          % Online quantized matrix
+\newcommand{\Woq}{\hat{W}_{oq}}          % Online quantized weight matrix
+\newcommand{\coq}{\hat{c}_{oq}}          % Online quantized constant
+% Constants
+\newcommand{\Rmultiplier}{R}             % Multiplier constant (typically R)
+
+\begin{document}
+% Topic-specific title slide
+\newcommand{\topictitle}{Analysis of Online SSL}
+\newcommand{\topicsubtitle}{Quantization Error and Performance Analysis}
+\renewcommand{\misoclasstinytitleslide}{Partially based on material by:  Branislav Kveton, \\[-1em] Mikhail Belkin, Jerry Zhu}
+
+\MakeTopicSlide
+
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+
+Want to bound $\tfrac{1}{\nodes} \sum_{t=1}^\nodes (\hat{f}_{soq,t}[t] \!-\! y_t)^2$
+\rightquestionbox{What can we guarantee?}
+\pause %\smallskip
+Three sources of error \pause
+\begin{itemize}
+ \item generalization error --- if all data: \alert{$(\hat{f}_{s,t} - y_t)^2$}
+ \item online error --- data only incrementally: \mcolA{$(\hat{f}_{so,t}[t] - \hat{f}_{s,t})^2$}
+ \item quantization error --- memory limitation: \mcolB{$(\hat{f}_{soq,t}[t] - \hat{f}_{so,t}[t])^2$}
+\end{itemize}
+
+\bigskip
+\pause 
+
+All together:
+\begin{align*}
+% \label{big:hfs} 
+\!\!\!\!\!\!\!\!\!\!\!\!\!
+\tfrac{1}{\nodes} \sum_{t=1}^\nodes (\hat{f}_{soq,t}[t] \!-\! y_t)^2 
+  \!\leq\!   \tfrac{9}{2\nodes} \sum_{t=1}^\nodes  \alert{(\hat{f}_{s,t}\! -\! y_t)^2}% \\
+%  \label{big:online}
+ \!\! + \!  \tfrac{9}{2\nodes} \sum_{t=1}^\nodes  \mcolA{(\hat{f}_{so,t}[t]\! -\! \hat{f}_{s,t})^2}  %\\
+% \label{big:quantization}
+  \!\!+\!  \tfrac{9}{2\nodes}  \sum_{t=1}^\nodes \mcolB{(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t])^2}
+\end{align*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+
+\textbf{Bounding \emphcol{transduction error}} \alert{$(\hat{f}_{s,t} - y_t)^2$}
+\moveb \pause
+If all labeled examples $l$ are i.i.d., $c_l = 1$ and $c_l \gg c_u$, then 
+\begin{align*}
+  R(\bell^\star) \ \leq & \ \
+  \widehat{R}(\bell^\star) +
+  \underbrace{\beta + \sqrt{\frac{2 \ln(2 / \delta)}{n_l}}
+  (n_l \beta + 4)}_{\mbox{transductive error }
+  \Delta_T(\beta, n_l, \delta)} \\
+  \beta \ \leq & \ \
+  2 \left[\frac{\sqrt{2}}{\gamma_g + 1} +
+  \sqrt{2 n_l} \frac{1 - c_u}{c_u}
+  \frac{\lambda_M(\bL) + \gamma_g}{\gamma_g^2 + 1}\right]
+\end{align*}
+holds with the probability of $1 - \delta$, where
+\begin{align*}
+  R(\bell^\star) =
+  %\ = & \ \
+  \frac{1}{\nodes} \sum_t (\hat{f}_{s,t} - y_t)^2 \quad \mbox{and} \quad
+  \widehat{R}(\bell^\star) =
+  %\ = & \ \
+  \frac{1}{n_l} \sum_{t \in l} (\hat{f}_{s,t} - y_t)^2
+\end{align*}
+\pause
+\vskip -0.7em
+\begin{flushright}
+\questionbox{How should we set $\gamma_g$?}
+\pause
+\onslide<handout:0>{\notecol{\tiny Want $\Delta_T(\beta, n_l, \delta) = o(1)$ 
+\pause $\to  \beta =  o\left(n_l^{-1/2}\right)$ \pause 
+$\to  \gamma_g = \Omega\left(n_l^{1+\alpha}\right)$ for any $\alpha > 0.$ }}
+\end{flushright}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+
+\textbf{Bounding \emphcol{online error}} \mcolA{$(\hat{f}_{so,t}[t] - \hat{f}_{s,t})^2$}
+\moveb \pause
+Idea: If $\bL$ and $\Lo$ are regularized, then HFSs get closer together. \\
+\notecol{\tiny since they get closer to zero} \\
+\pause
+Recall $\bell = (\bC^{-1}\bQ  + \bI)^{-1}\by$,  where $\bQ = \bL + \gamma_g\bI$ \\
+\notecol{\tiny and also 
+$\bv \in \realset^{n \times 1}$, $\lambda_m (A)\|\bv\|_2 \leq \| A\bv \|_2 \leq \lambda_M (A) \|\bv\|_2$}
+\pause
+\begin{align*}
+\action<+->{\| \bell \|_2 & \leq  }
+\action<+->{ \frac{ \| \by \|_2}{\lambda_m (\bC^{-1}\bQ  + \bI)}}
+\action<+->{ =  \frac{ \| \by \|_2}{\frac{\lambda_m(\bQ)}{\lambda_M(\bC)}+ 1}}
+\action<+->{  \leq  \frac{\sqrt{n_l}}{\gamma_g + 1}}
+\end{align*}
+\pause
+Difference between offline and online solutions:
+\begin{align*}
+\action<+->{(\hat{f}_{so,t}[t] - \hat{f}_{s,t})^2}
+ \action<+->{\leq \|\hat{f}_{so}[t] - \hat{f}_s\|^2_\infty}
+\action<+->{\leq \|\hat{f}_{so}[t] - \hat{f}_s\|^2_2}
+ \action<+->{\leq \left(\frac{2\sqrt{n_l}}{\gamma_g + 1}\right)^2}
+\end{align*}
+\vskip -0.5em
+\action<+->{\questionbox{\tiny Again, how should we set $\gamma_g$?}}
+\onslide<handout:0>{
+\action<+->{\notecol{\tiny If we want $O\left(n_l^{-1/2}\right)$?}}
+\action<+->{\notecol{\tiny Then $\gamma_g = \Omega\left(n_l^{3/4}\right)$}}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\pertK}{\Koq}  % Already defined above, commented out to avoid duplicate
+\newcommand{\vecy}{\mathbf{y}}
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+\textbf{Bounding \emphcol{quantization error}} \mcolB{$\left(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t]\right)^2$}
+\moveb \pause
+\questionbox{How are the quantized and full solution different?}
+\begin{align*}
+  \bell^\star = \min_{\bell \in \realset^\nodes} \
+  (\bell - \by)\transpose \bC (\bell - \by) +
+  \bell\transpose \bQ \bell
+\end{align*}
+\pause
+\yellbox{In $\bQ$!} \pause $\Ko$ (online) vs.~$\pertK$ (quantized) \moveb
+\pause
+We have:  $\ello = (\bC^{-1}\Ko + \bI)^{-1}\vecy$ vs.~$\elloq = (\bC^{-1}\pertK + \bI)^{-1}\vecy$
+\pause  \moveb
+
+With linear algebra we get
+\begin{equation*}
+\|\elloq - \ello\|_2  \leq \frac{\sqrt{n_l}}{c_u \gamma_g^2} 
+\alert{\|\Koq- \Ko \|_F}
+\end{equation*}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+\textbf{Bounding \emphcol{quantization error}} \mcolB{$\left(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t]\right)^2$}
+\moveb
+The quantization error depends on $\|\Koq- \Ko \|_F = \alert{\|\Loq- \Lo \|_F}$.
+\\ \smallskip
+\questionbox{When can we keep $\|\Loq- \Lo \|_F$ under control?} 
+\pause \\ \smallskip
+Charikar guarantees \emphcol{distortion}  error of at most
+$R \Rmultiplier / (\Rmultiplier-1)$
+\\ \smallskip \pause 
+\questionbox{For what kind of data $\{\bx_i\}_{i=1,\dots,n}$ is the distortion small?} 
+\\ \smallskip \pause 
+Assume manifold $\cM$ \pause 
+\begin{itemize}
+ \item all $\{\bx_i\}_{i \geq 1}$ lie on a smooth $d$-dimensional compact $\mathcal{M}$
+ \item with boundary of bounded geometry Def.\,11 of Hein~\cite{hein2007graph}
+\begin{itemize}
+\item has finite volume $V$
+\item has finite surface area $A$
+ \item should not intersect itself
+ \item should not fold back onto itself
+\end{itemize}
+\end{itemize}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+\textbf{Bounding \emphcol{quantization error}} \mcolB{$\left(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t]\right)^2$}
+\moveb
+Bounding $\alert{\|\Loq- \Lo \|_F}$ when  $\bx_i \in \cM$
+\moveb
+Consider $k$-sphere packing$^\star$ of radius~$r$ with centers contained in~$\cM$.
+\notecol{\tiny $^\star$only the centers are packed, not necessarily the entire ball}
+%
+%\moveb
+
+\hbskip
+If $k$ is large $\to r <$ \emphcol{injectivity radius} of $\cM$~\cite{hein2007graph} \pause
+and $r < 1$: \pause
+$$r < \left(\frac{V + A c_{\cM}}{k c_d} \right)^{1/d} = \cO\left(\frac{1}{k^{1/d}}\right)$$
+$r$-packing is a $2r$-covering:
+\pause
+$$\max_{i=1,\dots,\nodes} \|\bx_i - \bc\|_2 \leq R \tfrac{\Rmultiplier}{\Rmultiplier-1} \leq  2 \cO\left(k^{-1/d}\right) = \cO\left(k^{-1/d}\right)$$
+\rightquestionbox{But what about $\alert{\|\Loq- \Lo \|_F}$?}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+\textbf{Bounding \emphcol{quantization error}} \mcolB{$\left(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t]\right)^2$}
+\\ \smallskip
+If similarity is $M$-Lipschitz\pause, 
+$\bL$ is normalized\pause, 
+$\forall i,j \; \frac{\sqrt{\hat{D}_{o,ii}\hat{D}_{o,jj}}}{\nodes}> c_{min}$
+\pause
+\begin{align*}
+\|\Loq - \Lo\|_F^2
+\leq \cO(M R^2/c_{min}) = \cO(k^{-2/d}).
+\end{align*}
+% \end{flushright}
+\pause
+\rightquestionbox{Are the assumptions reasonable?}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Online SSL with Graphs: Analysis}
+\textbf{Bounding \emphcol{quantization error}} \mcolB{$\left(\hat{f}_{soq,t}[t] \!-\! \hat{f}_{so,t}[t]\right)^2$}
+\moveb
+We showed $\alert{\|\Loq - \Lo\|_F^2} \leq \cO(k^{-2/d})
+\pause = \cO(1)$.
+\pause
+\begin{equation*}%[Upper bound on the quality of quantization]
+% \label{eq:quant}
+ \frac{1}{\nodes}\sum_{t=1}^\nodes (\hat{f}_{soq,t}[t] - \hat{f}_{so,t}[t])^2
+% \leq_p
+ \leq
+ \frac{n_l}{c_u^2\gamma_g^4}
+\|\Loq - \Lo\|_F^2 \pause \leq \frac{n_l}{c_u^2\gamma_g^4}
+ \end{equation*}
+\pause
+%\moveb
+With properly setting $\gamma_g$, e.g.,~$\gamma_g = \Omega(n_l^{3/8})$, we can have
+\pause
+$$\frac{1}{\nodes} \sum_{t=1}^\nodes \left(\hat{f}_{soq,t}[t] \!-\! y_t\right)^2 = \cO\left(n_l^{-1/2}\right).$$
+\pause
+\rightquestionbox{What does that mean?}
+\end{frame}
+
+
+\MakeLastSlide
+\end{document}

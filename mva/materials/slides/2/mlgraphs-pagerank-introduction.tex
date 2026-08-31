@@ -1,0 +1,97 @@
+% !TEX TS-program = lualatex
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
+\input{../common/misomva}
+\begin{document}
+% Topic-specific title slide
+
+\newcommand{\topictitle}{Google PageRank: Introduction}
+
+\newcommand{\topicsubtitle}{Random Surfer Model}
+\newcommand{\misoclasstinytitleslide}{Partially based on material by:  Andreas Krause, \\[-1em] Branislav Kveton, Michael Kearns}
+
+\MakeTopicSlide
+
+\begin{frame}
+
+\frametitle{Success story \#2 \emphcol{Google \pagerank}}
+
+\begin{block}{}
+\emph{Objective:} \textbf{Rank} all web pages (nodes on the graph) by how 
+\textbf{many} other pages link to them and how \textbf{important} they are.
+\end{block}
+\pause
+{\color{gray} basic \pagerank is independent of query and the page content} \\
+\pause
+\begin{block}{}
+Internet  \pause $\to$ graph \pause $\to$ matrix \pause $\to$ stochastic matrix $\bM$ $\left(\sum_j \bM_{ij} = 1\right)$ \pause\\
+\end{block}
+\begin{center}
+% Manual layout for PageRank graph (spring layout needs lualatex)
+\begin{tikzpicture}[font={\tiny\bfseries},
+  nd/.style={circle, draw, minimum size=6mm, inner sep=0pt},
+  ->, >=stealth]
+\node[nd, onslide=<1-10>{text=white}] (G) at (0,1.5) {\only<1-10>{\phantom{?}}\only<11->{G}};
+\node[nd, onslide=<7>{label=center:?}] (A) at (1.5,2.5) {A};
+\node[nd, onslide=<7>{label=center:?}] (B) at (3,1.5) {B};
+\node[nd, onslide=<7>{label=center:?}] (C) at (1.5,0) {C};
+\node[nd, onslide=<7>{label=center:?}] (D) at (3,-1) {D};
+\node[nd, onslide=<7>{label=center:?}] (E) at (0,-1) {E};
+\node[nd, onslide=<7>{label=center:?}] (F) at (1.5,-2.2) {F};
+\only<1-10>{}
+\only<11->{\draw (G) -> (A); \draw (G) -> (B);}
+\draw (A) -> (C);
+\draw (B) -> (C);
+\draw (C) -> (D);
+\draw (D) -> (B);
+\draw (D) -> (F);
+\draw (C) -> (E);
+\draw (E) -> (F);
+\end{tikzpicture}
+\end{center}
+\onslide<8-| handout:2-3>{%
+\begin{tikzpicture}[remember picture,overlay] 
+    \node[cloud, draw, cloud puffs=9, fill=mvaAccent, aspect=2, yshift=2cm] at (current page.center) 
+    {\textbf{Random Surfer} Process};
+\end{tikzpicture}}
+\onslide<9-| handout:3>{%
+\begin{tikzpicture}[remember picture,overlay] 
+    \node[cloud, draw, cloud puffs=20, fill=mvaHighlight, aspect=3, yshift=-1cm,xshift=-2cm] at (current page.center) 
+    {What is wrong with it?};
+ \end{tikzpicture}} 
+
+ %what is wrong answer:
+\onslide<10| handout:0>{
+\begin{flushright}
+\vspace{-3em}
+\notecol{\tiny  dangling pages act like sinks}
+\end{flushright}
+}
+\end{frame}
+\begin{frame}
+\frametitle{Success story \#2 \emphcol{Google \pagerank}}
+{\small
+\bigskip
+\url{http://infolab.stanford.edu/~backrub/google.html}: \\
+\bigskip
+\emph{\pagerank can be thought of as a model of user behavior. We assume there is a ``random surfer'' who is given a web page at random and keeps clicking on links, never hitting ``back'' but eventually gets bored and starts on another random page.} }
+\moveb
+\pause 
+\begin{itemize}%\addtolength{\itemsep}{0.5\baselineskip}
+\item page is \textbf{important} if \textbf{important} pages link \textbf{to} it  
+\pause 
+\begin{itemize}
+\item circular definition
+\end{itemize}
+\pause 
+\item importance of a page is distributed \textbf{evenly} 
+\pause 
+\item probability of being bored is $15\%$
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\MakeLastSlide
+\end{document}
