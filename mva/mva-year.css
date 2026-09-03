@@ -1,24 +1,44 @@
-/* MVA Year Page Styles */
+/* MVA year-page components. Global typography and page shell come from /luky.min.css. */
 .note { color: #64748b; font-size: 0.85em; }
-h2 { color: #2c5aa0; border-bottom: 1px solid #ddd; padding-bottom: 0.3em; }
+
+/* The archive renderer historically emits an h1. Make it visually identical to
+   the site's standard section heading instead of inventing an MVA-only style. */
+#year-content > h1 {
+    font-size: 1.4em;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    padding-left: 1em;
+    border-bottom: none;
+    margin-top: 0.8em;
+    margin-bottom: 0.4em;
+    font-weight: 600;
+    color: #1e3a5f;
+    line-height: 1.3;
+    position: relative;
+}
+#year-content > h1::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: linear-gradient(180deg, var(--blue-primary), var(--text-dark));
+    border-radius: 2px;
+}
 
 .year-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1em;
-    margin: 1.5em 0;
+    gap: 0.8em;
+    margin: 1.2em 0;
 }
 .year-card {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 1em;
+    padding: 0.8em;
     text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.year-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 .year-card a {
     font-weight: 600;
@@ -26,101 +46,70 @@ h2 { color: #2c5aa0; border-bottom: 1px solid #ddd; padding-bottom: 0.3em; }
     text-decoration: none;
     display: block;
 }
-.year-card a:hover {
-    color: #3b82f6;
-}
+.year-card a:hover { color: #3b82f6; }
 
 .topic-pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em;
-    margin: 1em 0;
+    gap: 0.45em;
+    margin: 0.8em 0 1.2em;
 }
 .topic-pill {
     background: #e8f4fd;
     color: #1e3a5f;
-    padding: 0.4em 0.9em;
-    border-radius: 20px;
+    padding: 0.35em 0.75em;
+    border-radius: 999px;
     font-size: 0.9em;
-    transition: transform 0.2s;
 }
-.topic-pill:hover {
-    transform: scale(1.03);
-}
-
 .info-box {
     background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 1.5em;
-    margin: 1.5em 0;
+    padding: 1em 1.2em;
+    margin: 1em 0;
 }
-
 .lecture-grid {
     display: grid;
-    gap: 1em;
-    margin: 1.5em 0;
+    gap: 0.75em;
+    margin: 1em 0;
 }
 .lecture-card {
     background: #fff;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1.2em 1.5em;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.lecture-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 0.9em 1.1em;
 }
 .lecture-card h3 {
-    margin: 0 0 0.5em 0;
+    margin: 0 0 0.45em;
     color: #1e3a5f;
-    font-size: 1.05em;
+    font-size: 1.02em;
 }
-.lecture-card h3 a {
-    color: #1e3a5f;
-    text-decoration: none;
-}
-.lecture-card h3 a:hover {
-    color: #2d5a8b;
-}
+.lecture-card h3 a { color: #1e3a5f; text-decoration: none; }
+.lecture-card h3 a:hover { color: #2d5a8b; }
 .lecture-badge {
     display: inline-block;
     background: #1e3a5f;
     color: white;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.75em;
-    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72em;
+    font-weight: 700;
     margin-right: 0.5em;
 }
-.lecture-badge.td {
-    background: #059669;
-}
-.lecture-card ul {
-    margin: 0;
-    padding-left: 1.2em;
-    color: #475569;
-    font-size: 0.92em;
-}
-.lecture-card li {
-    margin-bottom: 0.2em;
-}
-.deadline-card {
-    background: #fef3c7;
-    border: 1px solid #fcd34d;
-}
+.lecture-badge.td { background: #059669; }
+.lecture-card ul { margin: 0; padding-left: 1.2em; color: #475569; }
+.lecture-card li { margin: 0.22em 0; }
+.deadline-card { background: #fef3c7; border: 1px solid #fcd34d; }
 .news-box {
     background: #f0fdf4;
+    border: 1px solid #dcfce7;
     border-radius: 8px;
-    padding: 1em 1.5em;
-    margin: 1em 0;
+    padding: 0.8em 1em;
+    margin: 0.8em 0;
 }
-.news-box li {
-    margin-bottom: 0.5em;
-}
+.news-box li { margin-bottom: 0.4em; }
 
 @media (max-width: 768px) {
     .year-grid { grid-template-columns: repeat(2, 1fr); }
-    .lecture-card { padding: 1em; }
-    .info-box { padding: 1em; }
+    .lecture-card, .info-box { padding: 0.85em; }
 }
