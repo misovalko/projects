@@ -22,7 +22,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          matches="$(grep -RInE --include='*.html' '(\{\{|\}\}|\{%|%\})' mva || true)"
+          # Only Liquid/Jekyll opening delimiters are diagnostic. Closing braces
+          # also occur legitimately in CSS and JSON embedded in static HTML.
+          matches="$(grep -RInF --include='*.html' -e '{{' -e '{%' mva || true)"
           if [ -n "$matches" ]; then
             printf '%s\n' "$matches"
             echo 'Liquid/Jekyll syntax found in MVA HTML. This repository is published with .nojekyll, so templates would be served literally.'
