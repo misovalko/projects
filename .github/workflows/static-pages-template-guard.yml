@@ -1,0 +1,30 @@
+name: Static Pages template guard
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'mva/**/*.html'
+      - 'mva/*.html'
+      - '.github/workflows/static-pages-template-guard.yml'
+  pull_request:
+    paths:
+      - 'mva/**/*.html'
+      - 'mva/*.html'
+      - '.github/workflows/static-pages-template-guard.yml'
+
+jobs:
+  no-liquid-in-static-mva-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject Jekyll or Liquid syntax in static MVA HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          matches="$(grep -RInE --include='*.html' '(\{\{|\}\}|\{%|%\})' mva || true)"
+          if [ -n "$matches" ]; then
+            printf '%s\n' "$matches"
+            echo 'Liquid/Jekyll syntax found in MVA HTML. This repository is published with .nojekyll, so templates would be served literally.'
+            exit 1
+          fi
