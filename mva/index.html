@@ -1,231 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2c5aa0">
-    <meta name="author" content="Michal Valko">
-    <meta name="keywords" content="graphs, machine learning, MVA, ENS Paris-Saclay, spectral clustering, semi-supervised learning, graph neural networks, spectral graph theory, manifold learning">
-    <meta name="description" content="Graphs in Machine Learning - MVA course at ENS Paris-Saclay taught by Michal Valko. Covers spectral graph theory, graph neural networks, semi-supervised learning, and online decision-making on graphs.">
-    <title>Michal Valko - Graphs in Machine Learning</title>
-    <link rel="canonical" href="https://misovalko.github.io/projects/mva/index.html">
-    <link rel="shortcut icon" href="../../images/common/micon6.webp">
-    <link rel="stylesheet" href="../../luky.min.css" title="base" type="text/css">
-    <style>
-        #content h1 { margin-bottom: 0.15em; }
-        #content h2 { color: #2c5aa0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.28em; margin-top: 2em; }
-        #content p { line-height: 1.6; }
-        .course-header { display: flex; align-items: center; justify-content: space-between; gap: 2em; margin-bottom: 1.4em; }
-        .course-header img { width: 130px; max-width: 28%; border-radius: 10px; }
-        .course-kicker { color: #64748b; margin: 0.25em 0 0; }
-        .intro-box, .info-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25em 1.4em; margin: 1.4em 0; }
-        .intro-box { text-align: center; background: #f0f7ff; }
-        .topic-pills { display: flex; flex-wrap: wrap; gap: 0.5em; margin: 1em 0; }
-        .topic-pill { background: #e8f4fd; color: #1e3a5f; padding: 0.4em 0.85em; border-radius: 999px; font-size: 0.9em; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.8em; }
-        .info-item { display: flex; align-items: flex-start; gap: 0.55em; }
-        .lecture-grid { display: grid; gap: 0.9em; margin: 1.25em 0; }
-        .lecture-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1em 1.25em; }
-        .lecture-card h3 { margin: 0 0 0.55em; color: #1e3a5f; font-size: 1.04em; }
-        .lecture-card ul { margin: 0; padding-left: 1.25em; color: #475569; }
-        .lecture-card li { margin: 0.28em 0; }
-        .lecture-badge { display: inline-block; background: #1e3a5f; color: #fff; padding: 3px 9px; border-radius: 999px; font-size: 0.74em; font-weight: 700; margin-right: 0.55em; }
-        .lecture-badge.td { background: #059669; }
-        .td-card { border-left: 4px solid #059669; }
-        .subdeck-description { display: block; color: #64748b; font-size: 0.87em; margin-top: 0.12em; }
-        .year-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8em; margin: 1.2em 0; }
-        .year-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 9px; padding: 0.9em; text-align: center; }
-        .year-card a { font-weight: 600; color: #1e3a5f; text-decoration: none; display: block; }
-        .sidebar-social { margin: 0.7em 0 1em; font-size: 0.9em; line-height: 1.8; }
-        .sidebar-social a { margin-right: 0.45em; }
-        @media (max-width: 768px) {
-            .course-header { align-items: flex-start; gap: 1em; }
-            .course-header img { width: 100px; }
-            .info-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Course",
-      "name": "Graphs in Machine Learning",
-      "courseCode": "MVA-GML",
-      "description": "Graduate course covering spectral graph theory, graph Laplacians, semi-supervised learning, manifold learning, graph neural networks, online decision-making on graphs, and scalable graph processing.",
-      "url": "https://misovalko.github.io/projects/mva/index.html",
-      "provider": {"@type": "EducationalOrganization", "name": "ENS Paris-Saclay", "url": "https://ens-paris-saclay.fr/"},
-      "inLanguage": "en",
-      "educationalLevel": "Graduate",
-      "instructor": {"@type": "Person", "name": "Michal Valko", "url": "https://misovalko.github.io/"}
-    }
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2c5aa0">
+  <meta name="author" content="Michal Valko">
+  <meta name="description" content="Graphs in Machine Learning - MVA course at ENS Paris-Saclay taught by Michal Valko.">
+  <title>Michal Valko - Graphs in Machine Learning</title>
+  <link rel="canonical" href="https://misovalko.github.io/projects/mva/index.html">
+  <link rel="shortcut icon" href="/images/common/micon6.webp">
+  <link rel="stylesheet" href="/luky.min.css" title="base" type="text/css">
+  <style>
+    .course-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:1em;margin-bottom:.6em}.course-heading h2{margin-top:.15em}.course-heading img{width:110px;max-width:20%;height:auto}.course-kicker{margin:.15em 0 .8em}.intro-box,.info-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1em 1.2em;margin:1em 0}.intro-box{background:#f0f7ff}.topic-pills{display:flex;flex-wrap:wrap;gap:.45em;margin:.8em 0 1.2em}.topic-pill{background:#e8f4fd;color:#1e3a5f;padding:.35em .75em;border-radius:999px;font-size:.9em}.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7em}.info-item{display:flex;align-items:flex-start;gap:.5em}.lecture-grid{display:grid;gap:.75em;margin:1em 0}.lecture-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:.9em 1.1em}.lecture-card h3{margin:0 0 .45em;color:#1e3a5f;font-size:1.02em}.lecture-card ul{margin:0;padding-left:1.2em;color:#475569}.lecture-card li{margin:.22em 0}.lecture-badge{display:inline-block;background:#1e3a5f;color:#fff;padding:3px 9px;border-radius:999px;font-size:.72em;font-weight:700;margin-right:.5em}.lecture-badge.td{background:#059669}.td-card{border-left:4px solid #059669}.subdeck-description{display:block;color:#64748b;font-size:.86em;margin-top:.1em}.year-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.7em;margin:1em 0}.year-card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:.8em;text-align:center}.year-card a{font-weight:600;color:#1e3a5f;text-decoration:none;display:block}@media(max-width:768px){.course-heading img{width:85px}.info-grid{grid-template-columns:1fr}}
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Course","name":"Graphs in Machine Learning","courseCode":"MVA-GML","url":"https://misovalko.github.io/projects/mva/index.html","provider":{"@type":"EducationalOrganization","name":"ENS Paris-Saclay","url":"https://ens-paris-saclay.fr/"},"instructor":{"@type":"Person","name":"Michal Valko","url":"https://misovalko.github.io/"}}</script>
 </head>
 <body>
-    <div id="supertoplt"><div id="supertoprt"><div id="supertop"></div></div></div>
-    <div id="lt">
-        <div id="rt">
-            <div id="top"><span class="nadpis">Michal Valko : Graphs in Machine Learning</span></div>
-            <div id="menu">
-                <div class="menulink">
-                    <a href="../../index.html">Intro</a>
-                    <a href="../../research.html">Publications</a>
-                    <a href="../../projects.html">Projects</a>
-                    <a href="../../mva-ml-graphs.html" class="active">Teaching</a>
-                    <a href="../../press.html">Press</a>
-                    <a href="../../talks.html">Talks</a>
-                    <a href="../../service.html">Service</a>
-                    <a href="../../experience.html">Experience</a>
-                </div>
-                <br>
-                <span class="male"><a href="mailto:michal.valko@inria.fr">michal.valko@inria.fr</a></span>
-                <div class="sidebar-social">
-                    <a href="https://scholar.google.com/citations?user=jrazNCQAAAAJ" rel="me noopener noreferrer">Scholar</a>
-                    <a href="https://github.com/misovalko" rel="me noopener noreferrer">GitHub</a>
-                    <a href="https://x.com/misovalko" rel="me noopener noreferrer">X</a>
-                    <a href="https://www.linkedin.com/in/michalvalko/" rel="me noopener noreferrer">LinkedIn</a>
-                    <a href="https://orcid.org/0009-0009-2673-0144" rel="me noopener noreferrer">ORCID</a>
-                </div>
-                <div class="centered">
-                    <a href="../../images/common/gr20.webp"><img src="../../images/common/mvgr20.webp" alt="Portrait photo of Michal Valko" loading="lazy" decoding="async"></a><br><br>
-                    <a href="https://isara.io" rel="noopener noreferrer"><img src="../../images/common/isara.webp" alt="Isara Labs logo" height="40" loading="lazy" decoding="async"></a><br>
-                    <a href="https://www.inria.fr/"><img src="../../images/common/INRIA-CORPO-CMJN.webp" alt="Inria logo" height="32" loading="lazy" decoding="async"></a><br>
-                    <a href="https://www.master-mva.com/"><img src="../../images/common/mva.webp" alt="MVA Master program logo" height="40" loading="lazy"></a>
-                </div>
-            </div>
-            <div id="content">
-                <div class="course-header">
-                    <div>
-                        <h1>Graphs in Machine Learning</h1>
-                        <p class="course-kicker"><a href="https://www.master-mva.com/">MVA Master Program</a> - <a href="https://ens-paris-saclay.fr/">ENS Paris-Saclay</a></p>
-                    </div>
-                    <img src="../../images/mva/peer_communities2.png" alt="Graph communities" loading="lazy" decoding="async">
-                </div>
-
-                <div class="intro-box">
-                    <strong>Teaching this course since 2014.</strong> Course materials from past years are available on the <a href="#year-pages">year pages</a> below. I have been teaching since 1996, including as a TA for <a href="../../ta-cs0007-fall2005.html">CS7: Introduction to Programming</a> at the University of Pittsburgh in 2005.
-                </div>
-
-                <h2>Main Topics</h2>
-                <div class="topic-pills">
-                    <span class="topic-pill">📊 Spectral Graph Theory</span>
-                    <span class="topic-pill">🔗 Graph Laplacians</span>
-                    <span class="topic-pill">🏷️ Semi-supervised Learning</span>
-                    <span class="topic-pill">🌐 Manifold Learning</span>
-                    <span class="topic-pill">📈 Online Learning</span>
-                    <span class="topic-pill">⚡ Scalability</span>
-                    <span class="topic-pill">🧠 Graph Neural Networks</span>
-                    <span class="topic-pill">👥 Social Networks</span>
-                    <span class="topic-pill">🎯 Recommender Systems</span>
-                    <span class="topic-pill">👁️ Vision Applications</span>
-                </div>
-
-                <h2>Course Description</h2>
-                <p>The graphs come handy whenever we deal with relations between the objects. This course, focused on learning, presents methods involving two main sources of graphs in ML: graphs coming from networks, such as social, biological and technology networks, and graphs constructed from flat data, where a graph serves as a useful nonparametric basis for tasks such as spectral clustering, manifold learning and semi-supervised learning. We also discuss online decision-making on graphs, suitable for recommender systems and online advertising, together with scalability to very large graphs.</p>
-                <p>The lectures show not only how but mostly why things work. Students learn relevant topics from spectral graph theory, learning theory, bandit theory and graph neural networks, together with the mathematical concepts behind graph-based machine learning. Practical sessions provide hands-on experience with applications and graph-processing tools.</p>
-
-                <h2>Organization</h2>
-                <div class="info-box">
-                    <div class="info-grid">
-                        <div class="info-item"><span>📚</span><div><strong>Format:</strong> 8 lectures + 3 TDs (2h each)</div></div>
-                        <div class="info-item"><span>📝</span><div><strong>Validation:</strong> TD 40% + Project 60%</div></div>
-                        <div class="info-item"><span>📐</span><div><strong>Prerequisites:</strong> Linear algebra, basic statistics</div></div>
-                        <div class="info-item"><span>🌍</span><div><strong>Language:</strong> English</div></div>
-                    </div>
-                </div>
-
-                <h2>General Syllabus</h2>
-                <p>The following combines the topics covered across the different editions of the course.</p>
-                <div class="lecture-grid">
-                    <div class="lecture-card"><h3><span class="lecture-badge">L0</span><a href="materials/slides/0/mlgraphs0.pdf">Overview</a></h3><ul><li>Course overview, logistics and expectations</li></ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L1</span>Introduction to Graphs in ML</h3><ul>
-                        <li><strong><a href="materials/slides/1/mlgraphs-introduction.pdf">Introduction</a></strong><span class="subdeck-description">Natural and constructed graphs, applications and course overview.</span></li>
-                        <li><strong><a href="materials/slides/1/mlgraphs-natural-graphs.pdf">Natural Graphs</a></strong><span class="subdeck-description">Social networks, product placement and submodularity.</span></li>
-                        <li><strong><a href="materials/slides/1/mlgraphs-graph-theory-basics.pdf">Graph Theory Basics</a></strong><span class="subdeck-description">Eulerian circuits and graph theory foundations.</span></li>
-                        <li><strong><a href="materials/slides/1/mlgraphs-similarity-graphs-intro.pdf">Similarity Graphs Introduction</a></strong><span class="subdeck-description">Flat data to graph representations for vision, audio, text and SSL.</span></li>
-                        <li><strong><a href="materials/slides/1/mlgraphs-similarity-graph-types.pdf">Similarity Graph Types</a></strong><span class="subdeck-description">Epsilon-neighborhood, k-NN and fully connected graphs.</span></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L2</span>PageRank &amp; Natural Graphs</h3><ul>
-                        <li><a href="materials/slides/2/mlgraphs-pagerank-introduction.pdf">PageRank: Introduction</a></li>
-                        <li><a href="materials/slides/2/mlgraphs-pagerank-core.pdf">PageRank: Core Algorithm</a></li>
-                        <li><a href="materials/slides/2/mlgraphs-pagerank-computation.pdf">PageRank: Computation</a></li>
-                        <li><a href="materials/slides/2/mlgraphs-natural-graphs-examples.pdf">Natural Graphs Examples</a></li>
-                        <li><a href="materials/slides/2/mlgraphs-random-graph-models.pdf">Random Graph Models</a></li>
-                        <li><a href="materials/slides/2/mlgraphs-small-world-phenomena.pdf">Small-World Phenomena</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L3</span>Graph Laplacian &amp; Spectral Clustering</h3><ul>
-                        <li><a href="materials/slides/3/mlgraphs-graph-laplacian-basics.pdf">Graph Laplacian Basics</a></li>
-                        <li><a href="materials/slides/3/mlgraphs-normalized-laplacians.pdf">Normalized Laplacians</a></li>
-                        <li><a href="materials/slides/3/mlgraphs-laplacian-random-walks.pdf">Laplacian and Random Walks</a></li>
-                        <li><a href="materials/slides/3/mlgraphs-spectral-clustering-background.pdf">Spectral Clustering: Background</a></li>
-                        <li><a href="materials/slides/3/mlgraphs-spectral-clustering-cuts.pdf">Spectral Clustering: Graph Cuts</a></li>
-                        <li><a href="materials/slides/3/mlgraphs-spectral-clustering-ratiocut-ncut.pdf">RatioCut &amp; NCut</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L4</span>Manifold Learning &amp; Similarity Construction</h3><ul>
-                        <li><a href="materials/slides/4/mlgraphs-manifold-learning.pdf">Manifold Learning</a></li>
-                        <li><a href="materials/slides/4/mlgraphs-similarity-graphs-construction.pdf">Similarity Graph Construction</a></li>
-                        <li><a href="materials/slides/4/mlgraphs-movie-recommendations.pdf">Movie Recommendations</a></li>
-                        <li><a href="materials/slides/4/mlgraphs-resistive-networks.pdf">Resistive Networks</a></li>
-                        <li><a href="materials/slides/4/mlgraphs-effective-resistance-computation.pdf">Effective Resistance Computation</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L5</span>SSL Foundations</h3><ul>
-                        <li><a href="materials/slides/5/mlgraphs-ssl-introduction.pdf">SSL Introduction</a></li>
-                        <li><a href="materials/slides/5/mlgraphs-ssl-harmonic-functions.pdf">SSL Harmonic Functions</a></li>
-                        <li><a href="materials/slides/5/mlgraphs-ssl-regularization.pdf">SSL Regularization</a></li>
-                        <li><a href="materials/slides/5/mlgraphs-ssl-manifold-regularization.pdf">SSL Manifold Regularization</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L6</span>SSL Advanced &amp; Graph Sparsification</h3><ul>
-                        <li><a href="materials/slides/6/mlgraphs-ssl-inductive-bounds.pdf">Inductive Bounds</a></li>
-                        <li><a href="materials/slides/6/mlgraphs-ssl-transductive-bounds.pdf">Transductive Bounds</a></li>
-                        <li><a href="materials/slides/6/mlgraphs-ssl-lapsvms-maxmargin.pdf">LapSVMs &amp; Max-Margin</a></li>
-                        <li><a href="materials/slides/6/mlgraphs-ssl-learnability.pdf">SSL Learnability</a></li>
-                        <li><a href="materials/slides/6/mlgraphs-cut-sparsifiers.pdf">Cut Graph Sparsifiers</a></li>
-                        <li><a href="materials/slides/6/mlgraphs-spectral-sparsifiers-theory.pdf">Spectral Sparsifiers: Theory</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L7</span>Online SSL &amp; Large-Scale Processing</h3><ul>
-                        <li><a href="materials/slides/7/mlgraphs-online-ssl-introduction.pdf">Online SSL Introduction</a></li>
-                        <li><a href="materials/slides/7/mlgraphs-online-ssl-quantization.pdf">Graph Quantization</a></li>
-                        <li><a href="materials/slides/7/mlgraphs-online-ssl-applications.pdf">Online SSL Applications</a></li>
-                        <li><a href="materials/slides/7/mlgraphs-large-scale-introduction.pdf">Large-Scale Introduction</a></li>
-                        <li><a href="materials/slides/7/mlgraphs-distributed-introduction.pdf">Distributed Processing</a></li>
-                        <li><a href="materials/slides/7/mlgraphs-graphlab-abstraction.pdf">GraphLab Abstraction</a></li>
-                    </ul></div>
-                    <div class="lecture-card"><h3><span class="lecture-badge">L8</span>Advanced Topics</h3><ul>
-                        <li><a href="materials/slides/8/mlgraphs-submodularity-theory.pdf">Submodularity: Theory</a></li>
-                        <li><a href="materials/slides/8/mlgraphs-submodularity-applications.pdf">Submodularity: Applications</a></li>
-                        <li><a href="materials/slides/8/mlgraphs-graph-bandits.pdf">Graph Bandits</a></li>
-                        <li><a href="materials/slides/8/mlgraphs-spectral-bandits.pdf">Spectral Bandits</a></li>
-                        <li><a href="materials/slides/8/mlgraphs-influence-maximization.pdf">Influence Maximization</a></li>
-                    </ul></div>
-                    <div class="lecture-card td-card"><h3><span class="lecture-badge td">TD1</span>Spectral Clustering</h3><ul><li><a href="materials/td/td1/handout/td1_handout.pdf">Handout</a></li><li>Graph construction and spectral clustering practice</li></ul></div>
-                    <div class="lecture-card td-card"><h3><span class="lecture-badge td">TD2</span>Face Recognition with SSL</h3><ul><li><a href="materials/td/td2/handout/td2.pdf">Handout</a></li><li>Semi-supervised learning and harmonic function solution</li></ul></div>
-                    <div class="lecture-card td-card"><h3><span class="lecture-badge td">TD3</span>Graph Neural Networks</h3><ul><li><a href="materials/td/td3/td3.pdf">Handout</a></li><li><a href="https://github.com/timlacroix/nri_practical_session" rel="noopener noreferrer">NRI practical session code</a></li></ul></div>
-                </div>
-
-                <h2>Recommended Reading</h2>
-                <ul>
-                    <li>D. A. Spielman: <a href="https://cs-www.cs.yale.edu/homes/spielman/sagt/" rel="noopener noreferrer"><em>Spectral and Algebraic Graph Theory</em></a></li>
-                    <li>G. L. Miller: <a href="https://www.cs.cmu.edu/afs/cs/academic/class/15859n-s20/index.html" rel="noopener noreferrer"><em>15-859N: Spectral Graph Theory</em></a></li>
-                    <li>D. Easley, J. Kleinberg: <a href="https://www.cs.cornell.edu/home/kleinber/networks-book/" rel="noopener noreferrer"><em>Networks, Crowds, and Markets</em></a></li>
-                    <li>U. von Luxburg: <a href="https://arxiv.org/abs/0711.0189" rel="noopener noreferrer"><em>A tutorial on spectral clustering</em></a></li>
-                    <li>F. R. K. Chung: <em>Spectral Graph Theory</em>, AMS, 1997</li>
-                    <li>O. Chapelle, B. Schölkopf, A. Zien (Eds.): <a href="https://mitpress.mit.edu/9780262514125/semi-supervised-learning/" rel="noopener noreferrer"><em>Semi-Supervised Learning</em></a></li>
-                    <li>T. N. Kipf, M. Welling: <a href="https://arxiv.org/abs/1609.02907" rel="noopener noreferrer"><em>Semi-Supervised Classification with Graph Convolutional Networks</em></a></li>
-                    <li>P. Veličković et al.: <a href="https://arxiv.org/abs/1710.10903" rel="noopener noreferrer"><em>Graph Attention Networks</em></a></li>
-                    <li>M. Valko: <a href="../bandits/index.html"><em>Bandits on Graphs and Structures</em></a>, 2016</li>
-                </ul>
-
-                <h2 id="year-pages">Class Year Pages</h2>
-                <div class="year-grid">
-                    <div class="year-card"><a href="years/2019-2020.html">2019/2020</a></div>
-                    <div class="year-card"><a href="years/2018-2019.html">2018/2019</a></div>
-                    <div class="year-card"><a href="years/2017-2018.html">2017/2018</a></div>
-                    <div class="year-card"><a href="years/2016-2017.html">2016/2017</a></div>
-                    <div class="year-card"><a href="years/2015-2016.html">2015/2016</a></div>
-                    <div class="year-card"><a href="years/2014-2015.html">2014/2015</a></div>
-                </div>
-                <div id="modified">mv</div>
-            </div>
-        </div>
-    </div>
-    <div id="downlt"><div id="downrt"><div id="down"></div></div></div>
+<a href="#content" class="skip-to-content">Skip to main content</a>
+<header id="supertoplt"><div id="supertoprt"><div id="supertop"></div></div></header>
+<div id="lt"><div id="rt">
+  <div id="top"><h1 class="nadpis">Michal Valko : Graphs in Machine Learning</h1></div>
+  <div id="menu" role="navigation" aria-label="Main navigation">
+    <div class="menulink"><a href="/index.html">Intro</a><a href="/research.html">Publications</a><a href="/projects.html">Projects</a><a href="/mva-ml-graphs.html" class="active">Teaching</a><a href="/talks.html">Talks</a><a href="/press.html">Press</a><a href="/service.html">Service</a><a href="/collaborate.html">Collaborate</a><a href="/experience.html">Experience</a></div><br>
+    <span class="male"><a href="mailto:michal.valko@inria.fr">michal.valko@inria.fr</a></span>
+    <div class="sidebar-social-icons"><a href="https://scholar.google.com/citations?user=jrazNCQAAAAJ&sortby=pubdate" class="scholar" aria-label="Google Scholar profile" rel="me noopener noreferrer">●</a><a href="https://orcid.org/0009-0009-2673-0144" class="orcid" aria-label="ORCID profile" rel="me noopener noreferrer">●</a><a href="https://github.com/misovalko" class="github" aria-label="GitHub profile" rel="me noopener noreferrer">●</a><a href="https://www.linkedin.com/in/michalvalko/" class="linkedin" aria-label="LinkedIn profile" rel="me noopener noreferrer">●</a><a href="https://x.com/misovalko" class="twitter" aria-label="X profile" rel="me noopener noreferrer">●</a></div>
+    <div class="centered"><a href="/images/common/gr20.webp"><img src="/images/common/mvgr20.webp" alt="Portrait photo of Michal Valko" width="75" height="99" loading="lazy" decoding="async"></a><br><br><a href="https://isara.io" rel="noopener noreferrer"><img src="/images/common/isara.webp" alt="Isara Labs logo" width="40" height="40" loading="lazy" decoding="async"></a><br><a href="https://www.inria.fr/" rel="noopener noreferrer"><img src="/images/common/INRIA-CORPO-CMJN.webp" alt="Inria logo" width="77" height="32" loading="lazy" decoding="async"></a><br><a href="https://www.master-mva.com/" rel="noopener noreferrer"><img src="/images/common/mva.webp" alt="MVA Master program logo" width="60" height="40" loading="lazy" decoding="async"></a></div>
+  </div>
+  <main id="content"><div id="course-content"><div class="info-box">Loading course materials…</div></div><div id="modified" role="contentinfo">mv</div></main>
+</div></div>
+<footer id="downlt"><div id="downrt"><div id="down"></div></div></footer>
+<button class="back-to-top" id="backToTop" aria-label="Back to top" title="Back to top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3 329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg></button>
+<script src="/js/main.js" defer></script>
+<script src="site-shell.js" defer></script>
+<script src="course-page.js" defer></script>
 </body>
 </html>
