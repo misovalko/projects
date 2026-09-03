@@ -5,7 +5,7 @@
     var target = document.getElementById('year-content');
     if (!year || !target) return;
 
-    var dataBase = 'https://raw.githubusercontent.com/misovalko/misovalko.github.io/master/_data/mva';
+    var dataUrl = '/mva-archive-data.json';
 
     function esc(value) {
         return String(value == null ? '' : value)
@@ -23,12 +23,6 @@
     function absoluteOrRelative(url) {
         if (!url) return '';
         return /^(?:https?:)?\/\//i.test(url) ? url : url;
-    }
-
-    async function loadYaml(url) {
-        var response = await fetch(url, { cache: 'no-cache' });
-        if (!response.ok) throw new Error('HTTP ' + response.status + ' for ' + url);
-        return jsyaml.load(await response.text());
     }
 
     function renderTopics(course, yd) {
@@ -171,13 +165,18 @@
     }
 
     target.innerHTML = '<div class="info-box">Loading course archive...</div>';
-    Promise.all([
-        loadYaml(dataBase + '/course.yml'),
-        loadYaml(dataBase + '/years/' + encodeURIComponent(year) + '.yml')
-    ]).then(function (values) {
-        render(values[0], values[1]);
-    }).catch(function (error) {
-        console.error(error);
-        target.innerHTML = '<div class="info-box"><strong>Course archive data could not be loaded.</strong><br><a href="../index.html">Return to the MVA course page</a>.</div>';
-    });
+    fetch(dataUrl, { cache: 'no-cache' })
+        .then(function (response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status + ' for ' + dataUrl);
+            return response.json();
+        })
+        .then(function (data) {
+            var yd = data.years && data.years[year];
+            if (!data.course || !yd) throw new Error('Missing MVA data for ' + year);
+            render(data.course, yd);
+        })
+        .catch(function (error) {
+            console.error(error);
+            target.innerHTML = '<div class="info-box"><strong>Course archive data could not be loaded.</strong><br><a href="../index.html">Return to the MVA course page</a>.</div>';
+        });
 })();
