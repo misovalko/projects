@@ -16,6 +16,10 @@ The repository includes research project material, course archives, thesis mater
 
 GitHub Pages publishes this repository directly as static files. `.nojekyll` is intentional so historical directories and files are served without Jekyll processing.
 
+Because `.nojekyll` is intentional, HTML in this repository must not depend on Jekyll/Liquid rendering. In particular, the MVA course pages are static Pages content. Their structured archive metadata remains canonical in the main website repository and is exposed publicly by the main site at `/mva-archive-data.json` for the static year pages to consume.
+
+The `Static Pages template guard` workflow rejects Liquid/Jekyll expressions in MVA HTML so template source cannot accidentally be published literally again.
+
 Existing paths should be treated as stable public URLs. Avoid renaming or reorganizing archival directories unless the corresponding links in the main website are updated at the same time.
 
 ## Relationship to the website
