@@ -18,3 +18,15 @@ This snapshot was recovered from Michal Valko's research archive and preserves t
 The experiment scripts use MATLAB built-ins and run with low verbosity by default. Higher-verbosity visualization paths in `oo.m` / `stoo.m` refer to historical drawing helpers that are preserved separately in the existing `../oo_v1.zip` archive.
 
 The recovered archive did not contain an explicit software license. This material is published as a historical/reproducibility snapshot; no additional license is asserted here.
+
+
+## Legacy source history
+
+The `legacy/` subfolder preserves additional paper-era implementation history that was not part of the small runnable snapshot above:
+
+- `oo_old.m` — earlier OO implementation
+- `stosoo1d.m` — earlier one-dimensional StoSOO implementation
+- `stosoo_test.m` — historical experiment/test driver
+- `draw_partition.m` — historical visualization helper
+
+These files are kept for research-history and reproducibility context rather than as a maintained software package.
