@@ -452,10 +452,10 @@ $\quad$
     vertex/.style={circle, draw=black, thick, minimum size=12pt, inner sep=0pt}
 ]
     \def\sp{1.0}
-    \foreach \i in {0,\dots,6} {
+    \foreach \i in {0,...,6} {
         \node[vertex] (v\i) at (\i*\sp, 0) {};
     }
-    \foreach \i in {0,\dots,5} {
+    \foreach \i in {0,...,5} {
         \pgfmathtruncatemacro{\j}{\i+1}
         \draw[thick] (v\i) -- (v\j);
     }

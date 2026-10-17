@@ -42,7 +42,7 @@ breakatwhitespace=false,         % sets if automatic breaks should only happen a
 breaklines=true,                 % sets automatic line breaking
 captionpos=b,                    % sets the caption-position to bottom
 commentstyle=\color{mygreen},    % comment style
-deletekeywords={\dots},            % if you want to delete keywords from the given language
+% deletekeywords omitted: \dots is a command, not a listings keyword.            % if you want to delete keywords from the given language
 escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
 extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
 frame=single,	                   % adds a frame around the code
@@ -62,7 +62,7 @@ morekeywords={[2]@invariant},
 keywordstyle={[2]\color{Decorators}\slshape},
 emph={self},
 emphstyle={\color{self}\slshape},
-otherkeywords={*,\dots},            % if you want to add more keywords to the set
+otherkeywords={*,...},            % if you want to add more keywords to the set
 numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
 numbersep=5pt,                   % how far the line-numbers are from the code
 numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
@@ -439,13 +439,13 @@ $K_n$ graph \qquad  \qquad  \hfil $\sum_{e \in E} \bb_e \bb_e\transpose = \bL_G$
     % ===== Left: Complete graph K_6 =====
     \begin{scope}[xshift=0cm]
         % 6 nodes in hexagonal arrangement
-        \foreach \i in {1,\dots,6} {
+        \foreach \i in {1,...,6} {
             \node[node] (n\i) at ({90 + (\i-1)*60}:1.8) {};
         }
         
         % All edges (complete graph)
-        \foreach \i in {1,\dots,6} {
-            \foreach \j in {\i,\dots,6} {
+        \foreach \i in {1,...,6} {
+            \foreach \j in {\i,...,6} {
                 \ifnum\i<\j
                     \draw[blue!80, thick] (n\i) -- (n\j);
                 \fi
@@ -505,12 +505,12 @@ Dumbbell \qquad  \qquad  \hfil $\sum_{e \in E} \bb_e \bb_e\transpose = \bL_G$ \h
     % ===== Left: Dumbbell graph (two K6s connected) =====
     \begin{scope}[xshift=0cm]
         % Left clique K6 (6 nodes)
-        \foreach \i in {1,\dots,6} {
+        \foreach \i in {1,...,6} {
             \node[node] (l\i) at ({90 + (\i-1)*60}:1.2) {};
         }
         % All edges in left clique
-        \foreach \i in {1,\dots,6} {
-            \foreach \j in {\i,\dots,6} {
+        \foreach \i in {1,...,6} {
+            \foreach \j in {\i,...,6} {
                 \ifnum\i<\j
                     \draw[blue!80, thick] (l\i) -- (l\j);
                 \fi
@@ -519,12 +519,12 @@ Dumbbell \qquad  \qquad  \hfil $\sum_{e \in E} \bb_e \bb_e\transpose = \bL_G$ \h
         
         % Right clique K6 (6 nodes) - shifted right
         \begin{scope}[xshift=4.5cm]
-            \foreach \i in {1,\dots,6} {
+            \foreach \i in {1,...,6} {
                 \node[node] (r\i) at ({90 + (\i-1)*60}:1.2) {};
             }
             % All edges in right clique
-            \foreach \i in {1,\dots,6} {
-                \foreach \j in {\i,\dots,6} {
+            \foreach \i in {1,...,6} {
+                \foreach \j in {\i,...,6} {
                     \ifnum\i<\j
                         \draw[blue!80, thick] (r\i) -- (r\j);
                     \fi
